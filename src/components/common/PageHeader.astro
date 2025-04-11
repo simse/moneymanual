@@ -1,0 +1,30 @@
+---
+import Breadcrumbs from '../Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  breadcrumbs?: {
+    text: string;
+    href: string;
+  }[];
+};
+
+const { title, subtitle, breadcrumbs = [] } = Astro.props;
+---
+<header class="bg-teal-900 text-white">
+  <div class="max-w-5xl mx-auto px-4 pt-4 pb-8">
+    <Breadcrumbs links={[
+      {
+        text: "Home",
+        href: "/",
+      },
+      ...breadcrumbs,
+    ]} appearance="light" />
+
+    <h1 class="text-3xl font-bold mb-4 mt-8">{title}</h1>
+
+    {subtitle ? <p class="text-xl text-white/90">{subtitle}</p> : null}
+  </div>
+</header>
+

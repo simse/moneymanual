@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/Layout.astro';
+import PageHeader from '../../components/common/PageHeader.astro';
+import Calculator from '../../components/tools/take-home-calculator/Calculator.svelte';
+---
+<BaseLayout
+  title="Take-Home Pay Calculator"
+>
+  <PageHeader
+    title="Take-Home Pay Calculator"
+    subtitle="Calculate your exact take-home pay after all taxes with this handy calculator"
+    breadcrumbs={[
+      {
+        text: "Tools",
+        href: "/tools",
+      }
+    ]}
+  />
+
+  <main class="max-w-5xl mx-auto px-4 my-8">
+    <Calculator client:load />
+  </main>
+</BaseLayout>

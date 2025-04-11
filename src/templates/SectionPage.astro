@@ -1,0 +1,49 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+
+interface Props {
+  page: CollectionEntry<'pages'>;
+};
+
+const { page } = Astro.props;
+const slug = page.id;
+
+// load pages within section
+const sectionPages = await getCollection("pages", ({ id }) => {
+  return id.startsWith(slug) && id !== slug;
+});
+
+sectionPages.sort((a, b) => {
+  if (a.data.sortOrderHint === b.data.sortOrderHint) {
+    return 0;
+  }
+
+  return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
+});
+---
+<header class="bg-teal-900 text-white">
+  <div class="max-w-5xl mx-auto px-4 pt-4 pb-14 border-t-8 border-teal-700">
+    <a href="/" class="underline text-lg font-medium mb-8 block">Home</a>
+
+    <h1 class="text-4xl font-bold mb-4">{page.data.title}</h1>
+
+    <p class="text-white/90 text-xl max-w-xl font-medium">{page.data.description}</p>
+  </div>
+</header>
+
+<main class="max-w-5xl mx-auto p-4">
+  <h2 class="my-6 text-2xl font-medium">Topics</h2>
+
+  <ul>
+    {sectionPages.map(page => (
+    <li class="border-t border-zinc-400 group">
+      <a href={`/${page.id}`} class="py-6 block">
+        <h3 class="text-xl font-bold mb-2 underline text-teal-600 group-hover:text-teal-800 group-active:bg-yellow-400 group-active:text-black w-fit">
+          {page.data.title}
+        </h3>
+        <p class="text-lg max-w-2xl">{page.data.description}</p>
+      </a>
+    </li>
+    ))}
+  </ul>
+</main>

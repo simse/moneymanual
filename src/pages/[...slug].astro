@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, getEntry, render } from 'astro:content';
+import BaseLayout from '../layouts/Layout.astro';
+import SectionPage from '../templates/SectionPage.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+export const prerender = true;
+export const getStaticPaths = (async () => {
+  const allPages = await getCollection("pages");
+  
+  return allPages.map(page => ({
+    params: { slug: page.id }
+  }));
+}) satisfies GetStaticPaths;
+
+// load page
+const { slug } = Astro.params;
+const page = await getEntry('pages', slug);
+
+if (!page) {
+  throw new Error('page empty, fatal error');
+}
+
+const { Content, headings } = await render(page);
+
+const sectionSlug = slug.split("/")[0]
+const section = await getEntry("pages", sectionSlug)
+const sectionName = section?.data.title ?? '';
+
+const breadcrumbs = [
+  {
+    text: "Home",
+    href: "/",
+  },
+  {
+    text: sectionName,
+    href: `/${sectionSlug}`,
+  }
+];
+---
+<BaseLayout
+  title={page.data.title}
+>
+  {page.data.type === 'page' ? (
+  <header class="max-w-5xl mx-auto px-4 pt-4 pb-8 border-t-8 border-teal-700">
+      <Breadcrumbs links={breadcrumbs} />
+  
+      <h1 class="text-4xl font-bold mb-4 mt-8">{page.data.title}</h1>
+
+      <p class="text-black/90 text-xl max-w-xl font-medium">{page.data.description}</p>
+    </header>
+
+    <main class="max-w-5xl mx-auto p-4 flex gap-8">
+      <article class="flex-1 prose prose-lg border-t border-zinc-400 pt-4">
+        <Content />
+      </article>
+
+      <nav class="hidden md:block w-64 border-t-2 border-teal-700 pt-4">
+        ToC and whatnot
+      </nav>
+    </main>
+  ) : (
+  <SectionPage page={page} /> 
+)}
+</BaseLayout>
