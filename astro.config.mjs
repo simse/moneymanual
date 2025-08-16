@@ -6,10 +6,17 @@ import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
 import Icons from 'unplugin-icons/vite';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
-  output: 'server',
-  integrations: [svelte(), mdx()],
+  site: 'https://moneymanual.co.uk',
+  output: 'static',
+  integrations: [
+    svelte(),
+    mdx(),
+    sitemap(),
+  ],
   vite: {
     plugins: [
       tailwindcss(),

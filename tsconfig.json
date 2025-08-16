@@ -8,6 +8,10 @@
     "dist"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": ["src/components/*"]
+    },
     "types": [
       "unplugin-icons/types/astro",
       "vitest/globals"

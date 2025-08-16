@@ -1,13 +1,18 @@
 ---
 import BaseLayout from '../../layouts/Layout.astro';
-import PageHeader from '../../components/common/PageHeader.astro';
+import PageHeader from '@components/common/PageHeader.astro';
+import ToolsSection from '@components/parts/Tools.astro';
 ---
 <BaseLayout
   title="Tools and Calculators"
+  description="A collection of useful finance tools and money calculators."
 >
   <PageHeader
     title="Tools and Calculators"
+    subtitle="A collection of useful finance tools and money calculators."
   />
 
-  Hello World!!
+  <main class="max-w-5xl mx-auto px-4 mt-8">
+    <ToolsSection />
+  </main>
 </BaseLayout>
