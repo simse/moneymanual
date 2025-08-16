@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/Layout.astro';
 import SectionPage from '../templates/SectionPage.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 
 export const prerender = true;
 export const getStaticPaths = (async () => {
@@ -56,8 +57,8 @@ const breadcrumbs = [
         <Content />
       </article>
 
-      <nav class="hidden md:block w-64 border-t-2 border-teal-700 pt-4">
-        ToC and whatnot
+      <nav class="hidden md:block w-64 border-t-2 border-teal-700 pt-4 sticky top-4 h-fit">
+        <TableOfContents headings={headings} />
       </nav>
     </main>
   ) : (
