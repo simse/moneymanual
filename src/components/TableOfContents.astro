@@ -1,0 +1,30 @@
+---
+// src/components/TableOfContents.astro
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter(heading => heading.depth > 1 && heading.depth < 7);
+---
+
+<ul class="space-y-2">
+  {filteredHeadings.map(heading => (
+    <li class:list={[
+        { 
+            'pl-0': heading.depth === 2,
+            'pl-4': heading.depth === 3,
+            'pl-8': heading.depth === 4,
+            'pl-12': heading.depth === 5,
+            'pl-12': heading.depth === 6,
+        }
+    ]}>
+      <a href={`#${heading.slug}`} class="hover:text-teal-700">
+        {heading.text}
+      </a>
+    </li>
+  ))}
+</ul>
