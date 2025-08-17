@@ -1,6 +1,7 @@
 ---
+import { getCollection } from 'astro:content';
 import '../styles/global.css';
-import Navbar from '@components/Navbar.astro';
+import Navbar from '@components/Navbar.svelte';
 import Footer from '@components/Footer.astro';
 
 interface Props {
@@ -9,6 +10,10 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
+const allPages = await getCollection('pages', ({ data }) => {
+  return data.type === 'section';
+});
 ---
 <!doctype html>
 <html lang="en" class="scroll-pt-4">
@@ -26,7 +31,11 @@ const { title, description } = Astro.props;
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
 	<body class="bg-white text-zinc-950 min-h-svh flex flex-col">
-    <Navbar />  
+    <Navbar topics={allPages.map(page => ({
+        title: page.data.title,
+        href: `/${page.id}`,
+        description: page.data.description,
+    }))} client:load />
 
     <div>
       <slot />

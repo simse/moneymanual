@@ -1,0 +1,11 @@
+name = "money-manual"
+main = "./dist/_worker.js/index.js"
+compatibility_date = "2025-08-17"
+compatibility_flags = [ "nodejs_compat" ]
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+
+[observability]
+enabled = true
