@@ -30,6 +30,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
     "@iconify/json": "2.2.330",
+    "@tailwindcss/forms": "0.5.10",
     "@tailwindcss/typography": "0.5.16",
     "@types/lodash": "4.17.20",
     "@types/node": "24.3.0",

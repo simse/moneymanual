@@ -1,5 +1,7 @@
 <script lang="ts">
 import debounce from "lodash/debounce";
+import SearchIcon from 'virtual:icons/bx/search';
+import ArrowRightIcon from 'virtual:icons/bx/right-arrow-alt';
 
 let suggestions = $state<
 	{
@@ -7,11 +9,15 @@ let suggestions = $state<
 		matchedWords: string[];
 	}[]
 >([]);
-let showSuggestions = $state(true);
+let inputActive = $state(false);
+let searchHovered = $state(false);
+let showSuggestions = $derived(inputActive || suggestions.length > 0);
 const { initialValue }: { initialValue?: string } = $props();
 let inputValue = $state(initialValue);
 
 const getSuggestions = async (query: string) => {
+    if (!query || query.length < 3) return [];
+
 	const resp = await fetch(`/api/search-autocomplete?query=${query}`);
 
 	const respBody =
@@ -43,24 +49,34 @@ const handleInput = debounce(
 
 		getSuggestions(value).then((result) => (suggestions = result));
 	},
-	300,
+	100,
 );
 </script>
 
-<form class="">
-    <input
-        class="block text-xl bg-white text-black w-128 p-2 border-4 border-transparent focus:border-black outline-yellow-500"
-        type="text"
-        bind:value={inputValue}
-        oninput={handleInput}
-        onfocus={() => showSuggestions = true}
-        onblur={() => showSuggestions = true}
-    />
+<form
+    class="w-fit"
+>
+    <div class="flex mb-1">
+        <input
+            id="search_query"
+            class="block text-xl bg-white text-black w-128 p-2 outline-yellow-500 ring-black border-transparent z-20"
+            type="text"
+            bind:value={inputValue}
+            oninput={handleInput}
+            onfocus={() => inputActive = true}
+            onblur={() => inputActive = false}
+        />
 
-    <ul class={`mt-1 w-128 bg-white text-black ${showSuggestions ? 'block' : 'hidden'}`}>
+        <button class="px-4 bg-teal-600 hover:bg-teal-700 hover:cursor-pointer z-10">
+            <SearchIcon width={24} height={24} />
+        </button>
+    </div>
+
+    <ul class={`w-128 bg-white text-black ${showSuggestions ? 'block' : 'hidden'}`}>
         {#each suggestions as suggestion}
         <li class="hover:bg-zinc-200">
-            <a class="p-4 text-lg block hover:underline hover:cursor-pointer" href={`/search?query=${suggestion.phrase}`}>
+            <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`/search?query=${suggestion.phrase}`}>
+                <span>
                 {#each suggestion.phrase.split(' ') as word}
                 {#if suggestion.matchedWords.includes(word)}
                     <strong>{word}{' '}</strong>
@@ -68,6 +84,8 @@ const handleInput = debounce(
                     {word}{' '}
                 {/if}
                 {/each}
+                </span>
+                <ArrowRightIcon width={24} height={24} class="ml-auto" />
             </a>
         </li>
 
