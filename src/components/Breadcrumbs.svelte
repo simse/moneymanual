@@ -1,25 +1,26 @@
----
+<script lang="ts">
 import ChevronIcon from "~icons/bx/chevron-right";
 
 interface Props {
-  links: {
-    href: string;
-    text: string;
-  }[];
-  appearance: 'light' | 'dark';
+	links: {
+		href: string;
+		text: string;
+	}[];
+	appearance: "light" | "dark";
 }
 
-const { links, appearance = 'dark' } = Astro.props;
----
+const { links, appearance = "dark" }: Props = $props();
+</script>
+
 <nav class={appearance === 'dark' ? 'text-black' : 'text-white'}>
   <ul class="flex gap-1 items-center">
-    {links.map(link => (
+      {#each links as link}
     <li>
       <a class="border-b hover:border-b-3 text-lg font-bold" href={link.href}>{link.text}</a>
     </li>
     <li class="last:hidden" aria-hidden="true">
       <ChevronIcon class={`h-6 w-6 ${appearance === 'dark' ? 'text-black' : 'text-white'}`} />
     </li>
-    ))}
+      {/each}
   </ul>
 </nav>

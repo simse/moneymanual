@@ -1,11 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
-import Layout from '../layouts/Layout.astro';
-import Hero from '@components/Hero.astro';
-import Tools from '@components/parts/Tools.astro';
+import { getCollection } from "astro:content";
+import Hero from "@components/Hero.astro";
+import Tools from "@components/parts/Tools.svelte";
+import Layout from "../layouts/Layout.astro";
 
-const allPages = await getCollection('pages', ({ data }) => {
-  return data.type === 'section';
+const allPages = await getCollection("pages", ({ data }) => {
+	return data.type === "section";
 });
 ---
 <Layout

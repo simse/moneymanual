@@ -1,14 +1,14 @@
 ---
-import Breadcrumbs from '../Breadcrumbs.astro';
+import Breadcrumbs from "../Breadcrumbs.svelte";
 
 interface Props {
-  title: string;
-  subtitle?: string;
-  breadcrumbs?: {
-    text: string;
-    href: string;
-  }[];
-};
+	title: string;
+	subtitle?: string;
+	breadcrumbs?: {
+		text: string;
+		href: string;
+	}[];
+}
 
 const { title, subtitle, breadcrumbs = [] } = Astro.props;
 ---

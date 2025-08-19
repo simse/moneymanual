@@ -1,16 +1,15 @@
 ---
-
+import Search from "./Search.svelte";
 ---
 <header class="text-white bg-teal-900 w-full py-12">
   <div class="max-w-5xl mx-auto px-4">
     <h1 class="text-3xl font-bold max-w-3xl mb-6">Information about money, finance and the UK economy</h1>
-  
-    <p class="text-xl">Free guides to help you save money, manage debt and understand your finances.</p>
-  
-    <!--form class="mt-8 pt-8 border-t border-white/50">
-      <label class="text-lg font-bold mb-2 block">Find a topic</label>
 
-      <input class="block text-xl bg-white text-black w-128 p-2 border-4 focus:border-black border-transparent outline-yellow-500" type="text" />
-    </form-->
+    <p class="text-xl">Free guides to help you save money, manage debt and understand your finances.</p>
+
+    <div class="mt-8 pt-8 border-t border-white/50">
+        <p class="text-lg font-bold mb-2">Find a topic</p>
+      <Search client:load/>
+    </div>
   </div>
 </header>

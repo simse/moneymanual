@@ -1,12 +1,17 @@
 <script lang="ts">
-  let { topics }: {
-    topics: {
-      title: string;
-      description: string;
-      href: string;
-    }[];
-  } = $props();
-  let isMenuOpen = $state(false);
+import ChevronDownIcon from 'virtual:icons/bx/bxs-chevron-down';
+import SearchIcon from 'virtual:icons/bx/search';
+
+const {
+	topics,
+}: {
+	topics: {
+		title: string;
+		description: string;
+		href: string;
+	}[];
+} = $props();
+let isMenuOpen = $state(false);
 </script>
 
 <nav class="w-full bg-black text-white">
@@ -25,18 +30,14 @@
         }}
         onclick={() => isMenuOpen = !isMenuOpen}
       >
-        Topics ▾
+        Topics <ChevronDownIcon />
       </button>
-
     <li>
-    <li class="border-b-2 border-transparent hover:border-white hidden">
-      <a class=" active:text-black active:bg-yellow-400 font-bold uppercase p-4 block" href="/tools">Tools</a>
-    </li>
-    <!--li class="border-l border-zinc-400 flex items-center">
-      <button class="pl-3 h-full hover:cursor-pointer">
+    <li class="border-l border-zinc-400 flex items-center">
+      <a class="pl-3 h-full hover:cursor-pointer" href="/search">
         <SearchIcon class="h-6 w-6" />
-      </button>
-    </li-->
+      </a>
+    </li>
   </ul>
 </nav>
 
@@ -51,9 +52,10 @@
       <li>
         <a
           href={topic.href}
+          class="group"
         >
-          <span class="text-emerald-800 font-bold text-lg underline">{topic.title}</span>
-          <p class="text-zinc-700 font-medium">{topic.description}</p>
+          <span class="text-teal-700 group-hover:text-teal-900 font-bold text-xl underline">{topic.title}</span>
+          <p class="text-zinc-700 group-hover:text-zinc-900 font-medium">{topic.description}</p>
         </a>
       </li>
        {/each}

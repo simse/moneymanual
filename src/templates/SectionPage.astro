@@ -1,24 +1,24 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
 
 interface Props {
-  page: CollectionEntry<'pages'>;
-};
+	page: CollectionEntry<"pages">;
+}
 
 const { page } = Astro.props;
 const slug = page.id;
 
 // load pages within section
 const sectionPages = await getCollection("pages", ({ id }) => {
-  return id.startsWith(slug) && id !== slug;
+	return id.startsWith(slug) && id !== slug;
 });
 
 sectionPages.sort((a, b) => {
-  if (a.data.sortOrderHint === b.data.sortOrderHint) {
-    return 0;
-  }
+	if (a.data.sortOrderHint === b.data.sortOrderHint) {
+		return 0;
+	}
 
-  return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
+	return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
 });
 ---
 <header class="bg-teal-900 text-white">

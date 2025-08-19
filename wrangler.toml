@@ -2,6 +2,11 @@ name = "money-manual"
 main = "./dist/_worker.js/index.js"
 compatibility_date = "2025-08-17"
 compatibility_flags = [ "nodejs_compat" ]
+upload_source_maps = true
+
+[[routes]]
+pattern = "moneymanual.org.uk"
+custom_domain = true
 
 [assets]
 binding = "ASSETS"
@@ -9,3 +14,7 @@ directory = "./dist"
 
 [observability]
 enabled = true
+
+[observability.logs]
+invocation_logs = true
+head_sampling_rate = 1
