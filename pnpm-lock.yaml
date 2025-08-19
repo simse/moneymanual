@@ -55,7 +55,7 @@ importers:
         specifier: 2.2.330
         version: 2.2.330
       '@tailwindcss/forms':
-        specifier: ^0.5.10
+        specifier: 0.5.10
         version: 0.5.10(tailwindcss@4.1.4)
       '@tailwindcss/typography':
         specifier: 0.5.16
