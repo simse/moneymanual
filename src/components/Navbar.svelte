@@ -1,12 +1,14 @@
 <script lang="ts">
-  let { topics }: {
-    topics: {
-      title: string;
-      description: string;
-      href: string;
-    }[];
-  } = $props();
-  let isMenuOpen = $state(false);
+const {
+	topics,
+}: {
+	topics: {
+		title: string;
+		description: string;
+		href: string;
+	}[];
+} = $props();
+let isMenuOpen = $state(false);
 </script>
 
 <nav class="w-full bg-black text-white">

@@ -1,43 +1,43 @@
 ---
+import { getCollection, getEntry, render } from "astro:content";
 import type { GetStaticPaths } from "astro";
-import { getCollection, getEntry, render } from 'astro:content';
-import BaseLayout from '../layouts/Layout.astro';
-import SectionPage from '../templates/SectionPage.astro';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
-import TableOfContents from '../components/TableOfContents.astro';
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import TableOfContents from "../components/TableOfContents.astro";
+import BaseLayout from "../layouts/Layout.astro";
+import SectionPage from "../templates/SectionPage.astro";
 
 export const prerender = true;
 export const getStaticPaths = (async () => {
-  const allPages = await getCollection("pages");
-  
-  return allPages.map(page => ({
-    params: { slug: page.id }
-  }));
+	const allPages = await getCollection("pages");
+
+	return allPages.map((page) => ({
+		params: { slug: page.id },
+	}));
 }) satisfies GetStaticPaths;
 
 // load page
 const { slug } = Astro.params;
-const page = await getEntry('pages', slug);
+const page = await getEntry("pages", slug);
 
 if (!page) {
-  throw new Error('page empty, fatal error');
+	throw new Error("page empty, fatal error");
 }
 
 const { Content, headings } = await render(page);
 
-const sectionSlug = slug.split("/")[0]
-const section = await getEntry("pages", sectionSlug)
-const sectionName = section?.data.title ?? '';
+const sectionSlug = slug.split("/")[0];
+const section = await getEntry("pages", sectionSlug);
+const sectionName = section?.data.title ?? "";
 
 const breadcrumbs = [
-  {
-    text: "Home",
-    href: "/",
-  },
-  {
-    text: sectionName,
-    href: `/${sectionSlug}`,
-  }
+	{
+		text: "Home",
+		href: "/",
+	},
+	{
+		text: sectionName,
+		href: `/${sectionSlug}`,
+	},
 ];
 ---
 <BaseLayout
@@ -52,7 +52,7 @@ const breadcrumbs = [
       <p class="text-black/90 text-xl max-w-xl font-medium">{page.data.description}</p>
     </header>
 
-    <main class="max-w-5xl mx-auto p-4 flex gap-8">
+    <main class="max-w-5xl mx-auto p-4 flex gap-8 mb-16">
       <article class="flex-1 prose prose-lg border-t border-zinc-400 pt-4">
         <Content />
       </article>

@@ -1,11 +1,10 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import {defineConfig} from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
 import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
 import Icons from 'unplugin-icons/vite';
-
 import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
@@ -15,7 +14,7 @@ export default defineConfig({
   integrations: [
     svelte(),
     mdx(),
-    sitemap(),
+    sitemap()
   ],
   vite: {
     plugins: [
@@ -26,6 +25,10 @@ export default defineConfig({
     ],
   },
   adapter: cloudflare({
-    imageService: 'compile'
+    imageService: 'passthrough',
+    platformProxy: {
+      enabled: true,
+      persist: true,
+    }
   })
 });

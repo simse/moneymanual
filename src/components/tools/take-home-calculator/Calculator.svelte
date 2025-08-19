@@ -1,11 +1,11 @@
 <script lang="ts">
-  import {
-    calculatePersonalAllowance,
-    calculateIncomeTax,
-    calculateEmployeeNationalInsurance,
-  } from "@saving-tool/hmrc-income-tax";
+import {
+	calculateEmployeeNationalInsurance,
+	calculateIncomeTax,
+	calculatePersonalAllowance,
+} from "@saving-tool/hmrc-income-tax";
 
-  let income = $state();
+const income = $state();
 </script>
 
 <div class="grid grid-cols-5 gap-4">
