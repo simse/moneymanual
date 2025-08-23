@@ -10,7 +10,6 @@ let suggestions = $state<
 	}[]
 >([]);
 let inputActive = $state(false);
-let searchHovered = $state(false);
 let showSuggestions = $derived(inputActive || suggestions.length > 0);
 const { initialValue }: { initialValue?: string } = $props();
 let inputValue = $state(initialValue);

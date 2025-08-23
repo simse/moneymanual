@@ -30,5 +30,8 @@ export default defineConfig({
       enabled: true,
       persist: true,
     }
-  })
+  }),
+    experimental: {
+        contentIntellisense: true,
+    },
 });

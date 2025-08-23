@@ -7,6 +7,14 @@ import Layout from "../layouts/Layout.astro";
 const allPages = await getCollection("pages", ({ data }) => {
 	return data.type === "section";
 });
+
+allPages.sort((a, b) => {
+    if (a.data.sortOrderHint === b.data.sortOrderHint) {
+        return 0;
+    }
+
+    return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
+});
 ---
 <Layout
   description="Money Manual is an encyclopedia for everything relating to money, finance and the economy."
