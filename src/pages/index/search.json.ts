@@ -9,13 +9,14 @@ const extractor: DataExtractor = (page) => {
 			id: page.id,
 			title: page.data.title,
 			description: page.data.description,
+            searchPhrases: page.data.searchPhrases?.join(" ")
 		},
 	];
 };
 
 export const GET: APIRoute = async () => {
 	const miniSearch = await createIndex(
-		["title", "description"],
+		["title", "description", "searchPhrases"],
 		["title", "description"],
 		extractor,
 	);
