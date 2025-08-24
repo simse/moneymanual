@@ -33,7 +33,7 @@ importers:
         specifier: 5.13.2
         version: 5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1)
       astro-favicons:
-        specifier: ^3.1.5
+        specifier: 3.1.5
         version: 3.1.5(astro@5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1))
       lodash:
         specifier: 4.17.21
