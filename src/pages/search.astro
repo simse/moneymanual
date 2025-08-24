@@ -11,7 +11,11 @@ const results = [];
 
 if (query) {
 	const index = await getIndex(Astro.locals, "search");
-	results.push(...index.search(query));
+	results.push(...index.search(query, {
+        filter: result => {
+            return result.score > 5;
+        }
+    }));
 }
 ---
 <Layout title={`${query} - search`} description={`Search results for ${query}`}>

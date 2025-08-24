@@ -10,7 +10,7 @@ const indexMap: Record<
 	search: {
 		instance: null,
 		file: "search.json",
-		fields: ["title", "description"],
+		fields: ["title", "description", "searchPhrases"],
 	},
 	autocomplete: {
 		instance: null,

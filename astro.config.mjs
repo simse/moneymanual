@@ -7,15 +7,13 @@ import mdx from '@astrojs/mdx';
 import Icons from 'unplugin-icons/vite';
 import sitemap from '@astrojs/sitemap';
 
+import favicons from 'astro-favicons';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://moneymanual.co.uk',
   output: 'static',
-  integrations: [
-    svelte(),
-    mdx(),
-    sitemap()
-  ],
+  integrations: [svelte(), mdx(), sitemap(), favicons()],
   vite: {
     plugins: [
       tailwindcss(),

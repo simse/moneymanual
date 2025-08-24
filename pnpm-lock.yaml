@@ -32,6 +32,9 @@ importers:
       astro:
         specifier: 5.13.2
         version: 5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1)
+      astro-favicons:
+        specifier: ^3.1.5
+        version: 3.1.5(astro@5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1))
       lodash:
         specifier: 4.17.21
         version: 4.17.21
@@ -1198,6 +1201,11 @@ packages:
     resolution: {integrity: sha512-LElXdjswlqjWrPpJFg1Fx4wpkOCxj1TDHlSV4PlaRxHGWko024xICaa97ZkMfs6DRKlCguiAI+rbXv5GWwXIkg==}
     hasBin: true
 
+  astro-favicons@3.1.5:
+    resolution: {integrity: sha512-XFEW0Yk0sSfFu7WAT5wJ61atbT16YpO3y5n/ooxtys1/Uuv0v2XmMFw8OUrxnykmstUKoa+XjqUw22ph9cFn7A==}
+    peerDependencies:
+      astro: '>= 4.0.0'
+
   astro@5.13.2:
     resolution: {integrity: sha512-yjcXY0Ua3EwjpVd3GoUXa65HQ6qgmURBptA+M9GzE0oYvgfuyM7bIbH8IR/TWIbdefVUJR5b7nZ0oVnMytmyfQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
@@ -1450,6 +1458,9 @@ packages:
     resolution: {integrity: sha512-WUj2qlxaQtO4g6Pq5c29GTcWGDyd8itL8zTlipgECz3JesAiiOKotd8JU6otB3PACgG6xkJUyVhboMS+bje/jA==}
     engines: {node: '>=6'}
 
+  escape-html@1.0.3:
+    resolution: {integrity: sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow==}
+
   escape-string-regexp@5.0.0:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
@@ -1516,6 +1527,10 @@ packages:
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
+
+  favilib@1.0.5:
+    resolution: {integrity: sha512-3Fk5LQRU96QUmHWmyZc3WIMyz1tmte6TPlCVjaairXeHGtPHM4pnLvg11CyXTq6od1v5aaopHoREHNSwN4BKDA==}
+    engines: {node: '>=14.0.0'}
 
   fdir@6.4.3:
     resolution: {integrity: sha512-PMXmW2y1hDDfTSRc9gaXIuCCRpuoz3Kaz8cUelp3smouvfT632ozg2vrT6lJsHKKOF59YLbOGfAWGUcKEfRMQw==}
@@ -2889,6 +2904,14 @@ packages:
       utf-8-validate:
         optional: true
 
+  xml2js@0.6.2:
+    resolution: {integrity: sha512-T4rieHaC1EXcES0Kxxj4JWgaUQHDk+qwHcYOCFHfiwKz7tOVPLq7Hjq9dM1WCMhylqMEfP7hMcOIChvotiZegA==}
+    engines: {node: '>=4.0.0'}
+
+  xmlbuilder@11.0.1:
+    resolution: {integrity: sha512-fDlsI/kFEx7gLvbecc0/ohLG50fugQp8ryHzMTuW9vSa1GJ0XYWKnhsUx7oie3G98+r56aTQIUB4kht42R3JvA==}
+    engines: {node: '>=4.0'}
+
   xxhash-wasm@1.1.0:
     resolution: {integrity: sha512-147y/6YNh+tlp6nd/2pWq38i9h6mz/EuQ6njIrmW8D1BS5nCqs0P6DG+m6zTGnNz5I+uhZ0SHxBs9BsPrwcKDA==}
 
@@ -3970,6 +3993,12 @@ snapshots:
 
   astring@1.9.0: {}
 
+  astro-favicons@3.1.5(astro@5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1)):
+    dependencies:
+      astro: 5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1)
+      favilib: 1.0.5
+      ultrahtml: 1.6.0
+
   astro@5.13.2(@types/node@24.3.0)(jiti@2.4.2)(lightningcss@1.29.2)(rollup@4.39.0)(typescript@5.8.3)(yaml@2.8.1):
     dependencies:
       '@astrojs/compiler': 2.12.2
@@ -4327,6 +4356,8 @@ snapshots:
 
   escalade@3.2.0: {}
 
+  escape-html@1.0.3: {}
+
   escape-string-regexp@5.0.0: {}
 
   esm-env@1.2.2: {}
@@ -4397,6 +4428,12 @@ snapshots:
   fastq@1.19.1:
     dependencies:
       reusify: 1.1.0
+
+  favilib@1.0.5:
+    dependencies:
+      escape-html: 1.0.3
+      sharp: 0.33.5
+      xml2js: 0.6.2
 
   fdir@6.4.3(picomatch@4.0.2):
     optionalDependencies:
@@ -6145,6 +6182,13 @@ snapshots:
       strip-ansi: 7.1.0
 
   ws@8.18.0: {}
+
+  xml2js@0.6.2:
+    dependencies:
+      sax: 1.4.1
+      xmlbuilder: 11.0.1
+
+  xmlbuilder@11.0.1: {}
 
   xxhash-wasm@1.1.0: {}
 
