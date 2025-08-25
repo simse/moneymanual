@@ -9,11 +9,11 @@ const allPages = await getCollection("pages", ({ data }) => {
 });
 
 allPages.sort((a, b) => {
-    if (a.data.sortOrderHint === b.data.sortOrderHint) {
-        return 0;
-    }
+	if (a.data.sortOrderHint === b.data.sortOrderHint) {
+		return 0;
+	}
 
-    return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
+	return a.data.sortOrderHint > b.data.sortOrderHint ? 1 : -1;
 });
 ---
 <Layout

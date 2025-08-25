@@ -1,7 +1,7 @@
 <script lang="ts">
+import ArrowRightIcon from "virtual:icons/bx/right-arrow-alt";
+import SearchIcon from "virtual:icons/bx/search";
 import debounce from "lodash/debounce";
-import SearchIcon from 'virtual:icons/bx/search';
-import ArrowRightIcon from 'virtual:icons/bx/right-arrow-alt';
 
 let suggestions = $state<
 	{
@@ -15,7 +15,7 @@ const { initialValue }: { initialValue?: string } = $props();
 let inputValue = $state(initialValue);
 
 const getSuggestions = async (query: string) => {
-    if (!query || query.length < 3) return [];
+	if (!query || query.length < 3) return [];
 
 	const resp = await fetch(`/api/search-autocomplete?query=${query}`);
 
@@ -46,7 +46,9 @@ const handleInput = debounce(
 		if (!e.target) return;
 		const { value } = e.target as HTMLInputElement;
 
-		getSuggestions(value).then((result) => (suggestions = result));
+		getSuggestions(value).then((result) => {
+			suggestions = result;
+		});
 	},
 	100,
 );

@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
 	}
 
 	const index = await getIndex(locals, "autocomplete");
-	const results = index.search(query, { prefix: true });
+	const results = index.search(query, { prefix: true }).slice(0, 6);
 
 	return new Response(JSON.stringify(results), {
 		status: 200,

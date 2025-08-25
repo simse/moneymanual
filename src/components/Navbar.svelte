@@ -1,6 +1,6 @@
 <script lang="ts">
-import ChevronDownIcon from 'virtual:icons/bx/bxs-chevron-down';
-import SearchIcon from 'virtual:icons/bx/search';
+import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
+import SearchIcon from "virtual:icons/bx/search";
 
 const {
 	topics,
