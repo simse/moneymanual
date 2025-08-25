@@ -1,4 +1,4 @@
-name: pr-checks.yml
+name: PR Checks
 on:
   pull_request:
 
@@ -19,3 +19,37 @@ jobs:
 
       - name: Lint
         run: pnpm run lint
+
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        name: Checkout repo
+
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
+
+  astro-check:
+    name: Astro Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        name: Checkout repo
+
+      - uses: moonrepo/setup-toolchain@v0
+        with:
+          auto-install: true
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Astro Check
+        run: pnpm run astro check

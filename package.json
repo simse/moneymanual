@@ -3,12 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "wrangler types && astro dev",
-    "build": "wrangler types && astro build",
-    "preview": "wrangler types && astro preview",
-    "codequality": "astro check",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
     "astro": "astro",
-    "test": "vitest",
     "deploy": "wrangler deploy",
     "lint": "biome check .",
     "format": "biome check --write ."
