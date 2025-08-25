@@ -9,7 +9,7 @@ const extractor: DataExtractor = (page) => {
 			id: page.id,
 			title: page.data.title,
 			description: page.data.description,
-            searchPhrases: page.data.searchPhrases?.join(" ")
+			searchPhrases: page.data.searchPhrases?.join(" "),
 		},
 	];
 };

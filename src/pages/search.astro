@@ -1,6 +1,5 @@
 ---
-import PageHeader from "../components/common/PageHeader.astro";
-import Search from "../components/Search.svelte";
+import SearchForm from "../components/Search.svelte";
 import Layout from "../layouts/Layout.astro";
 import { getIndex } from "../lib/minisearch";
 
@@ -11,11 +10,13 @@ const results = [];
 
 if (query) {
 	const index = await getIndex(Astro.locals, "search");
-	results.push(...index.search(query, {
-        filter: result => {
-            return result.score > 5;
-        }
-    }));
+	results.push(
+		...index.search(query, {
+			filter: (result) => {
+				return result.score > 5;
+			},
+		}),
+	);
 }
 ---
 <Layout title={`${query} - search`} description={`Search results for ${query}`}>
@@ -23,7 +24,7 @@ if (query) {
         <div class="mx-auto max-w-5xl px-4 py-12">
             <h1 class="text-3xl font-bold mb-4">Search on MoneyManual.co.uk</h1>
 
-            <Search initialValue={query} client:load />
+            <SearchForm initialValue={query} client:load />
         </div>
     </header>
 
@@ -44,6 +45,5 @@ if (query) {
                 ))}
             </ul>
         ) : null}
-
     </main>
 </Layout>

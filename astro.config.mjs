@@ -6,7 +6,6 @@ import svelte from '@astrojs/svelte';
 import mdx from '@astrojs/mdx';
 import Icons from 'unplugin-icons/vite';
 import sitemap from '@astrojs/sitemap';
-
 import favicons from 'astro-favicons';
 
 // https://astro.build/config
@@ -14,9 +13,12 @@ export default defineConfig({
   site: 'https://moneymanual.co.uk',
   output: 'static',
   integrations: [svelte(), mdx(), sitemap(), favicons()],
+  compressHTML: true,
   vite: {
     plugins: [
+      // @ts-expect-error
       tailwindcss(),
+      // @ts-expect-error
       Icons({
         compiler: 'svelte',
       }),
@@ -29,7 +31,7 @@ export default defineConfig({
       persist: true,
     }
   }),
-    experimental: {
-        contentIntellisense: true,
-    },
+  experimental: {
+    contentIntellisense: true,
+  },
 });
