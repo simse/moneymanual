@@ -1,0 +1,34 @@
+---
+export const prerender = false;
+
+import PageHeader from "@components/common/PageHeader.astro";
+import Calculator from "@components/tools/student-loan-repayment/Calculator.svelte";
+import BaseLayout from "../../layouts/Layout.astro";
+import { studentLoanRepaymentStateSchema } from "../../lib/calculator-state-schemas";
+
+const title = "Student Loan Repayment Calculator";
+const description =
+	"Find out how long it will take to repay your UK student loan, how much you will pay back in total, and whether your loan will be written off — based on your salary, plan and graduation year.";
+
+const raw = await Astro.session?.get("student-loan-repayment");
+const initial = studentLoanRepaymentStateSchema.safeParse(raw).data ?? null;
+---
+<BaseLayout
+  title={title}
+  description={description}
+>
+  <PageHeader
+    title={title}
+    subtitle={description}
+    breadcrumbs={[
+      {
+        text: "Tools",
+        href: "/tools",
+      }
+    ]}
+  />
+
+  <main class="max-w-5xl mx-auto px-4 my-8">
+    <Calculator initial={initial} client:load />
+  </main>
+</BaseLayout>

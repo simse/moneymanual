@@ -1,8 +1,12 @@
 <script lang="ts">
+import type { SavingsCalculatorState } from "../../../lib/calculator-state-schemas";
 import {
 	computeSavingsGrowth,
 	type SavingsGrowthYear,
 } from "../../../lib/savings-growth";
+import { persistSessionState } from "../../../lib/session-state.svelte";
+
+let { initial }: { initial: SavingsCalculatorState | null } = $props();
 
 const poundsFormatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -27,10 +31,19 @@ const formatPoundsExact = (amount: number): string => {
 	return poundsPenceFormatter.format(amount);
 };
 
-let startingBalance = $state<number | null>(null);
-let monthlyDeposit = $state<number | null>(null);
-let annualInterestRate = $state<number | null>(null);
-let years = $state<number | null>(null);
+let startingBalance = $state<number | null>(initial?.startingBalance ?? null);
+let monthlyDeposit = $state<number | null>(initial?.monthlyDeposit ?? null);
+let annualInterestRate = $state<number | null>(
+	initial?.annualInterestRate ?? null,
+);
+let years = $state<number | null>(initial?.years ?? null);
+
+persistSessionState("savings-calculator", () => ({
+	startingBalance,
+	monthlyDeposit,
+	annualInterestRate,
+	years,
+}));
 
 const result = $derived(
 	computeSavingsGrowth({

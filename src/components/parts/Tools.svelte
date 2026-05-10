@@ -23,14 +23,14 @@ const tools = [
 		iconColour: "text-emerald-900",
 		icon: SavingsIcon,
 	},
-	//{
-	//  name: 'Student Loan Repayment',
-	//  description: 'Find out how long it will take to repay your student loan',
-	//  href: '/tools/student-loan-repayment',
-	//  bgColour: 'bg-blue-200',
-	//  iconColour: 'text-blue-900',
-	//  icon: SchoolIcon,
-	//},
+	{
+		name: "Student Loan Repayment Calculator",
+		description: "Find out how long it will take to repay your student loan",
+		href: "/tools/student-loan-repayment",
+		bgColour: "bg-blue-200",
+		iconColour: "text-blue-900",
+		icon: SchoolIcon,
+	},
 	//{
 	//  name: 'Investment Calculator',
 	//  description: 'Calculate how much your investments will grow over time',

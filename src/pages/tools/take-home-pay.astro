@@ -1,11 +1,17 @@
 ---
+export const prerender = false;
+
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/take-home-calculator/Calculator.svelte";
 import BaseLayout from "../../layouts/Layout.astro";
+import { takeHomePayStateSchema } from "../../lib/calculator-state-schemas";
 
 const title = "Take-Home Pay Calculator";
 const description =
 	"Calculate your exact take-home pay after tax and National Insurance with this handy calculator";
+
+const raw = await Astro.session?.get("take-home-pay");
+const initial = takeHomePayStateSchema.safeParse(raw).data ?? null;
 ---
 <BaseLayout
   title={title}
@@ -23,6 +29,6 @@ const description =
   />
 
   <main class="max-w-5xl mx-auto px-4 my-8">
-    <Calculator client:load />
+    <Calculator initial={initial} client:load />
   </main>
 </BaseLayout>
