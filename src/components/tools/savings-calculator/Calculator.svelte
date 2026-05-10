@@ -27,10 +27,10 @@ const formatPoundsExact = (amount: number): string => {
 	return poundsPenceFormatter.format(amount);
 };
 
-let startingBalance = $state<number | null>(1000);
-let monthlyDeposit = $state<number | null>(100);
-let annualInterestRate = $state<number | null>(5);
-let years = $state<number | null>(10);
+let startingBalance = $state<number | null>(null);
+let monthlyDeposit = $state<number | null>(null);
+let annualInterestRate = $state<number | null>(null);
+let years = $state<number | null>(null);
 
 const result = $derived(
 	computeSavingsGrowth({
