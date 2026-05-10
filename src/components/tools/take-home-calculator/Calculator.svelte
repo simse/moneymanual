@@ -1,5 +1,7 @@
 <script lang="ts">
 import DownRightIcon from "virtual:icons/material-symbols/subdirectory-arrow-right";
+import type { TakeHomePayState } from "../../../lib/calculator-state-schemas";
+import { persistSessionState } from "../../../lib/session-state.svelte";
 import {
 	type Country,
 	computeTakeHome,
@@ -11,6 +13,8 @@ import {
 	type TaxYear,
 } from "../../../lib/take-home-pay";
 import AccordionSection from "../../common/AccordionSection.svelte";
+
+let { initial }: { initial: TakeHomePayState | null } = $props();
 
 const formatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -49,15 +53,35 @@ const studentLoanPlans: { id: StudentLoanPlan; label: string }[] = [
 	{ id: 5, label: "Plan 5" },
 ];
 
-let selectedTaxYear = $state<TaxYear>(DEFAULT_TAX_YEAR);
-let selectedPayFrequency = $state("annually");
-let selectedCountry = $state<Country>("England/NI/Wales");
-let selectedStudentLoanPlans = $state<StudentLoanPlan[]>([]);
-let grossIncome = $state<number | null>(null);
-let pensionMethod = $state<PensionMethod>("net_pay");
-let pensionInputType = $state<PensionInputType>("percent");
-let pensionValue = $state<number | null>(null);
-let annualBonus = $state<number | null>(null);
+let selectedTaxYear = $state<TaxYear>(
+	initial?.selectedTaxYear ?? DEFAULT_TAX_YEAR,
+);
+let selectedPayFrequency = $state(initial?.selectedPayFrequency ?? "annually");
+let selectedCountry = $state<Country>(
+	initial?.selectedCountry ?? "England/NI/Wales",
+);
+let selectedStudentLoanPlans = $state<StudentLoanPlan[]>(
+	initial?.selectedStudentLoanPlans ?? [],
+);
+let grossIncome = $state<number | null>(initial?.grossIncome ?? null);
+let pensionMethod = $state<PensionMethod>(initial?.pensionMethod ?? "net_pay");
+let pensionInputType = $state<PensionInputType>(
+	initial?.pensionInputType ?? "percent",
+);
+let pensionValue = $state<number | null>(initial?.pensionValue ?? null);
+let annualBonus = $state<number | null>(initial?.annualBonus ?? null);
+
+persistSessionState("take-home-pay", () => ({
+	selectedTaxYear,
+	selectedPayFrequency,
+	selectedCountry,
+	selectedStudentLoanPlans,
+	grossIncome,
+	pensionMethod,
+	pensionInputType,
+	pensionValue,
+	annualBonus,
+}));
 
 const result = $derived.by(() => {
 	const freq =
