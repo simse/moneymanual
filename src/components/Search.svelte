@@ -3,37 +3,33 @@ import ArrowRightIcon from "virtual:icons/bx/right-arrow-alt";
 import SearchIcon from "virtual:icons/bx/search";
 import debounce from "lodash/debounce";
 
-let suggestions = $state<
-	{
-		phrase: string;
-		matchedWords: string[];
-	}[]
->([]);
+type Suggestion = {
+	phrase: string;
+	matchedTerms: Set<string>;
+};
+
+let suggestions = $state<Suggestion[]>([]);
 let inputActive = $state(false);
 let showSuggestions = $derived(inputActive || suggestions.length > 0);
 const { initialValue }: { initialValue?: string } = $props();
 let inputValue = $state(initialValue);
 
-const getSuggestions = async (query: string) => {
+const getSuggestions = async (query: string): Promise<Suggestion[]> => {
 	if (!query || query.length < 3) return [];
 
 	const resp = await fetch(`/api/search-autocomplete?query=${query}`);
+	if (!resp.ok) return [];
 
-	const respBody =
-		await resp.json<
-			{
-				id: string;
-				score: number;
-				phrase: string;
-				match: {
-					[key: string]: string[];
-				};
-			}[]
-		>();
+	const respBody = (await resp.json()) as {
+		id: string;
+		score: number;
+		phrase: string;
+		terms: string[];
+	}[];
 
 	return respBody.map((result) => ({
 		phrase: result.phrase,
-		matchedWords: Object.keys(result.match),
+		matchedTerms: new Set(result.terms),
 	}));
 };
 
@@ -46,9 +42,13 @@ const handleInput = debounce(
 		if (!e.target) return;
 		const { value } = e.target as HTMLInputElement;
 
-		getSuggestions(value).then((result) => {
-			suggestions = result;
-		});
+		getSuggestions(value)
+			.then((result) => {
+				suggestions = result;
+			})
+			.catch(() => {
+				suggestions = [];
+			});
 	},
 	100,
 );
@@ -56,10 +56,13 @@ const handleInput = debounce(
 
 <form
     class="w-fit"
+    action="/search"
+    method="get"
 >
     <div class="flex mb-1">
         <input
             id="search_query"
+            name="query"
             class="block text-xl bg-white text-black w-128 p-2 outline-yellow-500 ring-black border-transparent z-20"
             type="text"
             bind:value={inputValue}
@@ -79,7 +82,7 @@ const handleInput = debounce(
             <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`/search?query=${suggestion.phrase}`}>
                 <span>
                 {#each suggestion.phrase.split(' ') as word}
-                {#if suggestion.matchedWords.includes(word)}
+                {#if suggestion.matchedTerms.has(word.toLowerCase())}
                     <strong>{word}{' '}</strong>
                 {:else}
                     {word}{' '}

@@ -3,7 +3,7 @@ import { getIndex } from "../../lib/minisearch";
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ url }) => {
+export const GET: APIRoute = async ({ url, request }) => {
 	const query = url.searchParams.get("query");
 
 	if (!query) {
@@ -13,7 +13,7 @@ export const GET: APIRoute = async ({ url }) => {
 		});
 	}
 
-	const index = await getIndex("search");
+	const index = await getIndex("search", request);
 	const results = index.search(query);
 
 	return new Response(JSON.stringify(results), {
