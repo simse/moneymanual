@@ -21,6 +21,14 @@ export default defineConfig({
         compiler: "svelte",
       }),
     ],
+    optimizeDeps: {
+      exclude: ["astro-favicons"],
+    },
+    ssr: {
+      optimizeDeps: {
+        exclude: ["astro-favicons"],
+      },
+    },
   },
   adapter: cloudflare({
     imageService: "cloudflare-binding",

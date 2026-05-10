@@ -12,29 +12,32 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/lint
 
   build:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/build
 
   astro-check:
     name: astro-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/astro-check
 
   deploy-staging:
     name: deploy to staging
     needs: [lint, build, astro-check]
     runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.moneymanual.org.uk
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
       - name: Deploy to staging
@@ -48,7 +51,7 @@ jobs:
     needs: [deploy-staging]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
       - name: Install Playwright browsers
@@ -71,8 +74,11 @@ jobs:
     name: deploy to prod
     needs: [e2e-staging]
     runs-on: ubuntu-latest
+    environment:
+      name: prod
+      url: https://moneymanual.org.uk
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
 
       - name: Deploy to prod
