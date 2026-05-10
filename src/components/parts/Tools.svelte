@@ -2,6 +2,7 @@
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
 import LineChartIcon from "virtual:icons/bx/line-chart";
 import PoundIcon from "virtual:icons/bx/pound";
+import SavingsIcon from "virtual:icons/material-symbols/savings";
 
 const tools = [
 	{
@@ -12,6 +13,15 @@ const tools = [
 		bgColour: "bg-pink-200",
 		iconColour: "text-pink-900",
 		icon: PoundIcon,
+	},
+	{
+		name: "Savings Growth Calculator",
+		description:
+			"See how your savings will grow with compound interest and regular deposits",
+		href: "/tools/savings-calculator",
+		bgColour: "bg-emerald-200",
+		iconColour: "text-emerald-900",
+		icon: SavingsIcon,
 	},
 	//{
 	//  name: 'Student Loan Repayment',
