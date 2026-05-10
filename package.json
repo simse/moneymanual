@@ -12,6 +12,9 @@
     "deploy:prod": "CLOUDFLARE_ENV=prod astro build && wrangler deploy",
     "lint": "biome check .",
     "format": "biome check --write .",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "test:e2e": "playwright test --ui",
     "test:e2e:headless": "playwright test"
   },
@@ -41,6 +44,7 @@
     "@types/node": "25.6.2",
     "unplugin-icons": "23.0.1",
     "vite": "7.3.3",
+    "vitest": "4.1.5",
     "wrangler": "4.90.0"
   }
 }

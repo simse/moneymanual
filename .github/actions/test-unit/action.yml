@@ -1,0 +1,11 @@
+name: Unit tests
+description: Run vitest unit tests after installing the toolchain and dependencies.
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+
+    - name: Unit tests
+      shell: bash
+      run: pnpm run test:unit

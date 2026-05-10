@@ -1,17 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "but claude pre-tool"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -21,15 +10,6 @@
             "command": "pnpm format",
             "timeout": 5,
             "statusMessage": "formatting code"
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|MultiEdit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "but claude post-tool"
           }
         ]
       }
@@ -43,10 +23,6 @@
             "command": "pnpm build",
             "timeout": 60,
             "statusMessage": "running build check"
-          },
-          {
-            "type": "command",
-            "command": "but claude stop"
           }
         ]
       }
