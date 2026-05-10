@@ -11,7 +11,9 @@
     "deploy:staging": "CLOUDFLARE_ENV=staging astro build && wrangler deploy",
     "deploy:prod": "CLOUDFLARE_ENV=prod astro build && wrangler deploy",
     "lint": "biome check .",
-    "format": "biome check --write ."
+    "format": "biome check --write .",
+    "test:e2e": "playwright test --ui",
+    "test:e2e:headless": "playwright test"
   },
   "dependencies": {
     "@astrojs/check": "0.9.9",
@@ -32,6 +34,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
     "@iconify/json": "2.2.471",
+    "@playwright/test": "1.59.1",
     "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/typography": "0.5.19",
     "@types/lodash": "4.17.24",
