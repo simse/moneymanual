@@ -25,3 +25,10 @@ pnpm-debug.log*
 
 # local wrangler state
 .wrangler
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
