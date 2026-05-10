@@ -8,7 +8,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "deploy": "wrangler deploy",
+    "deploy:staging": "wrangler deploy --env staging",
+    "deploy:prod": "wrangler deploy --env prod",
     "lint": "biome check .",
     "format": "biome check --write ."
   },
