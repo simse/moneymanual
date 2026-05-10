@@ -1,0 +1,11 @@
+name: Lint
+description: Run biome lint after installing the toolchain and dependencies.
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+
+    - name: Lint
+      shell: bash
+      run: pnpm run lint

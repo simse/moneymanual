@@ -1,0 +1,11 @@
+name: Build
+description: Build the Astro site after installing the toolchain and dependencies.
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/setup
+
+    - name: Build
+      shell: bash
+      run: pnpm run build

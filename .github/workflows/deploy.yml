@@ -1,4 +1,4 @@
-name: Deploy
+name: deploy
 on:
   push:
     branches: [main]
@@ -9,70 +9,33 @@ concurrency:
 
 jobs:
   lint:
-    name: Lint
+    name: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: pnpm run lint
+      - uses: ./.github/actions/lint
 
   build:
-    name: Build
+    name: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm run build
+      - uses: ./.github/actions/build
 
   astro-check:
-    name: Astro Check
+    name: astro-check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Astro Check
-        run: pnpm run astro check
+      - uses: ./.github/actions/astro-check
 
   deploy-staging:
-    name: Deploy to staging
+    name: deploy to staging
     needs: [lint, build, astro-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Deploy to staging
         run: pnpm run deploy:staging
@@ -81,19 +44,12 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   e2e-staging:
-    name: E2E tests against staging
+    name: e2e tests
     needs: [deploy-staging]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
@@ -112,19 +68,12 @@ jobs:
           retention-days: 14
 
   deploy-prod:
-    name: Deploy to prod
+    name: deploy to prod
     needs: [e2e-staging]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        name: Checkout repo
-
-      - uses: moonrepo/setup-toolchain@v0
-        with:
-          auto-install: true
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/setup
 
       - name: Deploy to prod
         run: pnpm run deploy:prod
