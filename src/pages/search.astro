@@ -9,14 +9,18 @@ const query = Astro.url.searchParams.get("query");
 const results = [];
 
 if (query) {
-	const index = await getIndex("search");
-	results.push(
-		...index.search(query, {
-			filter: (result) => {
-				return result.score > 5;
-			},
-		}),
-	);
+	try {
+		const index = await getIndex("search", Astro.request);
+		results.push(
+			...index.search(query, {
+				filter: (result) => {
+					return result.score > 5;
+				},
+			}),
+		);
+	} catch (err) {
+		console.error("Search index failed to load:", err);
+	}
 }
 ---
 <Layout title={`${query} - search`} description={`Search results for ${query}`}>

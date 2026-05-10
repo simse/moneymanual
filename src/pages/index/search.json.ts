@@ -3,13 +3,20 @@ import { createIndex, type DataExtractor } from "../../lib/minisearch";
 
 export const prerender = true;
 
-const extractor: DataExtractor = (page) => {
+type SearchDoc = {
+	id: string;
+	title: string;
+	description: string;
+	searchPhrases: string;
+};
+
+const extractor: DataExtractor<SearchDoc> = (page) => {
 	return [
 		{
 			id: page.id,
 			title: page.data.title,
 			description: page.data.description,
-			searchPhrases: page.data.searchPhrases?.join(" "),
+			searchPhrases: page.data.searchPhrases?.join(" ") ?? "",
 		},
 	];
 };

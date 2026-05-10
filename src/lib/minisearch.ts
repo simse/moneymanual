@@ -20,13 +20,17 @@ const indexMap: Record<
 	},
 };
 
-export const getIndex = async (type: IndexType) => {
+export const getIndex = async (type: IndexType, request: Request) => {
 	const indexInfo = indexMap[type];
 
 	if (!indexInfo.instance) {
-		const indexResp = await env.ASSETS.fetch(
-			`https://assets.local/index/${indexInfo.file}`,
-		);
+		// In production the prebuilt indexes live in the Cloudflare ASSETS binding,
+		// which only looks at the URL pathname. In dev the binding doesn't see Astro's
+		// prerendered routes, so fall back to a plain fetch against the dev server.
+		const indexUrl = new URL(`/index/${indexInfo.file}`, request.url);
+		const indexResp = import.meta.env.DEV
+			? await fetch(indexUrl)
+			: await env.ASSETS.fetch(indexUrl);
 		const index = await indexResp.text();
 		indexInfo.instance = MiniSearch.loadJSON(index, {
 			fields: indexInfo.fields,
@@ -36,23 +40,25 @@ export const getIndex = async (type: IndexType) => {
 	return indexInfo.instance;
 };
 
-export type DataExtractor = (
-	page: CollectionEntry<"pages">,
-) => { id: string; [key: string]: any }[];
+export type IndexDocument = { id: string };
 
-export const createIndex = async (
+export type DataExtractor<T extends IndexDocument> = (
+	page: CollectionEntry<"pages">,
+) => T[];
+
+export const createIndex = async <T extends IndexDocument>(
 	fields: string[],
 	storeFields: string[],
-	dataExtractor: DataExtractor,
+	dataExtractor: DataExtractor<T>,
 ) => {
 	const pages = await getCollection("pages");
 
-	const miniSearch = new MiniSearch({
+	const miniSearch = new MiniSearch<T>({
 		fields,
 		storeFields,
 	});
 
-	const documents: { id: string; [key: string]: any }[] = [];
+	const documents: T[] = [];
 
 	for (const page of pages) {
 		documents.push(...dataExtractor(page));

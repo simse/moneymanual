@@ -3,7 +3,12 @@ import { createIndex, type DataExtractor } from "../../lib/minisearch";
 
 export const prerender = true;
 
-const extractor: DataExtractor = (page) => {
+type AutocompleteDoc = {
+	id: string;
+	phrase: string;
+};
+
+const extractor: DataExtractor<AutocompleteDoc> = (page) => {
 	if (!page.data.searchPhrases) {
 		return [];
 	}
