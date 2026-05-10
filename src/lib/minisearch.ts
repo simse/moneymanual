@@ -1,4 +1,5 @@
 import { type CollectionEntry, getCollection } from "astro:content";
+import { env } from "cloudflare:workers";
 import MiniSearch from "minisearch";
 
 type IndexType = "search" | "autocomplete";
@@ -19,12 +20,11 @@ const indexMap: Record<
 	},
 };
 
-export const getIndex = async (locals: App.Locals, type: IndexType) => {
+export const getIndex = async (type: IndexType) => {
 	const indexInfo = indexMap[type];
 
 	if (!indexInfo.instance) {
-		const { ASSETS } = locals.runtime.env;
-		const indexResp = await ASSETS.fetch(
+		const indexResp = await env.ASSETS.fetch(
 			`https://assets.local/index/${indexInfo.file}`,
 		);
 		const index = await indexResp.text();

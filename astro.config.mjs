@@ -16,9 +16,7 @@ export default defineConfig({
   compressHTML: true,
   vite: {
     plugins: [
-      // @ts-expect-error
       tailwindcss(),
-      // @ts-expect-error
       Icons({
         compiler: 'svelte',
       }),
@@ -26,10 +24,6 @@ export default defineConfig({
   },
   adapter: cloudflare({
     imageService: 'passthrough',
-    platformProxy: {
-      enabled: true,
-      persist: true,
-    }
   }),
   experimental: {
     contentIntellisense: true,
