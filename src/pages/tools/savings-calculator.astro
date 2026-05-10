@@ -1,0 +1,28 @@
+---
+import PageHeader from "@components/common/PageHeader.astro";
+import Calculator from "@components/tools/savings-calculator/Calculator.svelte";
+import BaseLayout from "../../layouts/Layout.astro";
+
+const title = "Savings Growth Calculator";
+const description =
+	"See how your savings will grow with compound interest, regular deposits and a fixed annual interest rate.";
+---
+<BaseLayout
+  title={title}
+  description={description}
+>
+  <PageHeader
+    title={title}
+    subtitle={description}
+    breadcrumbs={[
+      {
+        text: "Tools",
+        href: "/tools",
+      }
+    ]}
+  />
+
+  <main class="max-w-5xl mx-auto px-4 my-8">
+    <Calculator client:load />
+  </main>
+</BaseLayout>
