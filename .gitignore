@@ -23,5 +23,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-# gemini settings
-.gemini/
+# local wrangler state
+.wrangler

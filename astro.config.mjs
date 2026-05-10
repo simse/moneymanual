@@ -1,35 +1,29 @@
 // @ts-check
-import {defineConfig} from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
-import cloudflare from '@astrojs/cloudflare';
-import svelte from '@astrojs/svelte';
-import mdx from '@astrojs/mdx';
-import Icons from 'unplugin-icons/vite';
-import sitemap from '@astrojs/sitemap';
-import favicons from 'astro-favicons';
+import { defineConfig } from "astro/config";
+import tailwindcss from "@tailwindcss/vite";
+import cloudflare from "@astrojs/cloudflare";
+import svelte from "@astrojs/svelte";
+import mdx from "@astrojs/mdx";
+import Icons from "unplugin-icons/vite";
+import sitemap from "@astrojs/sitemap";
+import favicons from "astro-favicons";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://moneymanual.co.uk',
-  output: 'static',
+  site: "https://moneymanual.co.uk",
+  output: "static",
   integrations: [svelte(), mdx(), sitemap(), favicons()],
   compressHTML: true,
   vite: {
     plugins: [
-      // @ts-expect-error
       tailwindcss(),
-      // @ts-expect-error
       Icons({
-        compiler: 'svelte',
+        compiler: "svelte",
       }),
     ],
   },
   adapter: cloudflare({
-    imageService: 'passthrough',
-    platformProxy: {
-      enabled: true,
-      persist: true,
-    }
+    imageService: "cloudflare-binding",
   }),
   experimental: {
     contentIntellisense: true,

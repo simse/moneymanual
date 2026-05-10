@@ -6,7 +6,7 @@ interface Props {
 		href: string;
 		text: string;
 	}[];
-	appearance: "light" | "dark";
+	appearance?: "light" | "dark";
 }
 
 const { links, appearance = "dark" }: Props = $props();

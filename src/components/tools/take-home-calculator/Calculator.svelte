@@ -112,7 +112,7 @@ const result = $derived.by(() => {
 	const nationalInsurance = calculateEmployeeNationalInsurance({
 		taxYear,
 		country,
-		taxableAnnualIncome,
+		grossAnnualIncome: taxableAnnualIncome,
 	});
 
 	const incomeTax = calculateIncomeTax({
@@ -134,7 +134,7 @@ const result = $derived.by(() => {
 		studentLoanRepayments[repaymentPlan] = calculateStudentLoanRepayments({
 			taxYear,
 			country,
-			taxableAnnualIncome,
+			grossAnnualIncome: taxableAnnualIncome,
 			studentLoanPlanNo: repaymentPlan,
 		});
 	}

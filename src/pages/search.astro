@@ -9,7 +9,7 @@ const query = Astro.url.searchParams.get("query");
 const results = [];
 
 if (query) {
-	const index = await getIndex(Astro.locals, "search");
+	const index = await getIndex("search");
 	results.push(
 		...index.search(query, {
 			filter: (result) => {
@@ -24,7 +24,7 @@ if (query) {
         <div class="mx-auto max-w-5xl px-4 py-12">
             <h1 class="text-3xl font-bold mb-4">Search on MoneyManual.co.uk</h1>
 
-            <SearchForm initialValue={query} client:load />
+            <SearchForm initialValue={query ?? undefined} client:load />
         </div>
     </header>
 
