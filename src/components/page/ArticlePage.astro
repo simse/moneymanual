@@ -1,0 +1,68 @@
+---
+import { render } from "astro:content";
+import Breadcrumbs from "@components/Breadcrumbs.svelte";
+import TableOfContents from "@components/TableOfContents.astro";
+import BaseLayout from "../../layouts/Layout.astro";
+import { getPageEntry, type PageEntry, parseEntryId } from "../../lib/content";
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+import { localePath } from "../../lib/i18n/urls";
+import SectionPage from "../../templates/SectionPage.astro";
+
+interface Props {
+	locale?: Locale;
+	page: PageEntry;
+}
+
+const { locale = DEFAULT_LOCALE, page } = Astro.props;
+
+const { Content, headings } = await render(page);
+const parsed = parseEntryId(page.id);
+
+let sectionTitle = "";
+if (parsed && !parsed.isSection) {
+	const sectionEntry = await getPageEntry(locale, parsed.topic);
+	sectionTitle = sectionEntry?.data.title ?? "";
+}
+
+const breadcrumbs: { text: string; href: string }[] = [
+	{ text: t(locale, "home"), href: localePath(locale) },
+];
+if (parsed && !parsed.isSection) {
+	breadcrumbs.push({
+		text: sectionTitle,
+		href: localePath(locale, parsed.topic),
+	});
+}
+
+const isSection = page.data.type === "section";
+---
+<BaseLayout
+  locale={locale}
+  title={page.data.title}
+  description={page.data.description}
+>
+  {isSection ? (
+    <SectionPage locale={locale} page={page} />
+  ) : (
+    <Fragment>
+      <header class="max-w-5xl mx-auto px-4 pt-4 pb-8 border-t-8 border-teal-700">
+          <Breadcrumbs links={breadcrumbs} />
+
+          <h1 class="text-4xl font-bold mb-4 mt-8">{page.data.title}</h1>
+
+          <p class="text-black/90 text-xl max-w-xl font-medium">{page.data.description}</p>
+      </header>
+
+      <main class="max-w-5xl mx-auto p-4 flex gap-8 mb-16">
+        <article class="flex-1 prose prose-lg border-t border-zinc-400 pt-4">
+          <Content />
+        </article>
+
+        <nav class="hidden md:block w-64 border-t-2 border-teal-700 pt-4 sticky top-4 h-fit">
+          <TableOfContents headings={headings} />
+        </nav>
+      </main>
+    </Fragment>
+  )}
+</BaseLayout>

@@ -1,11 +1,11 @@
 ---
-export const prerender = false;
-
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/savings-calculator/Calculator.svelte";
 import BaseLayout from "../../layouts/Layout.astro";
 import { savingsCalculatorStateSchema } from "../../lib/calculator-state-schemas";
+import { t } from "../../lib/i18n/strings";
 
+const locale = "en-gb";
 const title = "Savings Growth Calculator";
 const description =
 	"See how your savings will grow with compound interest, regular deposits and a fixed annual interest rate.";
@@ -14,15 +14,17 @@ const raw = await Astro.session?.get("savings-calculator");
 const initial = savingsCalculatorStateSchema.safeParse(raw).data ?? null;
 ---
 <BaseLayout
+  locale={locale}
   title={title}
   description={description}
 >
   <PageHeader
+    locale={locale}
     title={title}
     subtitle={description}
     breadcrumbs={[
       {
-        text: "Tools",
+        text: t(locale, "tools"),
         href: "/tools",
       }
     ]}

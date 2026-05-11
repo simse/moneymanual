@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { createIndex, type DataExtractor } from "../../lib/minisearch";
+import { createIndex, type DataExtractor } from "../../../lib/minisearch";
 
 export const prerender = true;
 
@@ -20,7 +20,7 @@ const extractor: DataExtractor<AutocompleteDoc> = (page) => {
 };
 
 export const GET: APIRoute = async () => {
-	const miniSearch = await createIndex(["phrase"], ["phrase"], extractor);
+	const miniSearch = await createIndex("cy", ["phrase"], ["phrase"], extractor);
 
 	return new Response(JSON.stringify(miniSearch), {
 		status: 200,

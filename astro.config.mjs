@@ -10,9 +10,28 @@ import favicons from "astro-favicons";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://moneymanual.co.uk",
-  output: "static",
-  integrations: [svelte(), mdx(), sitemap(), favicons()],
+  site: "https://moneymanual.org.uk",
+  output: "server",
+  i18n: {
+    defaultLocale: "en-gb",
+    locales: ["en-gb", "cy"],
+    routing: {
+      prefixDefaultLocale: false,
+      redirectToDefaultLocale: false,
+      fallbackType: "redirect",
+    },
+  },
+  integrations: [
+    svelte(),
+    mdx(),
+    sitemap({
+      i18n: {
+        defaultLocale: "en-gb",
+        locales: { "en-gb": "en-GB", cy: "cy" },
+      },
+    }),
+    favicons(),
+  ],
   compressHTML: true,
   devToolbar: { enabled: false },
   vite: {

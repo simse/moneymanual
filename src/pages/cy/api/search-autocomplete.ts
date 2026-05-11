@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { getIndex } from "../../lib/minisearch";
+import { getIndex } from "../../../lib/minisearch";
 
 export const GET: APIRoute = async ({ url, request }) => {
 	const query = url.searchParams.get("query");
@@ -11,7 +11,7 @@ export const GET: APIRoute = async ({ url, request }) => {
 		});
 	}
 
-	const index = await getIndex("autocomplete", "en-gb", request);
+	const index = await getIndex("autocomplete", "cy", request);
 	const results = index.search(query, { prefix: true }).slice(0, 6);
 
 	return new Response(JSON.stringify(results), {
