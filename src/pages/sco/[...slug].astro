@@ -1,0 +1,12 @@
+---
+import ArticlePage from "@components/page/ArticlePage.astro";
+import { getPageEntry } from "../../lib/content";
+
+const { slug } = Astro.params;
+const page = await getPageEntry("sco", slug);
+
+if (!page) {
+	return Astro.rewrite("/404");
+}
+---
+<ArticlePage locale="sco" page={page} />

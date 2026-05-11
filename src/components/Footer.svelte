@@ -4,7 +4,7 @@ import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
 import { LOCALES, type Locale, labelFor } from "../lib/i18n/locales";
 import { t } from "../lib/i18n/strings";
-import { alternateUrlFor } from "../lib/i18n/urls";
+import { alternateUrlFor, localePath } from "../lib/i18n/urls";
 
 type Topic = { title: string; href: string };
 
@@ -18,34 +18,35 @@ const {
 	topics: Topic[];
 } = $props();
 
-const tools = [
+const tools = $derived([
 	{
-		name: "Take-home pay",
-		href: "/tools/take-home-pay",
+		name: t(locale, "toolsTakeHomeShortName"),
+		href: localePath(locale, "tools/take-home-pay"),
 		bg: "bg-pink-200",
 		fg: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: "Savings growth",
-		href: "/tools/savings-calculator",
+		name: t(locale, "toolsSavingsShortName"),
+		href: localePath(locale, "tools/savings-calculator"),
 		bg: "bg-emerald-200",
 		fg: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: "Student loan",
-		href: "/tools/student-loan-repayment",
+		name: t(locale, "toolsStudentLoanShortName"),
+		href: localePath(locale, "tools/student-loan-repayment"),
 		bg: "bg-blue-200",
 		fg: "text-blue-900",
 		icon: SchoolIcon,
 	},
-];
+]);
 
 const linkCls =
 	"text-zinc-900 hover:text-teal-800 hover:underline font-medium block py-1";
 const year = new Date().getFullYear();
-const searchHref = $derived(locale === "cy" ? "/cy/search" : "/search");
+const searchHref = $derived(localePath(locale, "search"));
+const toolsHref = $derived(localePath(locale, "tools"));
 </script>
 
 <footer class="w-full bg-zinc-100 mt-16 border-t-4 border-teal-700">
@@ -74,7 +75,7 @@ const searchHref = $derived(locale === "cy" ? "/cy/search" : "/search");
 			<div class="md:col-span-5">
 				<div class="flex items-baseline justify-between mb-3">
 					<h4 class="font-bold text-zinc-900">{t(locale, "tools")}</h4>
-					<a href="/tools" class="text-teal-700 hover:text-teal-900 underline font-medium text-sm">
+					<a href={toolsHref} class="text-teal-700 hover:text-teal-900 underline font-medium text-sm">
 						{t(locale, "seeAll")}
 					</a>
 				</div>

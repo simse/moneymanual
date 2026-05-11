@@ -3,7 +3,12 @@ import "../styles/global.css";
 import Footer from "@components/Footer.svelte";
 import Navbar from "@components/Navbar.svelte";
 import { sectionEntriesForLocale, urlPathForEntry } from "../lib/content";
-import { DEFAULT_LOCALE, htmlLangFor, type Locale } from "../lib/i18n/locales";
+import {
+	DEFAULT_LOCALE,
+	htmlLangFor,
+	LOCALES,
+	type Locale,
+} from "../lib/i18n/locales";
 import { t } from "../lib/i18n/strings";
 import { alternateUrlFor, localePath } from "../lib/i18n/urls";
 
@@ -23,8 +28,14 @@ const topics = sections.map((entry) => ({
 }));
 
 const currentPath = Astro.url.pathname;
-const enHref = new URL(alternateUrlFor(currentPath, "en-gb"), Astro.site).href;
-const cyHref = new URL(alternateUrlFor(currentPath, "cy"), Astro.site).href;
+const alternates = LOCALES.map((code) => ({
+	hreflang: htmlLangFor(code),
+	href: new URL(alternateUrlFor(currentPath, code), Astro.site).href,
+}));
+const defaultHref = new URL(
+	alternateUrlFor(currentPath, DEFAULT_LOCALE),
+	Astro.site,
+).href;
 const pageTitle = title
 	? `${title}${t(locale, "titleSuffix")}`
 	: t(locale, "siteTagline");
@@ -42,9 +53,10 @@ const pageTitle = title
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex" />
     <meta name="description" content={description} />
-    <link rel="alternate" hreflang="en-GB" href={enHref} />
-    <link rel="alternate" hreflang="cy" href={cyHref} />
-    <link rel="alternate" hreflang="x-default" href={enHref} />
+    {alternates.map(({ hreflang, href }) => (
+      <link rel="alternate" hreflang={hreflang} href={href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={defaultHref} />
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body class="bg-white text-zinc-950 min-h-svh flex flex-col">

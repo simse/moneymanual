@@ -3,6 +3,7 @@ import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
 import SearchIcon from "virtual:icons/bx/search";
 import type { Locale } from "../lib/i18n/locales";
 import { t } from "../lib/i18n/strings";
+import { localePath } from "../lib/i18n/urls";
 
 const {
 	locale,
@@ -19,7 +20,7 @@ const {
 } = $props();
 let isMenuOpen = $state(false);
 
-const searchHref = $derived(locale === "cy" ? "/cy/search" : "/search");
+const searchHref = $derived(localePath(locale, "search"));
 </script>
 
 <nav class="w-full bg-black text-white">

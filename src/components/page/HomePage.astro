@@ -24,7 +24,7 @@ const sections = await sectionEntriesForLocale(locale);
     <section class="mt-8 mb-12">
       <h2 class="text-2xl font-bold my-4">{t(locale, "tools")}</h2>
 
-      <Tools />
+      <Tools locale={locale} />
     </section>
 
     <section class="my-12">

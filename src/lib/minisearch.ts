@@ -34,6 +34,16 @@ const indexMap: Record<IndexKey, IndexInfo> = {
 		file: "cy/autocomplete.json",
 		fields: ["phrase"],
 	},
+	"search-sco": {
+		instance: null,
+		file: "sco/search.json",
+		fields: ["title", "description", "searchPhrases"],
+	},
+	"autocomplete-sco": {
+		instance: null,
+		file: "sco/autocomplete.json",
+		fields: ["phrase"],
+	},
 };
 
 export const getIndex = async (

@@ -1,6 +1,8 @@
-import { DEFAULT_LOCALE, type Locale } from "./locales";
+import { DEFAULT_LOCALE, LOCALES, type Locale } from "./locales";
 
-const PATHS_WITHOUT_WELSH_VERSION = ["/tools"];
+const NON_DEFAULT_LOCALES = LOCALES.filter(
+	(locale) => locale !== DEFAULT_LOCALE,
+);
 
 export const localePath = (locale: Locale, rest = ""): string => {
 	const trimmed = rest.replace(/^\/+/, "").replace(/\/+$/, "");
@@ -12,21 +14,22 @@ export const localePath = (locale: Locale, rest = ""): string => {
 };
 
 export const localeFromPathname = (pathname: string): Locale => {
-	if (pathname === "/cy" || pathname.startsWith("/cy/")) return "cy";
+	for (const locale of NON_DEFAULT_LOCALES) {
+		if (pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)) {
+			return locale;
+		}
+	}
 	return DEFAULT_LOCALE;
 };
 
 const stripLocalePrefix = (pathname: string): string => {
-	if (pathname === "/cy") return "/";
-	if (pathname.startsWith("/cy/")) return pathname.slice(3) || "/";
+	for (const locale of NON_DEFAULT_LOCALES) {
+		if (pathname === `/${locale}`) return "/";
+		if (pathname.startsWith(`/${locale}/`)) {
+			return pathname.slice(locale.length + 1) || "/";
+		}
+	}
 	return pathname;
-};
-
-const hasLocalisedRoute = (basePath: string, target: Locale): boolean => {
-	if (target === DEFAULT_LOCALE) return true;
-	return !PATHS_WITHOUT_WELSH_VERSION.some(
-		(prefix) => basePath === prefix || basePath.startsWith(`${prefix}/`),
-	);
 };
 
 export const alternateUrlFor = (
@@ -34,9 +37,6 @@ export const alternateUrlFor = (
 	target: Locale,
 ): string => {
 	const base = stripLocalePrefix(currentPathname);
-	if (!hasLocalisedRoute(base, target)) {
-		return localePath(target);
-	}
 	const cleaned = base.replace(/^\/+/, "");
 	return localePath(target, cleaned);
 };

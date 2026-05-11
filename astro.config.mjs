@@ -14,7 +14,7 @@ export default defineConfig({
   output: "server",
   i18n: {
     defaultLocale: "en-gb",
-    locales: ["en-gb", "cy"],
+    locales: ["en-gb", "cy", "sco"],
     routing: {
       prefixDefaultLocale: false,
       redirectToDefaultLocale: false,
@@ -27,7 +27,7 @@ export default defineConfig({
     sitemap({
       i18n: {
         defaultLocale: "en-gb",
-        locales: { "en-gb": "en-GB", cy: "cy" },
+        locales: { "en-gb": "en-GB", cy: "cy", sco: "sco" },
       },
     }),
     favicons(),
