@@ -89,6 +89,7 @@ export interface StudentLoanInput {
 	salaryGrowthPercent: number;
 	inflationPercent: number;
 	currentYear: number;
+	monthlyOverpayment: number;
 }
 
 export interface StudentLoanResult {
@@ -122,6 +123,7 @@ export function computeStudentLoanRepayment(
 	const plan = STUDENT_LOAN_PLANS[input.plan];
 	const salaryGrowth = Math.max(0, input.salaryGrowthPercent) / 100;
 	const inflation = Math.max(0, input.inflationPercent) / 100;
+	const overpaymentAnnual = Math.max(0, input.monthlyOverpayment) * 12;
 	const writeOffCalendarYear = input.yearGraduated + 1 + plan.writeOffYears;
 
 	let balance = Math.max(0, input.currentBalance);
@@ -149,10 +151,13 @@ export function computeStudentLoanRepayment(
 				: plan.interestRate;
 
 		const interest = balance * interestRate;
-		const grossRepayment = repaymentActive
+		const statutoryRepayment = repaymentActive
 			? Math.max(0, salary - threshold) * plan.repaymentRate
 			: 0;
-		const repayment = Math.min(grossRepayment, balance + interest);
+		const repayment = Math.min(
+			statutoryRepayment + overpaymentAnnual,
+			balance + interest,
+		);
 		const endBalance = Math.max(0, balance + interest - repayment);
 
 		const status: StudentLoanYearStatus =
