@@ -1,8 +1,6 @@
 import type { APIRoute } from "astro";
 import { getIndex } from "../../lib/minisearch";
 
-export const prerender = false;
-
 export const GET: APIRoute = async ({ url, request }) => {
 	const query = url.searchParams.get("query");
 
@@ -13,7 +11,7 @@ export const GET: APIRoute = async ({ url, request }) => {
 		});
 	}
 
-	const index = await getIndex("search", request);
+	const index = await getIndex("search", "en-gb", request);
 	const results = index.search(query);
 
 	return new Response(JSON.stringify(results), {

@@ -1,0 +1,45 @@
+---
+import Hero from "@components/Hero.astro";
+import Tools from "@components/parts/Tools.svelte";
+import Layout from "../../layouts/Layout.astro";
+import { sectionEntriesForLocale, urlPathForEntry } from "../../lib/content";
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+
+const sections = await sectionEntriesForLocale(locale);
+---
+<Layout
+  locale={locale}
+  description={t(locale, "homepageDescription")}
+>
+  <Hero locale={locale} />
+
+  <main class="max-w-5xl mx-auto px-4 mt-8">
+    <section class="mt-8 mb-12">
+      <h2 class="text-2xl font-bold my-4">{t(locale, "tools")}</h2>
+
+      <Tools locale={locale} />
+    </section>
+
+    <section class="my-12">
+      <h2 class="text-2xl font-bold my-4">{t(locale, "topics")}</h2>
+
+      <ul class="md:w-4/5">
+        {sections.map(entry => (
+        <li class="border-t">
+          <a class="group py-4 block" href={urlPathForEntry(entry)}>
+            <h3 class="text-xl font-bold text-teal-700 group-hover:text-teal-900 underline mb-2">{entry.data.title}</h3>
+            <p class="text-lg font-medium">{entry.data.description}</p>
+          </a>
+        </li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</Layout>

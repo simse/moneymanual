@@ -1,18 +1,4 @@
 ---
-import PageHeader from "@components/common/PageHeader.astro";
-import ToolsSection from "@components/parts/Tools.svelte";
-import BaseLayout from "../../layouts/Layout.astro";
+import ToolsIndexPage from "@components/page/ToolsIndexPage.astro";
 ---
-<BaseLayout
-  title="Tools and Calculators"
-  description="A collection of useful finance tools and money calculators."
->
-  <PageHeader
-    title="Tools and Calculators"
-    subtitle="A collection of useful finance tools and money calculators."
-  />
-
-  <main class="max-w-5xl mx-auto px-4 mt-8">
-    <ToolsSection />
-  </main>
-</BaseLayout>
+<ToolsIndexPage locale="en-gb" />

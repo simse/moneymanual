@@ -1,7 +1,11 @@
 ---
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+import { localePath } from "../../lib/i18n/urls";
 import Breadcrumbs from "../Breadcrumbs.svelte";
 
 interface Props {
+	locale?: Locale;
 	title: string;
 	subtitle?: string;
 	breadcrumbs?: {
@@ -10,14 +14,19 @@ interface Props {
 	}[];
 }
 
-const { title, subtitle, breadcrumbs = [] } = Astro.props;
+const {
+	locale = DEFAULT_LOCALE,
+	title,
+	subtitle,
+	breadcrumbs = [],
+} = Astro.props;
 ---
 <header class="bg-teal-900 text-white">
   <div class="max-w-5xl mx-auto px-4 pt-4 pb-12">
     <Breadcrumbs links={[
       {
-        text: "Home",
-        href: "/",
+        text: t(locale, "home"),
+        href: localePath(locale),
       },
       ...breadcrumbs,
     ]} appearance="light" />
@@ -27,4 +36,3 @@ const { title, subtitle, breadcrumbs = [] } = Astro.props;
     {subtitle ? <p class="text-xl text-white/90">{subtitle}</p> : null}
   </div>
 </header>
-

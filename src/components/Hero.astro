@@ -1,15 +1,23 @@
 ---
+import { DEFAULT_LOCALE, type Locale } from "../lib/i18n/locales";
+import { t } from "../lib/i18n/strings";
 import Search from "./Search.svelte";
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
 ---
 <header class="text-white bg-teal-900 w-full py-12">
   <div class="max-w-5xl mx-auto px-4">
-    <h1 class="text-3xl font-bold max-w-3xl mb-6">Information about money, finance and the UK economy</h1>
+    <h1 class="text-3xl font-bold max-w-3xl mb-6">{t(locale, "heroHeading")}</h1>
 
-    <p class="text-xl">Free guides to help you save money, manage debt and understand your finances.</p>
+    <p class="text-xl">{t(locale, "heroSubheading")}</p>
 
     <div class="mt-8 pt-8 border-t border-white/50">
-        <p class="text-lg font-bold mb-2">Find a topic</p>
-      <Search client:load/>
+        <p class="text-lg font-bold mb-2">{t(locale, "findATopic")}</p>
+      <Search locale={locale} client:load/>
     </div>
   </div>
 </header>

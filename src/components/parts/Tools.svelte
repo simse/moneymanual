@@ -1,45 +1,39 @@
 <script lang="ts">
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
-import LineChartIcon from "virtual:icons/bx/line-chart";
 import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
+import type { Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+import { localePath } from "../../lib/i18n/urls";
 
-const tools = [
+const { locale }: { locale: Locale } = $props();
+
+const tools = $derived([
 	{
-		name: "Take Home Pay Calculator",
-		description:
-			"Calculate how much you should earn after taxes and other contributions",
-		href: "/tools/take-home-pay",
+		name: t(locale, "toolsTakeHomeName"),
+		description: t(locale, "toolsTakeHomeDescription"),
+		href: localePath(locale, "tools/take-home-pay"),
 		bgColour: "bg-pink-200",
 		iconColour: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: "Savings Growth Calculator",
-		description:
-			"See how your savings will grow with compound interest and regular deposits",
-		href: "/tools/savings-calculator",
+		name: t(locale, "toolsSavingsName"),
+		description: t(locale, "toolsSavingsDescription"),
+		href: localePath(locale, "tools/savings-calculator"),
 		bgColour: "bg-emerald-200",
 		iconColour: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: "Student Loan Repayment Calculator",
-		description: "Find out how long it will take to repay your student loan",
-		href: "/tools/student-loan-repayment",
+		name: t(locale, "toolsStudentLoanName"),
+		description: t(locale, "toolsStudentLoanDescription"),
+		href: localePath(locale, "tools/student-loan-repayment"),
 		bgColour: "bg-blue-200",
 		iconColour: "text-blue-900",
 		icon: SchoolIcon,
 	},
-	//{
-	//  name: 'Investment Calculator',
-	//  description: 'Calculate how much your investments will grow over time',
-	//  href: '/tools/investment-calculator',
-	//  bgColour: 'bg-emerald-200',
-	//  iconColour: 'text-emerald-900',
-	//  icon: LineChartIcon,
-	//},
-];
+]);
 </script>
 <ul class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     {#each tools as tool}

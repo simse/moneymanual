@@ -1,10 +1,17 @@
 <script lang="ts">
 import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
 import SearchIcon from "virtual:icons/bx/search";
+import type { Locale } from "../lib/i18n/locales";
+import { t } from "../lib/i18n/strings";
+import { localePath } from "../lib/i18n/urls";
 
 const {
+	locale,
+	homeHref,
 	topics,
 }: {
+	locale: Locale;
+	homeHref: string;
 	topics: {
 		title: string;
 		description: string;
@@ -12,6 +19,8 @@ const {
 	}[];
 } = $props();
 let isMenuOpen = $state(false);
+
+const searchHref = $derived(localePath(locale, "search"));
 </script>
 
 <nav class="w-full bg-black text-white">
@@ -19,7 +28,7 @@ let isMenuOpen = $state(false);
         <li class="mr-auto">
             <a
                 class="font-bold text-xl hover:border-b-2 active:bg-yellow-400 active:text-black"
-                href="/"
+                href={homeHref}
             >
                 moneymanual<span class="opacity-70">.org.uk</span>
             </a>
@@ -33,12 +42,12 @@ let isMenuOpen = $state(false);
                 }}
                 onclick={() => (isMenuOpen = !isMenuOpen)}
             >
-                Topics <ChevronDownIcon />
+                {t(locale, "topics")} <ChevronDownIcon />
             </button>
         </li>
         <li></li>
         <li class="border-l border-zinc-400 flex items-center">
-            <a class="pl-3 h-full hover:cursor-pointer" href="/search">
+            <a class="pl-3 h-full hover:cursor-pointer" href={searchHref} aria-label={t(locale, "search")}>
                 <SearchIcon class="h-6 w-6" />
             </a>
         </li>

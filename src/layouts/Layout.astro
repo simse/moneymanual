@@ -1,51 +1,71 @@
 ---
-import { getCollection } from "astro:content";
 import "../styles/global.css";
 import Footer from "@components/Footer.svelte";
 import Navbar from "@components/Navbar.svelte";
+import { sectionEntriesForLocale, urlPathForEntry } from "../lib/content";
+import {
+	DEFAULT_LOCALE,
+	htmlLangFor,
+	LOCALES,
+	type Locale,
+} from "../lib/i18n/locales";
+import { t } from "../lib/i18n/strings";
+import { alternateUrlFor, localePath } from "../lib/i18n/urls";
 
 interface Props {
+	locale?: Locale;
 	title?: string;
 	description: string;
 }
 
-const { title, description } = Astro.props;
+const { locale = DEFAULT_LOCALE, title, description } = Astro.props;
 
-const allPages = await getCollection("pages", ({ data }) => {
-	return data.type === "section";
-});
+const sections = await sectionEntriesForLocale(locale);
+const topics = sections.map((entry) => ({
+	title: entry.data.title,
+	href: urlPathForEntry(entry),
+	description: entry.data.description,
+}));
 
-const footerTopics = allPages
-	.slice()
-	.sort((a, b) => (a.data.sortOrderHint ?? 0) - (b.data.sortOrderHint ?? 0))
-	.map((s) => ({ title: s.data.title, href: `/${s.id}` }));
+const currentPath = Astro.url.pathname;
+const alternates = LOCALES.map((code) => ({
+	hreflang: htmlLangFor(code),
+	href: new URL(alternateUrlFor(currentPath, code), Astro.site).href,
+}));
+const defaultHref = new URL(
+	alternateUrlFor(currentPath, DEFAULT_LOCALE),
+	Astro.site,
+).href;
+const pageTitle = title
+	? `${title}${t(locale, "titleSuffix")}`
+	: t(locale, "siteTagline");
 ---
 <!doctype html>
-<html lang="en" class="scroll-pt-4">
+<html lang={htmlLangFor(locale)} class="scroll-pt-4">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
-    <title>{title ? `${title} - MoneyManual.org.uk` : 'Welcome to MoneyManual.org.uk'}</title>
+    <title>{pageTitle}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <meta name="robots" content="noindex" />
     <meta name="description" content={description} />
+    {alternates.map(({ hreflang, href }) => (
+      <link rel="alternate" hreflang={hreflang} href={href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={defaultHref} />
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body class="bg-white text-zinc-950 min-h-svh flex flex-col">
-    <Navbar topics={allPages.map(page => ({
-        title: page.data.title,
-        href: `/${page.id}`,
-        description: page.data.description,
-    }))} client:load />
+    <Navbar locale={locale} homeHref={localePath(locale)} topics={topics} client:load />
 
     <div class="flex-1">
       <slot />
     </div>
 
-    <Footer topics={footerTopics} />
+    <Footer locale={locale} currentPath={currentPath} topics={topics.map(t => ({ title: t.title, href: t.href }))} />
   </body>
 </html>

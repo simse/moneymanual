@@ -2,22 +2,33 @@
 import ArrowRightIcon from "virtual:icons/bx/right-arrow-alt";
 import SearchIcon from "virtual:icons/bx/search";
 import debounce from "lodash/debounce";
+import type { Locale } from "../lib/i18n/locales";
 
 type Suggestion = {
 	phrase: string;
 	matchedTerms: Set<string>;
 };
 
+const {
+	initialValue,
+	locale = "en-gb",
+}: { initialValue?: string; locale?: Locale } = $props();
+
+const localePrefix = $derived(locale === "cy" ? "/cy" : "");
+const autocompleteEndpoint = $derived(
+	`${localePrefix}/api/search-autocomplete`,
+);
+const searchAction = $derived(`${localePrefix}/search`);
+
 let suggestions = $state<Suggestion[]>([]);
 let inputActive = $state(false);
 let showSuggestions = $derived(inputActive || suggestions.length > 0);
-const { initialValue }: { initialValue?: string } = $props();
 let inputValue = $state(initialValue);
 
 const getSuggestions = async (query: string): Promise<Suggestion[]> => {
 	if (!query || query.length < 3) return [];
 
-	const resp = await fetch(`/api/search-autocomplete?query=${query}`);
+	const resp = await fetch(`${autocompleteEndpoint}?query=${query}`);
 	if (!resp.ok) return [];
 
 	const respBody = (await resp.json()) as {
@@ -56,7 +67,7 @@ const handleInput = debounce(
 
 <form
     class="w-fit"
-    action="/search"
+    action={searchAction}
     method="get"
 >
     <div class="flex mb-1">
@@ -79,7 +90,7 @@ const handleInput = debounce(
     <ul class={`w-128 bg-white text-black ${showSuggestions ? 'block' : 'hidden'}`}>
         {#each suggestions as suggestion}
         <li class="hover:bg-zinc-200">
-            <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`/search?query=${suggestion.phrase}`}>
+            <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`${searchAction}?query=${suggestion.phrase}`}>
                 <span>
                 {#each suggestion.phrase.split(' ') as word}
                 {#if suggestion.matchedTerms.has(word.toLowerCase())}
