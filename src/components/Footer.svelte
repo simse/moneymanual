@@ -1,52 +1,52 @@
 <script lang="ts">
-    import SchoolIcon from "virtual:icons/bx/bxs-graduation";
-    import PoundIcon from "virtual:icons/bx/pound";
-    import SavingsIcon from "virtual:icons/material-symbols/savings";
-    import { LOCALES, type Locale, labelFor } from "../lib/i18n/locales";
-    import { t } from "../lib/i18n/strings";
-    import { alternateUrlFor, localePath } from "../lib/i18n/urls";
+import SchoolIcon from "virtual:icons/bx/bxs-graduation";
+import PoundIcon from "virtual:icons/bx/pound";
+import SavingsIcon from "virtual:icons/material-symbols/savings";
+import { LOCALES, type Locale, labelFor } from "../lib/i18n/locales";
+import { t } from "../lib/i18n/strings";
+import { alternateUrlFor, localePath } from "../lib/i18n/urls";
 
-    type Topic = { title: string; href: string };
+type Topic = { title: string; href: string };
 
-    const {
-        locale,
-        currentPath,
-        topics,
-    }: {
-        locale: Locale;
-        currentPath: string;
-        topics: Topic[];
-    } = $props();
+const {
+	locale,
+	currentPath,
+	topics,
+}: {
+	locale: Locale;
+	currentPath: string;
+	topics: Topic[];
+} = $props();
 
-    const tools = $derived([
-        {
-            name: t(locale, "toolsTakeHomeShortName"),
-            href: localePath(locale, "tools/take-home-pay"),
-            bg: "bg-pink-200",
-            fg: "text-pink-900",
-            icon: PoundIcon,
-        },
-        {
-            name: t(locale, "toolsSavingsShortName"),
-            href: localePath(locale, "tools/savings-calculator"),
-            bg: "bg-emerald-200",
-            fg: "text-emerald-900",
-            icon: SavingsIcon,
-        },
-        {
-            name: t(locale, "toolsStudentLoanShortName"),
-            href: localePath(locale, "tools/student-loan-repayment"),
-            bg: "bg-blue-200",
-            fg: "text-blue-900",
-            icon: SchoolIcon,
-        },
-    ]);
+const tools = $derived([
+	{
+		name: t(locale, "toolsTakeHomeShortName"),
+		href: localePath(locale, "tools/take-home-pay"),
+		bg: "bg-pink-200",
+		fg: "text-pink-900",
+		icon: PoundIcon,
+	},
+	{
+		name: t(locale, "toolsSavingsShortName"),
+		href: localePath(locale, "tools/savings-calculator"),
+		bg: "bg-emerald-200",
+		fg: "text-emerald-900",
+		icon: SavingsIcon,
+	},
+	{
+		name: t(locale, "toolsStudentLoanShortName"),
+		href: localePath(locale, "tools/student-loan-repayment"),
+		bg: "bg-blue-200",
+		fg: "text-blue-900",
+		icon: SchoolIcon,
+	},
+]);
 
-    const linkCls =
-        "text-zinc-900 hover:text-teal-800 hover:underline font-medium block py-1";
-    const year = new Date().getFullYear();
-    const searchHref = $derived(localePath(locale, "search"));
-    const toolsHref = $derived(localePath(locale, "tools"));
+const linkCls =
+	"text-zinc-900 hover:text-teal-800 hover:underline font-medium block py-1";
+const year = new Date().getFullYear();
+const searchHref = $derived(localePath(locale, "search"));
+const toolsHref = $derived(localePath(locale, "tools"));
 </script>
 
 <footer class="w-full bg-zinc-100 mt-16 border-t-4 border-teal-700">
