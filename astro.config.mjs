@@ -10,7 +10,7 @@ import favicons from "astro-favicons";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://moneymanual.org.uk",
+  site: process.env.SITE_URL ?? "https://moneymanual.org.uk",
   output: "server",
   i18n: {
     defaultLocale: "en-gb",
