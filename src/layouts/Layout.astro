@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import "../styles/global.css";
-import Footer from "@components/Footer.astro";
+import Footer from "@components/Footer.svelte";
 import Navbar from "@components/Navbar.svelte";
 
 interface Props {
@@ -14,6 +14,11 @@ const { title, description } = Astro.props;
 const allPages = await getCollection("pages", ({ data }) => {
 	return data.type === "section";
 });
+
+const footerTopics = allPages
+	.slice()
+	.sort((a, b) => (a.data.sortOrderHint ?? 0) - (b.data.sortOrderHint ?? 0))
+	.map((s) => ({ title: s.data.title, href: `/${s.id}` }));
 ---
 <!doctype html>
 <html lang="en" class="scroll-pt-4">
@@ -37,14 +42,10 @@ const allPages = await getCollection("pages", ({ data }) => {
         description: page.data.description,
     }))} client:load />
 
-    <div>
+    <div class="flex-1">
       <slot />
     </div>
 
-    <Footer />
-
-    <!-- Cloudflare Web Analytics -->
-    <script is:inline defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "4aeddc400d31497681f3a11c92bc38db"}'></script>
-    <!-- End Cloudflare Web Analytics -->
+    <Footer topics={footerTopics} />
   </body>
 </html>
