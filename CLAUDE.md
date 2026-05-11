@@ -54,6 +54,17 @@ When verifying a change, use the Playwright MCP tools (`mcp__playwright__browser
 
 **Styling.** Tailwind v4 via the `@tailwindcss/vite` plugin; global styles in `src/styles/global.css` register the `typography` and `forms` plugins and set the Archivo font. There is no `tailwind.config` — theme tokens go in `@theme` blocks in CSS.
 
+**Localisation.** URL-prefix routing via Astro's `i18n` config (`astro.config.mjs`). Supported locales live in `src/lib/i18n/locales.ts` as `LOCALES = ["en-gb", "cy", "sco"]`; `en-gb` is the default and has no prefix, others use `/cy/...` and `/sco/...`. Adding a locale is a five-step change:
+1. Append to `LOCALES` and add entries to the `HTML_LANG` / `LABEL` maps in `locales.ts`.
+2. Append to `i18n.locales` and the sitemap `i18n.locales` map in `astro.config.mjs`.
+3. Add a dictionary entry in `src/lib/i18n/strings.ts` (every locale must implement the full `Strings` type — TypeScript will tell you if you miss a key).
+4. Mirror the existing per-locale route tree under `src/pages/{locale}/` (`index.astro`, `[...slug].astro`, `search.astro`, `api/search*.ts`, `tools/*.astro`) — each file is a 3-line wrapper around a shared page component (`src/components/page/*.astro`) that takes `locale` as a prop. Also create `src/pages/index/{locale}/{search,autocomplete}.json.ts` and add `search-{locale}` / `autocomplete-{locale}` entries to `indexMap` in `src/lib/minisearch.ts`.
+5. Mirror MDX content under `content/articles/{topic}/{locale}/*.mdx`. If a translation isn't ready, copy the en-gb file and prepend a "translation pending" blockquote — every path must exist in every locale (otherwise the language switcher dead-ends).
+
+**Translating strings.** All UI strings go through `t(locale, key)` from `src/lib/i18n/strings.ts`. Hrefs use `localePath(locale, "rest/of/path")` — never hand-build `/cy/...` URLs. Inside Svelte components, any top-level array/object that calls `t(locale, ...)` must be wrapped in `$derived(...)` — a bare `const` only captures the initial value and Svelte 5 will warn (`state_referenced_locally`).
+
+**Tool state across locales.** The three calculator tools persist their state via `Astro.session?.get/set` (see `src/pages/api/calculator-state/[key].ts` and `src/lib/session-state.svelte.ts`). The session is cookie-bound, not URL-bound, so the same inputs follow the user across `/tools/...`, `/cy/tools/...`, `/sco/tools/...` automatically — don't add locale to the session key.
+
 ## Conventions
 
 - **TypeScript strict, no `any`.** `tsconfig.json` extends `astro/tsconfigs/strict`. Path alias: `@components/*` → `src/components/*`.
