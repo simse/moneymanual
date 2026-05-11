@@ -5,12 +5,11 @@ import cloudflare from "@astrojs/cloudflare";
 import svelte from "@astrojs/svelte";
 import mdx from "@astrojs/mdx";
 import Icons from "unplugin-icons/vite";
-import sitemap from "@astrojs/sitemap";
 import favicons from "astro-favicons";
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL ?? "https://moneymanual.org.uk",
+  site: import.meta.env.SITE_URL ?? "https://moneymanual.org.uk",
   output: "server",
   i18n: {
     defaultLocale: "en-gb",
@@ -21,17 +20,7 @@ export default defineConfig({
       fallbackType: "redirect",
     },
   },
-  integrations: [
-    svelte(),
-    mdx(),
-    sitemap({
-      i18n: {
-        defaultLocale: "en-gb",
-        locales: { "en-gb": "en-GB", cy: "cy", sco: "sco" },
-      },
-    }),
-    favicons(),
-  ],
+  integrations: [svelte(), mdx(), favicons()],
   compressHTML: true,
   devToolbar: { enabled: false },
   vite: {

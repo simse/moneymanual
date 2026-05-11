@@ -17,9 +17,6 @@ importers:
       '@astrojs/mdx':
         specifier: 5.0.4
         version: 5.0.4(astro@6.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.3)(yaml@2.8.4))
-      '@astrojs/sitemap':
-        specifier: 3.7.2
-        version: 3.7.2
       '@astrojs/svelte':
         specifier: 8.1.0
         version: 8.1.0(@types/node@25.6.2)(astro@6.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.3)(yaml@2.8.4))(jiti@2.7.0)(lightningcss@1.32.0)(svelte@5.55.5)(typescript@6.0.3)(yaml@2.8.4)
@@ -41,6 +38,9 @@ importers:
       minisearch:
         specifier: 7.2.0
         version: 7.2.0
+      sitemap:
+        specifier: 9.0.1
+        version: 9.0.1
       svelte:
         specifier: 5.55.5
         version: 5.55.5
@@ -135,9 +135,6 @@ packages:
   '@astrojs/prism@4.0.1':
     resolution: {integrity: sha512-nksZQVjlferuWzhPsBpQ1JE5XuKAf1id1/9Hj4a9KG4+ofrlzxUUwX4YGQF/SuDiuiGKEnzopGOt38F3AnVWsQ==}
     engines: {node: '>=22.12.0'}
-
-  '@astrojs/sitemap@3.7.2':
-    resolution: {integrity: sha512-PqkzkcZTb5ICiyIR8VoKbIAP/laNRXi5tw616N1Ckk+40oNB8Can1AzVV56lrbC5GKSZFCyJYUVYqVivMisvpA==}
 
   '@astrojs/svelte@8.1.0':
     resolution: {integrity: sha512-yZrHRFOxDJeo2hr9rGAMou6/6OL3agEaUCvWNWrea8YhZultsERTYZthfKNC58onAtZs76xNklOYV+G2Dp10kw==}
@@ -2491,9 +2488,6 @@ packages:
   std-env@4.1.0:
     resolution: {integrity: sha512-Rq7ybcX2RuC55r9oaPVEW7/xu3tj8u4GeBYHBWCychFtzMIr86A7e3PPEBPT37sHStKX3+TiX/Fr/ACmJLVlLQ==}
 
-  stream-replace-string@2.0.0:
-    resolution: {integrity: sha512-TlnjJ1C0QrmxRNrON00JvaFFlNh5TTG00APw23j74ET7gkQpTASi6/L2fuiav8pzK715HXtUeClpBTw2NPSn6w==}
-
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
     engines: {node: '>=8'}
@@ -3144,12 +3138,6 @@ snapshots:
   '@astrojs/prism@4.0.1':
     dependencies:
       prismjs: 1.30.0
-
-  '@astrojs/sitemap@3.7.2':
-    dependencies:
-      sitemap: 9.0.1
-      stream-replace-string: 2.0.0
-      zod: 4.4.3
 
   '@astrojs/svelte@8.1.0(@types/node@25.6.2)(astro@6.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.3)(yaml@2.8.4))(jiti@2.7.0)(lightningcss@1.32.0)(svelte@5.55.5)(typescript@6.0.3)(yaml@2.8.4)':
     dependencies:
@@ -5756,8 +5744,6 @@ snapshots:
   stackback@0.0.2: {}
 
   std-env@4.1.0: {}
-
-  stream-replace-string@2.0.0: {}
 
   string-width@4.2.3:
     dependencies:
