@@ -14,6 +14,7 @@ export default defineConfig({
   output: "static",
   integrations: [svelte(), mdx(), sitemap(), favicons()],
   compressHTML: true,
+  devToolbar: { enabled: false },
   vite: {
     plugins: [
       tailwindcss(),

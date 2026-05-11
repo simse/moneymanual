@@ -1,0 +1,90 @@
+<script lang="ts">
+import SchoolIcon from "virtual:icons/bx/bxs-graduation";
+import PoundIcon from "virtual:icons/bx/pound";
+import SavingsIcon from "virtual:icons/material-symbols/savings";
+
+type Topic = { title: string; href: string };
+
+const { topics }: { topics: Topic[] } = $props();
+
+const tools = [
+	{
+		name: "Take-home pay",
+		href: "/tools/take-home-pay",
+		bg: "bg-pink-200",
+		fg: "text-pink-900",
+		icon: PoundIcon,
+	},
+	{
+		name: "Savings growth",
+		href: "/tools/savings-calculator",
+		bg: "bg-emerald-200",
+		fg: "text-emerald-900",
+		icon: SavingsIcon,
+	},
+	{
+		name: "Student loan",
+		href: "/tools/student-loan-repayment",
+		bg: "bg-blue-200",
+		fg: "text-blue-900",
+		icon: SchoolIcon,
+	},
+];
+
+const linkCls =
+	"text-zinc-900 hover:text-teal-800 hover:underline font-medium block py-1";
+const year = new Date().getFullYear();
+</script>
+
+<footer class="w-full bg-zinc-100 mt-16 border-t-4 border-teal-700">
+	<div class="max-w-5xl mx-auto px-4 py-12">
+		<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+			<div class="md:col-span-4">
+				<p class="font-bold text-xl mb-2">
+					moneymanual<span class="opacity-60">.org.uk</span>
+				</p>
+				<p class="text-zinc-700 font-medium mb-4">
+					Free, plain-English guides to money, finance and the UK economy.
+				</p>
+				<ul class="text-sm">
+					<li><a href="/search" class={linkCls}>Search the site</a></li>
+					<li><a href="/sitemap-index.xml" class={linkCls}>Sitemap</a></li>
+				</ul>
+			</div>
+			<div class="md:col-span-3">
+				<h4 class="font-bold text-zinc-900 mb-3">Topics</h4>
+				<ul>
+					{#each topics as topic}
+						<li><a href={topic.href} class={linkCls}>{topic.title}</a></li>
+					{/each}
+				</ul>
+			</div>
+			<div class="md:col-span-5">
+				<div class="flex items-baseline justify-between mb-3">
+					<h4 class="font-bold text-zinc-900">Tools</h4>
+					<a href="/tools" class="text-teal-700 hover:text-teal-900 underline font-medium text-sm">
+						See all →
+					</a>
+				</div>
+				<ul class="flex flex-col gap-3">
+					{#each tools as tool}
+						<li>
+							<a href={tool.href} class="flex gap-3 group items-center">
+								<div class={`w-10 h-10 shrink-0 flex items-center justify-center ${tool.bg}`}>
+									<tool.icon class={`h-5 w-5 ${tool.fg}`} />
+								</div>
+								<span class="text-zinc-900 group-hover:text-teal-800 group-hover:underline font-bold">
+									{tool.name}
+								</span>
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		</div>
+		<div class="border-t border-zinc-300 mt-10 pt-5 flex flex-wrap gap-x-6 gap-y-1 text-sm text-zinc-700">
+			<p>© {year} MoneyManual.org.uk</p>
+			<p>Information only — not financial advice.</p>
+		</div>
+	</div>
+</footer>

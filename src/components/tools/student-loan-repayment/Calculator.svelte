@@ -46,6 +46,9 @@ let salaryGrowthPercent = $state<number | null>(
 	initial?.salaryGrowthPercent ?? 5,
 );
 let inflationPercent = $state<number | null>(initial?.inflationPercent ?? 3);
+let monthlyOverpayment = $state<number | null>(
+	initial?.monthlyOverpayment ?? null,
+);
 
 persistSessionState("student-loan-repayment", () => ({
 	currentBalance,
@@ -54,19 +57,39 @@ persistSessionState("student-loan-repayment", () => ({
 	currentSalary,
 	salaryGrowthPercent,
 	inflationPercent,
+	monthlyOverpayment,
 }));
 
+const sharedInputs = $derived({
+	currentBalance: currentBalance ?? 0,
+	currentSalary: currentSalary ?? 0,
+	yearGraduated: yearGraduated ?? currentYear,
+	plan,
+	salaryGrowthPercent: salaryGrowthPercent ?? 0,
+	inflationPercent: inflationPercent ?? 0,
+	currentYear,
+});
+
+const baselineResult = $derived(
+	computeStudentLoanRepayment({ ...sharedInputs, monthlyOverpayment: 0 }),
+);
 const result = $derived(
 	computeStudentLoanRepayment({
-		currentBalance: currentBalance ?? 0,
-		currentSalary: currentSalary ?? 0,
-		yearGraduated: yearGraduated ?? currentYear,
-		plan,
-		salaryGrowthPercent: salaryGrowthPercent ?? 0,
-		inflationPercent: inflationPercent ?? 0,
-		currentYear,
+		...sharedInputs,
+		monthlyOverpayment: monthlyOverpayment ?? 0,
 	}),
 );
+const isOverpaying = $derived((monthlyOverpayment ?? 0) > 0);
+
+const moneySaved = $derived(baselineResult.totalRepaid - result.totalRepaid);
+const yearsBaseline = $derived(
+	baselineResult.yearsUntilCleared ?? STUDENT_LOAN_PLANS[plan].writeOffYears,
+);
+const yearsWith = $derived(
+	result.yearsUntilCleared ?? STUDENT_LOAN_PLANS[plan].writeOffYears,
+);
+const yearsSaved = $derived(yearsBaseline - yearsWith);
+const overpayingCostsMore = $derived(isOverpaying && moneySaved < 0);
 
 const hasResult = $derived(result.yearlyBreakdown.length > 0);
 const repaymentShare = $derived(
@@ -194,6 +217,25 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
         </div>
       </div>
 
+      <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-2">Monthly overpayment <span class="text-base font-normal text-zinc-600">(optional)</span></h2>
+        <p class="text-base text-zinc-700 mb-3">
+          Voluntary extra payment you'll make each month on top of the statutory deduction. You can make voluntary repayments directly to the Student Loans Company at any time.
+        </p>
+        <div class="flex items-stretch gap-2">
+          <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">£</span>
+          <input
+            type="number"
+            aria-label="Monthly overpayment in pounds"
+            class="text-xl border-2 border-black outline-yellow-400 block w-full"
+            placeholder="For example: 100"
+            min="0"
+            step="10"
+            bind:value={monthlyOverpayment}
+          >
+        </div>
+      </div>
+
       <p class="text-sm text-zinc-600">
         Estimates based on current plan thresholds and rates. Plan 2 interest scales with income between £29,385 and £52,485. Real-world thresholds and rates can change each April.
       </p>
@@ -202,17 +244,53 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
 
   <aside class="md:col-span-2 md:sticky md:top-4 md:self-start">
     {#if hasResult}
-      <div class="bg-teal-900 text-white p-4" data-testid="outcome-card">
-        {#if result.writtenOff}
-          <strong>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} years</strong>
-          <p class="text-3xl font-bold" data-testid="written-off-amount">{formatPounds(result.writtenOffAmount)}</p>
-          <p>forgiven in {result.writeOffCalendarYear}</p>
-        {:else}
-          <strong>Paid off in {result.yearsUntilCleared} year{result.yearsUntilCleared === 1 ? "" : "s"}</strong>
-          <p class="text-3xl font-bold" data-testid="total-repaid">{formatPounds(result.totalRepaid)}</p>
-          <p>total paid back</p>
+      {#if isOverpaying}
+        <div class="bg-zinc-200 text-zinc-900 p-4" data-testid="baseline-card">
+          <strong>Without overpayment</strong>
+          {#if baselineResult.writtenOff}
+            <p class="text-2xl font-bold" data-testid="baseline-amount">{formatPoundsExact(baselineResult.totalRepaid)} paid</p>
+            <p>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} years, {formatPoundsExact(baselineResult.writtenOffAmount)} forgiven in {baselineResult.writeOffCalendarYear}</p>
+          {:else}
+            <p class="text-2xl font-bold" data-testid="baseline-amount">{formatPoundsExact(baselineResult.totalRepaid)} paid</p>
+            <p>Paid off in {baselineResult.yearsUntilCleared} year{baselineResult.yearsUntilCleared === 1 ? "" : "s"}</p>
+          {/if}
+        </div>
+        <div class="bg-teal-900 text-white p-4 mt-2" data-testid="with-overpayment-card">
+          <strong>With overpayment</strong>
+          {#if result.writtenOff}
+            <p class="text-2xl font-bold" data-testid="with-amount">{formatPoundsExact(result.totalRepaid)} paid</p>
+            <p>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} years, {formatPoundsExact(result.writtenOffAmount)} forgiven in {result.writeOffCalendarYear}</p>
+          {:else}
+            <p class="text-2xl font-bold" data-testid="with-amount">{formatPoundsExact(result.totalRepaid)} paid</p>
+            <p>Paid off in {result.yearsUntilCleared} year{result.yearsUntilCleared === 1 ? "" : "s"}</p>
+          {/if}
+        </div>
+        {#if overpayingCostsMore}
+          <div class="bg-amber-100 border-2 border-amber-400 p-3 mt-2 text-base" data-testid="overpay-warning">
+            Overpaying costs you <strong>{formatPounds(-moneySaved)}</strong> more — without it, your loan would have been written off in {baselineResult.writeOffCalendarYear}.
+          </div>
+        {:else if moneySaved > 0}
+          <p class="mt-2 text-lg" data-testid="savings-summary">
+            You save <strong>{yearsSaved} year{yearsSaved === 1 ? "" : "s"}</strong> and <strong>{formatPounds(moneySaved)}</strong>.
+          </p>
+        {:else if yearsSaved > 0}
+          <p class="mt-2 text-lg" data-testid="savings-summary">
+            You save <strong>{yearsSaved} year{yearsSaved === 1 ? "" : "s"}</strong>.
+          </p>
         {/if}
-      </div>
+      {:else}
+        <div class="bg-teal-900 text-white p-4" data-testid="outcome-card">
+          {#if result.writtenOff}
+            <strong>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} years</strong>
+            <p class="text-3xl font-bold" data-testid="written-off-amount">{formatPounds(result.writtenOffAmount)}</p>
+            <p>forgiven in {result.writeOffCalendarYear}</p>
+          {:else}
+            <strong>Paid off in {result.yearsUntilCleared} year{result.yearsUntilCleared === 1 ? "" : "s"}</strong>
+            <p class="text-3xl font-bold" data-testid="total-repaid">{formatPounds(result.totalRepaid)}</p>
+            <p>total paid back</p>
+          {/if}
+        </div>
+      {/if}
 
       <div class="mt-4 border-2 border-black">
         <div class="flex h-3 w-full" aria-hidden="true">

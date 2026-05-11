@@ -30,6 +30,7 @@ export const studentLoanRepaymentStateSchema = z.object({
 	currentSalary: nullableNumber,
 	salaryGrowthPercent: nullableNumber,
 	inflationPercent: nullableNumber,
+	monthlyOverpayment: nullableNumber,
 });
 
 export const calculatorStateSchemas = {

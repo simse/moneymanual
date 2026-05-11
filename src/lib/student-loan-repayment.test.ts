@@ -2,6 +2,7 @@ import {
 	computeStudentLoanRepayment,
 	STUDENT_LOAN_PLANS,
 	type StudentLoanInput,
+	type StudentLoanResult,
 } from "./student-loan-repayment";
 
 const baseInput: StudentLoanInput = {
@@ -12,6 +13,7 @@ const baseInput: StudentLoanInput = {
 	salaryGrowthPercent: 5,
 	inflationPercent: 3,
 	currentYear: 2026,
+	monthlyOverpayment: 0,
 };
 
 describe("computeStudentLoanRepayment", () => {
@@ -293,5 +295,201 @@ describe("computeStudentLoanRepayment", () => {
 		expect(result.writeOffCalendarYear).toBe(writeOffYear);
 		const lastRow = result.yearlyBreakdown[result.yearlyBreakdown.length - 1];
 		expect(lastRow.calendarYear).toBe(writeOffYear - 1);
+	});
+
+	describe("overpayment", () => {
+		it("produces the same result with monthlyOverpayment 0 as without (regression guard)", () => {
+			const withZero = computeStudentLoanRepayment({
+				...baseInput,
+				monthlyOverpayment: 0,
+			});
+			const explicit = computeStudentLoanRepayment(baseInput);
+
+			expect(withZero).toEqual(explicit);
+		});
+
+		it("shortens yearsUntilCleared", () => {
+			const without = computeStudentLoanRepayment({
+				...baseInput,
+				plan: "plan1",
+				currentBalance: 20000,
+				currentSalary: 45000,
+				salaryGrowthPercent: 0,
+				inflationPercent: 0,
+			});
+			const withOverpayment = computeStudentLoanRepayment({
+				...baseInput,
+				plan: "plan1",
+				currentBalance: 20000,
+				currentSalary: 45000,
+				salaryGrowthPercent: 0,
+				inflationPercent: 0,
+				monthlyOverpayment: 200,
+			});
+
+			const withoutYears = without.yearsUntilCleared;
+			const withYears = withOverpayment.yearsUntilCleared;
+			expect(withoutYears).not.toBeNull();
+			expect(withYears).not.toBeNull();
+			expect(withYears as number).toBeLessThan(withoutYears as number);
+		});
+
+		it("reduces total interest accrued", () => {
+			const without = computeStudentLoanRepayment({
+				...baseInput,
+				plan: "plan2",
+				currentBalance: 30000,
+				currentSalary: 45000,
+			});
+			const withOverpayment = computeStudentLoanRepayment({
+				...baseInput,
+				plan: "plan2",
+				currentBalance: 30000,
+				currentSalary: 45000,
+				monthlyOverpayment: 150,
+			});
+
+			expect(withOverpayment.totalInterest).toBeLessThan(without.totalInterest);
+		});
+
+		it("never repays more than the outstanding balance plus interest, even with a large overpayment", () => {
+			const result = computeStudentLoanRepayment({
+				...baseInput,
+				plan: "plan1",
+				currentBalance: 5000,
+				currentSalary: 40000,
+				salaryGrowthPercent: 0,
+				inflationPercent: 0,
+				monthlyOverpayment: 5000,
+			});
+
+			const lastRow = result.yearlyBreakdown[result.yearlyBreakdown.length - 1];
+			expect(lastRow.endBalance).toBe(0);
+			expect(lastRow.repayment).toBeLessThanOrEqual(
+				lastRow.startBalance + lastRow.interest + 1e-6,
+			);
+			expect(result.totalRepaid).toBeLessThanOrEqual(
+				result.totalInterest + 5000 + 1e-6,
+			);
+		});
+
+		it("clamps a negative monthlyOverpayment to zero", () => {
+			const negative = computeStudentLoanRepayment({
+				...baseInput,
+				monthlyOverpayment: -200,
+			});
+			const zero = computeStudentLoanRepayment({
+				...baseInput,
+				monthlyOverpayment: 0,
+			});
+
+			expect(negative).toEqual(zero);
+		});
+
+		it("can clear a loan that would otherwise be written off", () => {
+			const inputs = {
+				...baseInput,
+				plan: "plan5" as const,
+				currentBalance: 50000,
+				currentSalary: 26000,
+				yearGraduated: 2024,
+				currentYear: 2026,
+				salaryGrowthPercent: 2,
+				inflationPercent: 3,
+			};
+
+			const withoutOverpayment = computeStudentLoanRepayment(inputs);
+			expect(withoutOverpayment.writtenOff).toBe(true);
+
+			const withOverpayment = computeStudentLoanRepayment({
+				...inputs,
+				monthlyOverpayment: 400,
+			});
+			expect(withOverpayment.writtenOff).toBe(false);
+			const clearedYears = withOverpayment.yearsUntilCleared;
+			expect(clearedYears).not.toBeNull();
+			expect(clearedYears as number).toBeGreaterThan(0);
+		});
+	});
+
+	describe("snapshots", () => {
+		const round = (n: number) => Math.round(n * 100) / 100;
+		const snapshot = (r: StudentLoanResult) => ({
+			...r,
+			totalRepaid: round(r.totalRepaid),
+			totalInterest: round(r.totalInterest),
+			writtenOffAmount: round(r.writtenOffAmount),
+			yearlyBreakdown: r.yearlyBreakdown.map((row) => ({
+				...row,
+				startBalance: round(row.startBalance),
+				salary: round(row.salary),
+				threshold: round(row.threshold),
+				interestRate: Math.round(row.interestRate * 10000) / 10000,
+				interest: round(row.interest),
+				repayment: round(row.repayment),
+				endBalance: round(row.endBalance),
+			})),
+		});
+
+		it("Plan 2 mid-career graduate clearing the loan", () => {
+			const result = computeStudentLoanRepayment({
+				plan: "plan2",
+				currentBalance: 30000,
+				currentSalary: 45000,
+				yearGraduated: 2020,
+				currentYear: 2026,
+				salaryGrowthPercent: 5,
+				inflationPercent: 3,
+				monthlyOverpayment: 0,
+			});
+
+			expect(snapshot(result)).toMatchSnapshot();
+		});
+
+		it("Plan 5 low earner getting written off", () => {
+			const result = computeStudentLoanRepayment({
+				plan: "plan5",
+				currentBalance: 50000,
+				currentSalary: 26000,
+				yearGraduated: 2024,
+				currentYear: 2026,
+				salaryGrowthPercent: 2,
+				inflationPercent: 3,
+				monthlyOverpayment: 0,
+			});
+
+			expect(snapshot(result)).toMatchSnapshot();
+		});
+
+		it("Plan 1 fast payoff with overpayment", () => {
+			const result = computeStudentLoanRepayment({
+				plan: "plan1",
+				currentBalance: 15000,
+				currentSalary: 50000,
+				yearGraduated: 2020,
+				currentYear: 2026,
+				salaryGrowthPercent: 0,
+				inflationPercent: 0,
+				monthlyOverpayment: 150,
+			});
+
+			expect(snapshot(result)).toMatchSnapshot();
+		});
+
+		it("Postgrad with overpayment that prevents write-off", () => {
+			const result = computeStudentLoanRepayment({
+				plan: "postgrad",
+				currentBalance: 25000,
+				currentSalary: 30000,
+				yearGraduated: 2020,
+				currentYear: 2026,
+				salaryGrowthPercent: 0,
+				inflationPercent: 0,
+				monthlyOverpayment: 200,
+			});
+
+			expect(result.writtenOff).toBe(false);
+			expect(snapshot(result)).toMatchSnapshot();
+		});
 	});
 });
