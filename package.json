@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
+    "deploy:preview": "CLOUDFLARE_ENV=preview astro build && wrangler versions upload --env preview",
     "deploy:staging": "CLOUDFLARE_ENV=staging astro build && wrangler deploy",
     "deploy:prod": "CLOUDFLARE_ENV=prod astro build && wrangler deploy",
     "lint": "biome check .",

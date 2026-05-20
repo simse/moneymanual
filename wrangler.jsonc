@@ -21,6 +21,20 @@
 		},
 	},
 	"env": {
+		"preview": {
+			"name": "money-manual-preview",
+			"workers_dev": true,
+			"preview_urls": true,
+			"kv_namespaces": [
+				{
+					"binding": "SESSION",
+					"id": "776e836c1afe4d9caa81a93780ef716e",
+				},
+			],
+			"images": {
+				"binding": "IMAGES",
+			},
+		},
 		"staging": {
 			"name": "money-manual-staging",
 			"routes": [
