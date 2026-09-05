@@ -7,7 +7,11 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["src/**/*.{ts,astro,svelte}", "!src/styles/global.css"]
+		"includes": [
+			"src/**/*.{ts,astro,svelte}",
+			"scripts/**/*.ts",
+			"!src/styles/global.css"
+		]
 	},
 	"formatter": {
 		"enabled": true,

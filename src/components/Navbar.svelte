@@ -1,26 +1,26 @@
 <script lang="ts">
-    import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
-    import SearchIcon from "virtual:icons/bx/search";
-    import type { Locale } from "../lib/i18n/locales";
-    import { t } from "../lib/i18n/strings";
-    import { localePath } from "../lib/i18n/urls";
+import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
+import SearchIcon from "virtual:icons/bx/search";
+import type { Locale } from "../lib/i18n/locales";
+import { t } from "../lib/i18n/strings";
+import { localePath } from "../lib/i18n/urls";
 
-    const {
-        locale,
-        homeHref,
-        topics,
-    }: {
-        locale: Locale;
-        homeHref: string;
-        topics: {
-            title: string;
-            description: string;
-            href: string;
-        }[];
-    } = $props();
-    let isMenuOpen = $state(false);
+const {
+	locale,
+	homeHref,
+	topics,
+}: {
+	locale: Locale;
+	homeHref: string;
+	topics: {
+		title: string;
+		description: string;
+		href: string;
+	}[];
+} = $props();
+let isMenuOpen = $state(false);
 
-    const searchHref = $derived(localePath(locale, "search"));
+const searchHref = $derived(localePath(locale, "search"));
 </script>
 
 <nav class="w-full bg-black text-white">

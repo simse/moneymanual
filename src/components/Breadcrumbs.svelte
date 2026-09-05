@@ -1,15 +1,15 @@
 <script lang="ts">
-    import ChevronIcon from "~icons/bx/chevron-right";
+import ChevronIcon from "~icons/bx/chevron-right";
 
-    interface Props {
-        links: {
-            href?: string;
-            text: string;
-        }[];
-        appearance?: "light" | "dark";
-    }
+interface Props {
+	links: {
+		href?: string;
+		text: string;
+	}[];
+	appearance?: "light" | "dark";
+}
 
-    const { links, appearance = "dark" }: Props = $props();
+const { links, appearance = "dark" }: Props = $props();
 </script>
 
 <nav class={appearance === "dark" ? "text-black" : "text-white"}>

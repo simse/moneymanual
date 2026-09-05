@@ -23,7 +23,7 @@ type Strings = {
 	footerTagline: string;
 	notFinancialAdvice: string;
 	copyright: (year: number) => string;
-	resultsFound: (count: number, query: string) => string;
+	resultsFound: (count: number, query: string, queryTimeMs?: number) => string;
 	resultsNone: (query: string) => string;
 	notFoundTitle: string;
 	notFoundHeading: string;
@@ -253,7 +253,8 @@ const enGb: Strings = {
 		"Free, plain-English guides to money, finance and the UK economy.",
 	notFinancialAdvice: "Information only — not financial advice.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) => `Found ${count} results for "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Found ${count} results for "${query}"${queryTimeMs === undefined ? "" : ` in ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `No results found for "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Page not found",
@@ -512,8 +513,8 @@ const cy: Strings = {
 		"Canllawiau am ddim, mewn iaith glir, i arian, cyllid ac economi'r DU.",
 	notFinancialAdvice: "Gwybodaeth yn unig — nid cyngor ariannol.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) =>
-		`Wedi dod o hyd i ${count} canlyniad ar gyfer "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Wedi dod o hyd i ${count} canlyniad ar gyfer "${query}"${queryTimeMs === undefined ? "" : ` mewn ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `Dim canlyniadau ar gyfer "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Heb ddod o hyd i'r dudalen",
@@ -773,7 +774,8 @@ const sco: Strings = {
 		"Free, plain-spoken guides tae siller, finance an the UK economy.",
 	notFinancialAdvice: "Information ainly — no financial advice.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) => `Fund ${count} results for "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Fund ${count} results for "${query}"${queryTimeMs === undefined ? "" : ` in ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `Nae results fund for "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Page no fund",
