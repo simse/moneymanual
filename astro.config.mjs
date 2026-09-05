@@ -35,7 +35,7 @@ export default defineConfig({
     },
     ssr: {
       optimizeDeps: {
-        exclude: ["astro-favicons"],
+        exclude: ["astro-favicons", "@astrojs/svelte/server.js"],
       },
     },
   },

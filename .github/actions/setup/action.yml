@@ -1,13 +1,10 @@
 name: Setup toolchain
-description: Install pnpm and node via setup-toolchain, then run pnpm install with the locked dependencies.
+description: Install pnpm and node.
 
 runs:
   using: composite
   steps:
-    - uses: moonrepo/setup-toolchain@v0
+    - uses: pnpm/setup@v2
       with:
-        auto-install: true
-
-    - name: Install dependencies
-      shell: bash
-      run: pnpm install --frozen-lockfile
+        cache: true
+        install: true

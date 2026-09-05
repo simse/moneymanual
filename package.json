@@ -7,7 +7,6 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check",
     "astro": "astro",
     "deploy:staging": "CLOUDFLARE_ENV=staging astro build && wrangler deploy",
     "deploy:prod": "CLOUDFLARE_ENV=prod astro build && wrangler deploy",
@@ -15,30 +14,26 @@
     "format": "biome check --write .",
     "test": "vitest run",
     "test:unit": "vitest run",
-    "test:unit:watch": "vitest",
-    "test:e2e": "playwright test --ui",
-    "test:e2e:headless": "playwright test"
+    "test:unit:watch": "vitest"
   },
   "dependencies": {
-    "@astrojs/check": "0.9.9",
-    "@astrojs/cloudflare": "13.5.0",
-    "@astrojs/mdx": "5.0.4",
-    "@astrojs/svelte": "8.1.0",
+    "@astrojs/cloudflare": "14.3.0",
+    "@astrojs/mdx": "8.0.0",
+    "@astrojs/svelte": "9.0.1",
     "@saving-tool/hmrc-income-tax": "3.0.1",
-    "@tailwindcss/vite": "4.3.0",
-    "astro": "6.3.1",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.1",
     "astro-favicons": "3.1.6",
     "lodash": "4.18.1",
     "minisearch": "7.2.0",
     "sitemap": "9.0.1",
-    "svelte": "5.55.5",
-    "tailwindcss": "4.3.0",
-    "typescript": "6.0.3"
+    "svelte": "5.57.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "7.0.2"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.15",
     "@iconify/json": "2.2.471",
-    "@playwright/test": "1.59.1",
     "@tailwindcss/forms": "0.5.11",
     "@tailwindcss/typography": "0.5.19",
     "@types/lodash": "4.17.24",
@@ -48,9 +43,17 @@
     "remark-parse": "11.0.0",
     "unified": "11.0.5",
     "unplugin-icons": "23.0.1",
-    "vite": "7.3.3",
-    "vitest": "4.1.5",
-    "wrangler": "4.90.0",
+    "vite": "8.2.2",
+    "vitest": "5.0.0",
+    "wrangler": "4.129.0",
     "yaml": "2.8.4"
+  },
+  "packageManager": "pnpm@12.3.3",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "26.8.1",
+      "onFail": "download"
+    }
   }
 }
