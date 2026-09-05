@@ -47,6 +47,7 @@ const linkCls =
 const year = new Date().getFullYear();
 const searchHref = $derived(localePath(locale, "search"));
 const toolsHref = $derived(localePath(locale, "tools"));
+const glossaryHref = $derived(localePath(locale, "glossary"));
 </script>
 
 <footer class="w-full bg-zinc-100 mt-16 border-t-4 border-teal-700">
@@ -66,8 +67,8 @@ const toolsHref = $derived(localePath(locale, "tools"));
                         >
                     </li>
                     <li>
-                        <a href="/sitemap-index.xml" class={linkCls}
-                            >{t(locale, "sitemap")}</a
+                        <a href={glossaryHref} class={linkCls}
+                            >{t(locale, "glossaryFooterLink")}</a
                         >
                     </li>
                 </ul>

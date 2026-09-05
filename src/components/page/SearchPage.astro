@@ -1,10 +1,10 @@
 ---
 import SearchForm from "@components/Search.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { getPageEntry, parseEntryId, urlPathForEntry } from "../../lib/content";
 import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
 import { t } from "../../lib/i18n/strings";
-import { getIndex } from "../../lib/minisearch";
+import { search } from "../../lib/search";
+import type { SearchResult } from "../../lib/search-results";
 
 interface Props {
 	locale?: Locale;
@@ -13,47 +13,18 @@ interface Props {
 const { locale = DEFAULT_LOCALE } = Astro.props;
 const query = Astro.url.searchParams.get("query");
 
-type SearchHit = {
-	id: string;
-	score: number;
-	title: string;
-	description: string;
-};
-
-const hits: SearchHit[] = [];
+let results: SearchResult[] = [];
+let queryTimeMs: number | undefined;
 
 if (query) {
 	try {
-		const index = await getIndex("search", locale, Astro.request);
-		hits.push(
-			...(index.search(query, {
-				filter: (result) => result.score > 5,
-			}) as unknown as SearchHit[]),
-		);
+		const response = await search(query, locale, Astro.request);
+		results = response.results;
+		queryTimeMs = response.queryTimeMs;
 	} catch (err) {
-		console.error("Search index failed to load:", err);
+		console.error("Search failed:", err);
 	}
 }
-
-const resultsWithUrls = await Promise.all(
-	hits.map(async (hit) => {
-		const parsed = parseEntryId(hit.id);
-		if (!parsed) return null;
-		const entry = await getPageEntry(
-			parsed.locale,
-			parsed.isSection ? parsed.topic : `${parsed.topic}/${parsed.rest}`,
-		);
-		if (!entry) return null;
-		return {
-			href: urlPathForEntry(entry),
-			title: hit.title,
-			description: hit.description,
-		};
-	}),
-);
-const results = resultsWithUrls.filter(
-	(r): r is { href: string; title: string; description: string } => r !== null,
-);
 ---
 <Layout locale={locale} title={query ? `${query} - ${t(locale, "search")}` : t(locale, "search")} description={t(locale, "searchPageHeading")}>
     <header class="bg-teal-900 text-white">
@@ -66,12 +37,12 @@ const results = resultsWithUrls.filter(
 
     <main class="mx-auto max-w-5xl px-4 mt-4">
         {query ? (
-            <p class="my-8 font-medium text-zinc-700">{t(locale, "resultsFound")(results.length, query)}</p>
+            <p class="my-8 font-medium text-zinc-700">{t(locale, "resultsFound")(results.length, query, queryTimeMs)}</p>
 
             <ul>
                 {results.map(result => (
                     <li class="border-b border-gray-400 max-w-160 group">
-                        <a class="py-4 block" href={result.href}>
+                        <a class="py-4 block" href={result.url}>
                             <h2 class="text-xl font-bold mb-2 underline text-teal-600 group-hover:text-teal-800 group-active:bg-yellow-400 group-active:text-black w-fit">
                                 {result.title}
                             </h2>

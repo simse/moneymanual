@@ -23,13 +23,27 @@ type Strings = {
 	footerTagline: string;
 	notFinancialAdvice: string;
 	copyright: (year: number) => string;
-	resultsFound: (count: number, query: string) => string;
+	resultsFound: (count: number, query: string, queryTimeMs?: number) => string;
 	resultsNone: (query: string) => string;
 	notFoundTitle: string;
 	notFoundHeading: string;
 	notFoundBody: string;
 	notFoundHomeLink: string;
 	languageSwitcherLabel: string;
+
+	glossaryHeading: string;
+	glossarySubheading: string;
+	glossaryDescription: string;
+	glossaryFooterLink: string;
+	glossaryFilterPlaceholder: string;
+	glossaryBreadcrumb: string;
+	glossaryTermCount: (count: number) => string;
+	glossarySeeAlso: string;
+	glossaryBrowseByTopic: string;
+	glossaryJumpToLetter: string;
+	glossaryTopicCount: (count: number) => string;
+	glossaryRecentlyAdded: string;
+	glossaryRecentlyAddedBadge: string;
 
 	// Tool index + footer entries (long name + short name + description)
 	toolsTakeHomeName: string;
@@ -239,13 +253,30 @@ const enGb: Strings = {
 		"Free, plain-English guides to money, finance and the UK economy.",
 	notFinancialAdvice: "Information only — not financial advice.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) => `Found ${count} results for "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Found ${count} results for "${query}"${queryTimeMs === undefined ? "" : ` in ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `No results found for "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Page not found",
 	notFoundBody: "We couldn't find the page you were looking for.",
 	notFoundHomeLink: "Back to home",
 	languageSwitcherLabel: "Language",
+
+	glossaryHeading: "Glossary of finance terms",
+	glossarySubheading:
+		"Plain-English definitions of the money words you'll come across — from AER to Yield. Pick a term from the list, or browse by topic.",
+	glossaryDescription:
+		"A plain-English glossary of common money, finance and economy terms, browsable by topic.",
+	glossaryFooterLink: "Glossary",
+	glossaryFilterPlaceholder: "Filter terms…",
+	glossaryBreadcrumb: "Glossary",
+	glossaryTermCount: (count) => `${count} term${count === 1 ? "" : "s"}`,
+	glossarySeeAlso: "See also",
+	glossaryBrowseByTopic: "Browse by topic",
+	glossaryJumpToLetter: "Jump to a letter",
+	glossaryTopicCount: (count) => `${count} term${count === 1 ? "" : "s"}`,
+	glossaryRecentlyAdded: "Recently added",
+	glossaryRecentlyAddedBadge: "NEW",
 
 	toolsTakeHomeName: "Take Home Pay Calculator",
 	toolsTakeHomeShortName: "Take-home pay",
@@ -482,14 +513,30 @@ const cy: Strings = {
 		"Canllawiau am ddim, mewn iaith glir, i arian, cyllid ac economi'r DU.",
 	notFinancialAdvice: "Gwybodaeth yn unig — nid cyngor ariannol.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) =>
-		`Wedi dod o hyd i ${count} canlyniad ar gyfer "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Wedi dod o hyd i ${count} canlyniad ar gyfer "${query}"${queryTimeMs === undefined ? "" : ` mewn ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `Dim canlyniadau ar gyfer "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Heb ddod o hyd i'r dudalen",
 	notFoundBody: "Ni allwn ddod o hyd i'r dudalen yr oeddech yn chwilio amdani.",
 	notFoundHomeLink: "Yn ôl i'r hafan",
 	languageSwitcherLabel: "Iaith",
+
+	glossaryHeading: "Geirfa termau cyllid",
+	glossarySubheading:
+		"Diffiniadau iaith glir o'r geiriau arian y dewch ar eu traws — o AER i Gynnyrch. Dewiswch derm o'r rhestr, neu porwch yn ôl pwnc.",
+	glossaryDescription:
+		"Geirfa iaith glir o dermau arian, cyllid ac economi cyffredin, y gallwch bori drwyddi yn ôl pwnc.",
+	glossaryFooterLink: "Geirfa",
+	glossaryFilterPlaceholder: "Hidlo termau…",
+	glossaryBreadcrumb: "Geirfa",
+	glossaryTermCount: (count) => `${count} ${count === 1 ? "term" : "term"}`,
+	glossarySeeAlso: "Gweler hefyd",
+	glossaryBrowseByTopic: "Pori yn ôl pwnc",
+	glossaryJumpToLetter: "Neidio i lythyren",
+	glossaryTopicCount: (count) => `${count} ${count === 1 ? "term" : "term"}`,
+	glossaryRecentlyAdded: "Wedi ychwanegu'n ddiweddar",
+	glossaryRecentlyAddedBadge: "NEWYDD",
 
 	toolsTakeHomeName: "Cyfrifiannell Cyflog Net",
 	toolsTakeHomeShortName: "Cyflog net",
@@ -727,13 +774,30 @@ const sco: Strings = {
 		"Free, plain-spoken guides tae siller, finance an the UK economy.",
 	notFinancialAdvice: "Information ainly — no financial advice.",
 	copyright: (year) => `© ${year} MoneyManual.org.uk`,
-	resultsFound: (count, query) => `Fund ${count} results for "${query}"`,
+	resultsFound: (count, query, queryTimeMs) =>
+		`Fund ${count} results for "${query}"${queryTimeMs === undefined ? "" : ` in ${queryTimeMs} ms`}`,
 	resultsNone: (query) => `Nae results fund for "${query}".`,
 	notFoundTitle: "404",
 	notFoundHeading: "Page no fund",
 	notFoundBody: "We couldna find the page ye wis luikin for.",
 	notFoundHomeLink: "Back tae hame",
 	languageSwitcherLabel: "Leid",
+
+	glossaryHeading: "Glossary o siller terms",
+	glossarySubheading:
+		"Plain-spoken definitions o the siller wirds ye'll come across — fae AER tae Yield. Pick a term fae the leet, or hunt by subjeck.",
+	glossaryDescription:
+		"A plain-spoken glossary o common siller, finance an economy terms, browsable by subjeck.",
+	glossaryFooterLink: "Glossary",
+	glossaryFilterPlaceholder: "Filter terms…",
+	glossaryBreadcrumb: "Glossary",
+	glossaryTermCount: (count) => `${count} term${count === 1 ? "" : "s"}`,
+	glossarySeeAlso: "See an aw",
+	glossaryBrowseByTopic: "Hunt by subjeck",
+	glossaryJumpToLetter: "Lowp tae a letter",
+	glossaryTopicCount: (count) => `${count} term${count === 1 ? "" : "s"}`,
+	glossaryRecentlyAdded: "Newly addit",
+	glossaryRecentlyAddedBadge: "NEW",
 
 	toolsTakeHomeName: "Tak-Hame Pey Calculator",
 	toolsTakeHomeShortName: "Tak-hame pey",

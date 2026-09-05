@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
+    "search:sync": "node scripts/search-sync.ts",
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
@@ -42,9 +43,14 @@
     "@tailwindcss/typography": "0.5.19",
     "@types/lodash": "4.17.24",
     "@types/node": "25.6.2",
+    "remark-gfm": "4.0.1",
+    "remark-mdx": "3.1.1",
+    "remark-parse": "11.0.0",
+    "unified": "11.0.5",
     "unplugin-icons": "23.0.1",
     "vite": "7.3.3",
     "vitest": "4.1.5",
-    "wrangler": "4.90.0"
+    "wrangler": "4.90.0",
+    "yaml": "2.8.4"
   }
 }

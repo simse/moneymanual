@@ -3,6 +3,8 @@ import ArrowRightIcon from "virtual:icons/bx/right-arrow-alt";
 import SearchIcon from "virtual:icons/bx/search";
 import debounce from "lodash/debounce";
 import type { Locale } from "../lib/i18n/locales";
+import { localePath } from "../lib/i18n/urls";
+import type { AutocompleteResult, SearchResponse } from "../lib/search-results";
 
 type Suggestion = {
 	phrase: string;
@@ -14,11 +16,10 @@ const {
 	locale = "en-gb",
 }: { initialValue?: string; locale?: Locale } = $props();
 
-const localePrefix = $derived(locale === "cy" ? "/cy" : "");
 const autocompleteEndpoint = $derived(
-	`${localePrefix}/api/search-autocomplete`,
+	localePath(locale, "api/search-autocomplete"),
 );
-const searchAction = $derived(`${localePrefix}/search`);
+const searchAction = $derived(localePath(locale, "search"));
 
 let suggestions = $state<Suggestion[]>([]);
 let inputActive = $state(false);
@@ -28,19 +29,16 @@ let inputValue = $state(initialValue);
 const getSuggestions = async (query: string): Promise<Suggestion[]> => {
 	if (!query || query.length < 3) return [];
 
-	const resp = await fetch(`${autocompleteEndpoint}?query=${query}`);
+	const resp = await fetch(
+		`${autocompleteEndpoint}?${new URLSearchParams({ query })}`,
+	);
 	if (!resp.ok) return [];
 
-	const respBody = (await resp.json()) as {
-		id: string;
-		score: number;
-		phrase: string;
-		terms: string[];
-	}[];
+	const respBody = (await resp.json()) as SearchResponse<AutocompleteResult>;
 
-	return respBody.map((result) => ({
+	return respBody.results.map((result) => ({
 		phrase: result.phrase,
-		matchedTerms: new Set(result.terms),
+		matchedTerms: new Set(result.matchedTerms),
 	}));
 };
 
@@ -90,7 +88,7 @@ const handleInput = debounce(
     <ul class={`w-128 bg-white text-black ${showSuggestions ? 'block' : 'hidden'}`}>
         {#each suggestions as suggestion}
         <li class="hover:bg-zinc-200">
-            <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`${searchAction}?query=${suggestion.phrase}`}>
+            <a class="p-4 text-lg block hover:underline hover:cursor-pointer flex items-center" href={`${searchAction}?${new URLSearchParams({ query: suggestion.phrase })}`}>
                 <span>
                 {#each suggestion.phrase.split(' ') as word}
                 {#if suggestion.matchedTerms.has(word.toLowerCase())}

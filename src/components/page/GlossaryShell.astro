@@ -1,0 +1,74 @@
+---
+import Breadcrumbs from "@components/Breadcrumbs.svelte";
+import GlossaryTermList from "@components/glossary/GlossaryTermList.svelte";
+import type { GlossaryTermEntry } from "../../lib/content";
+import { glossaryTermSlug } from "../../lib/content";
+import type { TopicId } from "../../lib/glossary-topics";
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+import { localePath } from "../../lib/i18n/urls";
+
+interface Props {
+	locale?: Locale;
+	terms: GlossaryTermEntry[];
+	selectedSlug?: string;
+	breadcrumbTerm?: string;
+}
+
+const {
+	locale = DEFAULT_LOCALE,
+	terms,
+	selectedSlug,
+	breadcrumbTerm,
+} = Astro.props;
+
+const summaries = terms.map((entry) => {
+	const slug = glossaryTermSlug(entry);
+	return {
+		slug,
+		term: entry.data.term,
+		short: entry.data.short,
+		topic: entry.data.topic as TopicId,
+		href: localePath(locale, `glossary/${slug}`),
+	};
+});
+
+const glossaryHref = localePath(locale, "glossary");
+const homeHref = localePath(locale);
+
+const breadcrumbs: { text: string; href?: string }[] = [
+	{ text: t(locale, "home"), href: homeHref },
+	{ text: t(locale, "glossaryBreadcrumb"), href: glossaryHref },
+];
+if (breadcrumbTerm) {
+	breadcrumbs.push({
+		text: breadcrumbTerm,
+	});
+}
+---
+
+<header
+    class="max-w-5xl mx-auto px-4 pt-4 pb-2 border-t-8 border-teal-700 flex items-baseline gap-4"
+>
+    <Breadcrumbs links={breadcrumbs} />
+    <span class="ml-auto text-sm text-zinc-500 font-medium">
+        {t(locale, "glossaryTermCount")(terms.length)}
+    </span>
+</header>
+
+<main
+    class="max-w-5xl mx-auto px-4 py-8 grid grid-cols-1 md:grid-cols-12 gap-8"
+>
+    <aside class="md:col-span-4">
+        <GlossaryTermList
+            client:load
+            terms={summaries}
+            selectedSlug={selectedSlug}
+            filterPlaceholder={t(locale, "glossaryFilterPlaceholder")}
+        />
+    </aside>
+
+    <div class="md:col-span-8">
+        <slot />
+    </div>
+</main>

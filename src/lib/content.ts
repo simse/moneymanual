@@ -3,6 +3,7 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from "./i18n/locales";
 import { localePath } from "./i18n/urls";
 
 export type PageEntry = CollectionEntry<"pages">;
+export type GlossaryTermEntry = CollectionEntry<"glossary">;
 
 export type ParsedEntryId = {
 	topic: string;
@@ -91,6 +92,40 @@ export const entriesForLocale = async (
 		return parsed !== null && parsed.locale === locale;
 	});
 };
+
+export const glossaryTermSlug = (entry: GlossaryTermEntry): string => {
+	const [, ...rest] = entry.id.split("/");
+	return rest.join("/");
+};
+
+export const glossaryTermsForLocale = async (
+	locale: Locale,
+): Promise<GlossaryTermEntry[]> => {
+	const all = await getCollection("glossary", (entry) => {
+		const [entryLocale] = entry.id.split("/");
+		return isLocale(entryLocale) && entryLocale === locale;
+	});
+	all.sort((a, b) =>
+		a.data.term.localeCompare(b.data.term, locale, { sensitivity: "base" }),
+	);
+	return all;
+};
+
+export const glossaryTermBySlug = async (
+	locale: Locale,
+	slug: string,
+): Promise<GlossaryTermEntry | undefined> => {
+	return getEntry("glossary", `${locale}/${slug}`);
+};
+
+export const relatedGlossaryTerms = (
+	all: GlossaryTermEntry[],
+	entry: GlossaryTermEntry,
+	limit = 3,
+): GlossaryTermEntry[] =>
+	all
+		.filter((t) => t.data.topic === entry.data.topic && t.id !== entry.id)
+		.slice(0, limit);
 
 export const sectionTopicFromSlug = (urlSlug?: string): string => {
 	const cleaned = (urlSlug ?? "").replace(/^\/+/, "");

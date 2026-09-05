@@ -38,16 +38,21 @@ const searchHref = $derived(localePath(locale, "search"));
             <button
                 class={{
                     "font-bold border-b-2 border-transparent hover:border-white uppercase flex items-center gap-1 p-4 hover:cursor-pointer": true,
-                    "bg-white text-emerald-800": isMenuOpen,
+                    "bg-zinc-100 text-emerald-800": isMenuOpen,
                 }}
                 onclick={() => (isMenuOpen = !isMenuOpen)}
             >
-                {t(locale, "topics")} <ChevronDownIcon />
+                {t(locale, "topics")}
+                <ChevronDownIcon />
             </button>
         </li>
         <li></li>
         <li class="border-l border-zinc-400 flex items-center">
-            <a class="pl-3 h-full hover:cursor-pointer" href={searchHref} aria-label={t(locale, "search")}>
+            <a
+                class="pl-3 h-full hover:cursor-pointer"
+                href={searchHref}
+                aria-label={t(locale, "search")}
+            >
                 <SearchIcon class="h-6 w-6" />
             </a>
         </li>
@@ -56,7 +61,7 @@ const searchHref = $derived(localePath(locale, "search"));
 
 <div
     class={{
-        "w-full bg-white": true,
+        "w-full bg-zinc-100": true,
         block: isMenuOpen,
         hidden: !isMenuOpen,
     }}
