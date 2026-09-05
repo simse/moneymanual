@@ -40,32 +40,46 @@ const pageTitle = title
 	? `${title}${t(locale, "titleSuffix")}`
 	: t(locale, "siteTagline");
 ---
+
 <!doctype html>
 <html lang={htmlLangFor(locale)} class="scroll-pt-4">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-    <title>{pageTitle}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <meta name="robots" content="noindex" />
-    <meta name="description" content={description} />
-    {alternates.map(({ hreflang, href }) => (
-      <link rel="alternate" hreflang={hreflang} href={href} />
-    ))}
-    <link rel="alternate" hreflang="x-default" href={defaultHref} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-  </head>
-  <body class="bg-white text-zinc-950 min-h-svh flex flex-col">
-    <Navbar locale={locale} homeHref={localePath(locale)} topics={topics} client:load />
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{pageTitle}</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap"
+            rel="stylesheet"
+        />
+        <meta name="description" content={description} />
+        {
+            alternates.map(({ hreflang, href }) => (
+                <link rel="alternate" hreflang={hreflang} href={href} />
+            ))
+        }
+        <link rel="alternate" hreflang="x-default" href={defaultHref} />
+        <link rel="sitemap" href="/sitemap-index.xml" />
+    </head>
+    <body class="bg-white text-zinc-950 min-h-svh flex flex-col">
+        <Navbar
+            locale={locale}
+            homeHref={localePath(locale)}
+            topics={topics}
+            client:load
+        />
 
-    <div class="flex-1">
-      <slot />
-    </div>
+        <div class="flex-1">
+            <slot />
+        </div>
 
-    <Footer locale={locale} currentPath={currentPath} topics={topics.map(t => ({ title: t.title, href: t.href }))} />
-  </body>
+        <Footer
+            locale={locale}
+            currentPath={currentPath}
+            topics={topics.map((t) => ({ title: t.title, href: t.href }))}
+        />
+    </body>
 </html>
