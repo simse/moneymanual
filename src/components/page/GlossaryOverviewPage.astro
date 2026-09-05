@@ -1,0 +1,168 @@
+---
+import GlossaryShell from "@components/page/GlossaryShell.astro";
+import Layout from "../../layouts/Layout.astro";
+import { glossaryTermSlug, glossaryTermsForLocale } from "../../lib/content";
+import { TOPICS } from "../../lib/glossary-topics";
+import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
+import { t } from "../../lib/i18n/strings";
+import { localePath } from "../../lib/i18n/urls";
+
+interface Props {
+	locale?: Locale;
+}
+
+const { locale = DEFAULT_LOCALE } = Astro.props;
+
+const terms = await glossaryTermsForLocale(locale);
+
+const topicSummaries = TOPICS.map((topic) => ({
+	id: topic.id,
+	name: topic.name,
+	tone: topic.tone,
+	count: terms.filter((t) => t.data.topic === topic.id).length,
+})).filter((t) => t.count > 0);
+
+const recent = [...terms]
+	.sort(
+		(a, b) =>
+			b.data.lastChangedDate.getTime() - a.data.lastChangedDate.getTime(),
+	)
+	.slice(0, 4);
+
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const activeLetters = new Set(terms.map((t) => t.data.term[0].toUpperCase()));
+
+const firstSlugByLetter = new Map<string, string>();
+for (const entry of terms) {
+	const letter = entry.data.term[0].toUpperCase();
+	if (!firstSlugByLetter.has(letter)) {
+		firstSlugByLetter.set(letter, glossaryTermSlug(entry));
+	}
+}
+
+const linkForLetter = (letter: string): string | undefined => {
+	const slug = firstSlugByLetter.get(letter);
+	return slug ? localePath(locale, `glossary/${slug}`) : undefined;
+};
+---
+
+<Layout
+	locale={locale}
+	title={t(locale, "glossaryHeading")}
+	description={t(locale, "glossaryDescription")}
+>
+	<GlossaryShell locale={locale} terms={terms}>
+		<section>
+			<p
+				class="uppercase text-xs tracking-widest font-bold text-teal-700 mb-2"
+			>
+				{t(locale, "glossaryBreadcrumb")}
+			</p>
+			<h1 class="text-4xl font-bold mb-3">
+				{t(locale, "glossaryHeading")}
+			</h1>
+			<p
+				class="text-xl text-zinc-700 font-medium leading-relaxed mb-8 max-w-2xl"
+			>
+				{t(locale, "glossarySubheading")}
+			</p>
+
+			{
+				topicSummaries.length > 0 && (
+					<>
+						<h2 class="font-bold uppercase text-xs tracking-widest text-zinc-500 mb-3">
+							{t(locale, "glossaryBrowseByTopic")}
+						</h2>
+						<ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+							{topicSummaries.map((topic) => (
+								<li>
+									<a
+										href={`#topic-${topic.id}`}
+										class={`flex items-center gap-3 p-3 border ${topic.tone.border} ${topic.tone.soft} hover:border-teal-700`}
+									>
+										<span
+											class={`w-2.5 h-2.5 rounded-full ${topic.tone.dot}`}
+										/>
+										<span class={`font-bold ${topic.tone.fg} flex-1`}>
+											{topic.name}
+										</span>
+										<span class="text-zinc-700 text-sm font-medium">
+											{t(locale, "glossaryTopicCount")(topic.count)}
+										</span>
+										<span class="text-zinc-500" aria-hidden="true">
+											→
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</>
+				)
+			}
+
+			{
+				recent.length > 0 && (
+					<>
+						<h2 class="font-bold uppercase text-xs tracking-widest text-zinc-500 mb-3">
+							{t(locale, "glossaryRecentlyAdded")}
+						</h2>
+						<ul class="space-y-3 mb-10">
+							{recent.map((entry) => {
+								const slug = glossaryTermSlug(entry);
+								return (
+									<li>
+										<a
+											href={localePath(locale, `glossary/${slug}`)}
+											class="flex items-baseline gap-3 group"
+										>
+											<span class="text-xs uppercase tracking-widest font-bold text-zinc-400 w-12">
+												{t(locale, "glossaryRecentlyAddedBadge")}
+											</span>
+											<div>
+												<p class="font-bold text-zinc-900 group-hover:text-teal-800 group-hover:underline">
+													{entry.data.term}
+												</p>
+											</div>
+										</a>
+									</li>
+								);
+							})}
+						</ul>
+					</>
+				)
+			}
+
+			<h2
+				class="font-bold uppercase text-xs tracking-widest text-zinc-500 mb-3"
+			>
+				{t(locale, "glossaryJumpToLetter")}
+			</h2>
+			<div class="flex flex-wrap gap-1">
+				{
+					ALPHABET.map((letter) => {
+						const has = activeLetters.has(letter);
+						const href = has ? linkForLetter(letter) : undefined;
+						const className = has
+							? "text-teal-800 hover:bg-teal-700 hover:text-white border border-zinc-300"
+							: "text-zinc-300 border border-zinc-100 cursor-not-allowed";
+						return href ? (
+							<a
+								href={href}
+								class={`w-9 h-9 flex items-center justify-center font-bold ${className}`}
+							>
+								{letter}
+							</a>
+						) : (
+							<span
+								aria-hidden="true"
+								class={`w-9 h-9 flex items-center justify-center font-bold ${className}`}
+							>
+								{letter}
+							</span>
+						);
+					})
+				}
+			</div>
+		</section>
+	</GlossaryShell>
+</Layout>

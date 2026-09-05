@@ -3,6 +3,8 @@ import type { APIRoute } from "astro";
 import { SitemapStream, streamToPromise } from "sitemap";
 import {
 	entriesForLocale,
+	glossaryTermSlug,
+	glossaryTermsForLocale,
 	parseEntryId,
 	urlPathForEntry,
 } from "src/lib/content";
@@ -19,6 +21,7 @@ const STATIC_PATHS = [
 	"tools/savings-calculator",
 	"tools/student-loan-repayment",
 	"tools/take-home-pay",
+	"glossary",
 ];
 
 type SitemapItem = {
@@ -63,6 +66,18 @@ export const GET: APIRoute = async () => {
 			url: urlPathForEntry(entry),
 			lastmod: entry.data.lastChangedDate.toISOString(),
 			changefreq: "weekly",
+			links: alternateLinksFor(logical),
+		});
+	}
+
+	const glossaryTerms = await glossaryTermsForLocale(DEFAULT_LOCALE);
+	for (const entry of glossaryTerms) {
+		const slug = glossaryTermSlug(entry);
+		const logical = `glossary/${slug}`;
+		items.push({
+			url: localePath(DEFAULT_LOCALE, logical),
+			lastmod: entry.data.lastChangedDate.toISOString(),
+			changefreq: "monthly",
 			links: alternateLinksFor(logical),
 		});
 	}

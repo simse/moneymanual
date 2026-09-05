@@ -1,0 +1,31 @@
+---
+interface Props {
+	label?: string;
+	tone?: "teal" | "yellow" | "zinc";
+}
+
+const { label, tone = "teal" } = Astro.props;
+
+const TONES = {
+	teal: { border: "border-teal-700", label: "text-teal-700" },
+	yellow: { border: "border-yellow-500", label: "text-yellow-700" },
+	zinc: { border: "border-zinc-700", label: "text-zinc-700" },
+} as const;
+
+const { border, label: labelColor } = TONES[tone];
+---
+
+<aside class={`border-l-4 ${border} bg-zinc-100 p-4 my-6`}>
+	{
+		label && (
+			<p
+				class={`font-bold uppercase text-xs tracking-widest ${labelColor} mb-2`}
+			>
+				{label}
+			</p>
+		)
+	}
+	<div class="text-zinc-800 font-medium">
+		<slot />
+	</div>
+</aside>

@@ -1,26 +1,26 @@
 <script lang="ts">
-import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
-import SearchIcon from "virtual:icons/bx/search";
-import type { Locale } from "../lib/i18n/locales";
-import { t } from "../lib/i18n/strings";
-import { localePath } from "../lib/i18n/urls";
+    import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
+    import SearchIcon from "virtual:icons/bx/search";
+    import type { Locale } from "../lib/i18n/locales";
+    import { t } from "../lib/i18n/strings";
+    import { localePath } from "../lib/i18n/urls";
 
-const {
-	locale,
-	homeHref,
-	topics,
-}: {
-	locale: Locale;
-	homeHref: string;
-	topics: {
-		title: string;
-		description: string;
-		href: string;
-	}[];
-} = $props();
-let isMenuOpen = $state(false);
+    const {
+        locale,
+        homeHref,
+        topics,
+    }: {
+        locale: Locale;
+        homeHref: string;
+        topics: {
+            title: string;
+            description: string;
+            href: string;
+        }[];
+    } = $props();
+    let isMenuOpen = $state(false);
 
-const searchHref = $derived(localePath(locale, "search"));
+    const searchHref = $derived(localePath(locale, "search"));
 </script>
 
 <nav class="w-full bg-black text-white">
@@ -38,16 +38,21 @@ const searchHref = $derived(localePath(locale, "search"));
             <button
                 class={{
                     "font-bold border-b-2 border-transparent hover:border-white uppercase flex items-center gap-1 p-4 hover:cursor-pointer": true,
-                    "bg-white text-emerald-800": isMenuOpen,
+                    "bg-zinc-100 text-emerald-800": isMenuOpen,
                 }}
                 onclick={() => (isMenuOpen = !isMenuOpen)}
             >
-                {t(locale, "topics")} <ChevronDownIcon />
+                {t(locale, "topics")}
+                <ChevronDownIcon />
             </button>
         </li>
         <li></li>
         <li class="border-l border-zinc-400 flex items-center">
-            <a class="pl-3 h-full hover:cursor-pointer" href={searchHref} aria-label={t(locale, "search")}>
+            <a
+                class="pl-3 h-full hover:cursor-pointer"
+                href={searchHref}
+                aria-label={t(locale, "search")}
+            >
                 <SearchIcon class="h-6 w-6" />
             </a>
         </li>
@@ -56,7 +61,7 @@ const searchHref = $derived(localePath(locale, "search"));
 
 <div
     class={{
-        "w-full bg-white": true,
+        "w-full bg-zinc-100": true,
         block: isMenuOpen,
         hidden: !isMenuOpen,
     }}
