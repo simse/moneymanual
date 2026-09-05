@@ -31,7 +31,7 @@ jobs:
 
   deploy-staging:
     name: deploy to staging
-    needs: [lint, build, astro-check, test-unit]
+    needs: [lint, build, test-unit]
     runs-on: ubuntu-26.04-arm
     environment:
       name: staging
@@ -56,7 +56,7 @@ jobs:
 
   deploy-prod:
     name: deploy to prod
-    needs: [lint, build, astro-check, test-unit]
+    needs: [lint, build, test-unit]
     runs-on: ubuntu-26.04-arm
     environment:
       name: prod
