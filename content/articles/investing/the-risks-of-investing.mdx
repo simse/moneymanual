@@ -14,6 +14,8 @@ searchPhrases:
   - inflation and savings
 ---
 
+import LineChart from "@components/content/LineChart.svelte";
+
 Investing can help your money grow, but you could get back less than you put in. Understanding the risks helps you decide how much to invest and where to put it.
 
 Spreading your investments and allowing time can reduce some risks. They cannot guarantee a profit. Keeping money in cash has a different risk: rising prices can reduce what your savings buy.
@@ -90,16 +92,68 @@ The government sets the [Bank of England an inflation target of 2%](/inflation/w
 
 ### How inflation changes what £10,000 can buy
 
-This example assumes prices rise by 2% every year for 10 years. It compares no interest with 2% annual interest, kept in the account. It ignores tax and assumes no deposits or withdrawals. These are illustrations, not historical rates or forecasts.
+Real value shows what £10,000 earning no interest can buy, expressed in 2016 pounds. Potential value shows the balance with interest earned at average one-year fixed cash ISA rates.
 
-| After 10 years                | No interest | 2% annual interest |
-| ----------------------------- | ----------- | ------------------ |
-| Account balance               | £10,000     | £12,190            |
-| Buying power in today's money | £8,203      | £10,000            |
+The potential value is not adjusted for inflation. The gap between these lines is therefore not a comparison of real returns.
 
-Figures are rounded to the nearest pound. Prices rise by about 22% over the decade because each year's increase builds on the last.
-
-Without interest, your balance stays the same but buys less. With interest matching inflation, your balance grows enough to preserve its buying power.
+<LineChart
+  title="Inflation reduces what cash savings can buy"
+  subtitle="Buying power and potential cash ISA balance, UK, 2016 to 2026"
+  description="The buying power of £10,000 falls to £7,036.23. The potential cash ISA balance rises to £12,737.87, before adjusting for inflation."
+  source="Money Manual calculations."
+  yDomain={[0, 14000]}
+  yTicks={[0, 2000, 4000, 6000, 8000, 10000, 12000, 14000]}
+  xTicks={[2016, 2018, 2020, 2022, 2024, 2026]}
+  formatY={(value) =>
+    new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      maximumFractionDigits: 0,
+    }).format(value)
+  }
+  formatValue={(value) =>
+    new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)
+  }
+  series={[
+    {
+      label: "Real value",
+      points: [
+        { x: 2016, y: 10000.0 },
+        { x: 2017, y: 9743.84 },
+        { x: 2018, y: 9508.55 },
+        { x: 2019, y: 9316.53 },
+        { x: 2020, y: 9220.61 },
+        { x: 2021, y: 9036.27 },
+        { x: 2022, y: 8207.26 },
+        { x: 2023, y: 7682.75 },
+        { x: 2024, y: 7514.83 },
+        { x: 2025, y: 7237.67 },
+        { x: 2026, y: 7036.23 },
+      ],
+    },
+    {
+      label: "Potential value",
+      points: [
+        { x: 2016, y: 10106.0 },
+        { x: 2017, y: 10115.8 },
+        { x: 2018, y: 10251.35 },
+        { x: 2019, y: 10377.45 },
+        { x: 2020, y: 10435.56 },
+        { x: 2021, y: 10465.82 },
+        { x: 2022, y: 10654.21 },
+        { x: 2023, y: 11187.98 },
+        { x: 2024, y: 11701.51 },
+        { x: 2025, y: 12166.06 },
+        { x: 2026, y: 12737.87 },
+      ],
+    },
+  ]}
+/>
 
 Investments offer a chance to grow faster than inflation over time. They can also fall short, so inflation alone is not a reason to invest all your savings.
 
