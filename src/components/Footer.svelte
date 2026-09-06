@@ -2,40 +2,34 @@
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
 import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
-import { LOCALES, type Locale, labelFor } from "../lib/i18n/locales";
-import { t } from "../lib/i18n/strings";
-import { alternateUrlFor, localePath } from "../lib/i18n/urls";
+import { copy } from "../lib/copy";
 
 type Topic = { title: string; href: string };
 
 const {
-	locale,
-	currentPath,
 	topics,
 }: {
-	locale: Locale;
-	currentPath: string;
 	topics: Topic[];
 } = $props();
 
 const tools = $derived([
 	{
-		name: t(locale, "toolsTakeHomeShortName"),
-		href: localePath(locale, "tools/take-home-pay"),
+		name: copy.toolsTakeHomeShortName,
+		href: "/tools/take-home-pay",
 		bg: "bg-pink-200",
 		fg: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: t(locale, "toolsSavingsShortName"),
-		href: localePath(locale, "tools/savings-calculator"),
+		name: copy.toolsSavingsShortName,
+		href: "/tools/savings-calculator",
 		bg: "bg-emerald-200",
 		fg: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: t(locale, "toolsStudentLoanShortName"),
-		href: localePath(locale, "tools/student-loan-repayment"),
+		name: copy.toolsStudentLoanShortName,
+		href: "/tools/student-loan-repayment",
 		bg: "bg-blue-200",
 		fg: "text-blue-900",
 		icon: SchoolIcon,
@@ -44,10 +38,11 @@ const tools = $derived([
 
 const linkCls =
 	"text-zinc-900 hover:text-teal-800 hover:underline font-medium block py-1";
+
 const year = new Date().getFullYear();
-const searchHref = $derived(localePath(locale, "search"));
-const toolsHref = $derived(localePath(locale, "tools"));
-const glossaryHref = $derived(localePath(locale, "glossary"));
+const searchHref = "/search";
+const toolsHref = "/tools";
+const glossaryHref = "/glossary";
 </script>
 
 <footer class="w-full bg-zinc-100 mt-16 border-t-4 border-teal-700">
@@ -58,24 +53,24 @@ const glossaryHref = $derived(localePath(locale, "glossary"));
                     moneymanual<span class="opacity-60">.org.uk</span>
                 </p>
                 <p class="text-zinc-700 font-medium mb-4">
-                    {t(locale, "footerTagline")}
+                    {copy.footerTagline}
                 </p>
                 <ul class="text-sm">
                     <li>
                         <a href={searchHref} class={linkCls}
-                            >{t(locale, "searchTheSite")}</a
+                            >{copy.searchTheSite}</a
                         >
                     </li>
                     <li>
                         <a href={glossaryHref} class={linkCls}
-                            >{t(locale, "glossaryFooterLink")}</a
+                            >{copy.glossaryFooterLink}</a
                         >
                     </li>
                 </ul>
             </div>
             <div class="md:col-span-3">
                 <h4 class="font-bold text-zinc-900 mb-3">
-                    {t(locale, "topics")}
+                    {copy.topics}
                 </h4>
                 <ul>
                     {#each topics as topic}
@@ -90,13 +85,13 @@ const glossaryHref = $derived(localePath(locale, "glossary"));
             <div class="md:col-span-5">
                 <div class="flex items-baseline justify-between mb-3">
                     <h4 class="font-bold text-zinc-900">
-                        {t(locale, "tools")}
+                        {copy.tools}
                     </h4>
                     <a
                         href={toolsHref}
                         class="text-teal-700 hover:text-teal-900 underline font-medium text-sm"
                     >
-                        {t(locale, "seeAll")}
+                        {copy.seeAll}
                     </a>
                 </div>
                 <ul class="flex flex-col gap-3">
@@ -122,21 +117,11 @@ const glossaryHref = $derived(localePath(locale, "glossary"));
                 </ul>
             </div>
         </div>
-        <!--<nav aria-label={t(locale, "languageSwitcherLabel")} class="border-t border-zinc-300 mt-10 pt-5 flex flex-wrap items-center gap-2 text-sm">
-			<span class="font-medium text-zinc-700 mr-2">{t(locale, "languageSwitcherLabel")}:</span>
-			{#each LOCALES as code}
-				{#if code === locale}
-					<span class="px-3 py-1 bg-zinc-300 text-zinc-700 font-bold" aria-current="true">{labelFor(code)}</span>
-				{:else}
-					<a href={alternateUrlFor(currentPath, code)} class="px-3 py-1 bg-white border border-zinc-400 text-teal-800 hover:bg-teal-50 hover:underline font-medium">{labelFor(code)}</a>
-				{/if}
-			{/each}
-			</nav>-->
         <div
             class="border-t border-zinc-300 mt-6 pt-5 flex flex-wrap gap-x-6 gap-y-1 text-sm text-zinc-700"
         >
-            <p>{t(locale, "copyright")(year)}</p>
-            <p>{t(locale, "notFinancialAdvice")}</p>
+            <p>{copy.copyright(year)}</p>
+            <p>{copy.notFinancialAdvice}</p>
         </div>
     </div>
 </footer>

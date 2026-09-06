@@ -5,23 +5,20 @@ import Layout from "../../layouts/Layout.astro";
 import type { GlossaryTermEntry } from "../../lib/content";
 import {
 	glossaryTermSlug,
-	glossaryTermsForLocale,
+	glossaryTerms,
 	relatedGlossaryTerms,
 } from "../../lib/content";
+import { copy } from "../../lib/copy";
 import { iconFor } from "../../lib/glossary-icons";
 import { topicById } from "../../lib/glossary-topics";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-import { localePath } from "../../lib/i18n/urls";
 
 interface Props {
-	locale?: Locale;
 	entry: GlossaryTermEntry;
 }
 
-const { locale = DEFAULT_LOCALE, entry } = Astro.props;
+const { entry } = Astro.props;
 
-const allTerms = await glossaryTermsForLocale(locale);
+const allTerms = await glossaryTerms();
 const related = relatedGlossaryTerms(allTerms, entry, 3);
 const topic = topicById(entry.data.topic);
 const { Content } = await render(entry);
@@ -29,12 +26,10 @@ const slug = glossaryTermSlug(entry);
 ---
 
 <Layout
-    locale={locale}
     title={entry.data.term}
-    description={`${entry.data.term} — ${t(locale, "glossaryDescription")}`}
+    description={`${entry.data.term} — ${copy.glossaryDescription}`}
 >
     <GlossaryShell
-        locale={locale}
         terms={allTerms}
         selectedSlug={slug}
         breadcrumbTerm={entry.data.term}
@@ -106,7 +101,7 @@ const slug = glossaryTermSlug(entry);
                 related.length > 0 && (
                     <>
                         <h2 class="font-bold uppercase text-xs tracking-widest text-zinc-500 mb-3">
-                            {t(locale, "glossarySeeAlso")}
+                            {copy.glossarySeeAlso}
                         </h2>
                         <ul class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             {related.map((r) => {
@@ -114,10 +109,7 @@ const slug = glossaryTermSlug(entry);
                                 return (
                                     <li>
                                         <a
-                                            href={localePath(
-                                                locale,
-                                                `glossary/${rSlug}`,
-                                            )}
+										href={`/glossary/${rSlug}`}
                                             class="block border border-zinc-200 p-3 hover:border-teal-700 hover:bg-zinc-50 h-full"
                                         >
                                             <p class="font-bold text-zinc-900">

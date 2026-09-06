@@ -1,11 +1,8 @@
 ---
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-import { localePath } from "../../lib/i18n/urls";
+import { copy } from "../../lib/copy";
 import Breadcrumbs from "../Breadcrumbs.svelte";
 
 interface Props {
-	locale?: Locale;
 	title: string;
 	subtitle?: string;
 	breadcrumbs?: {
@@ -14,19 +11,14 @@ interface Props {
 	}[];
 }
 
-const {
-	locale = DEFAULT_LOCALE,
-	title,
-	subtitle,
-	breadcrumbs = [],
-} = Astro.props;
+const { title, subtitle, breadcrumbs = [] } = Astro.props;
 ---
 <header class="bg-teal-900 text-white">
   <div class="max-w-5xl mx-auto px-4 pt-4 pb-12">
     <Breadcrumbs links={[
       {
-        text: t(locale, "home"),
-        href: localePath(locale),
+        text: copy.home,
+        href: "/",
       },
       ...breadcrumbs,
     ]} appearance="light" />

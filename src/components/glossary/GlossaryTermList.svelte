@@ -23,6 +23,7 @@ const {
 let query = $state("");
 
 const normalized = $derived(query.trim().toLowerCase());
+
 const filtered = $derived(
 	normalized === ""
 		? terms

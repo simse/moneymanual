@@ -1,3 +1,3 @@
 import { searchRoute } from "../../lib/search-route";
 
-export const GET = searchRoute("search", "en-gb");
+export const GET = searchRoute("search");

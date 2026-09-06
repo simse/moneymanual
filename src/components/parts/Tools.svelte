@@ -2,33 +2,29 @@
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
 import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
-import type { Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-import { localePath } from "../../lib/i18n/urls";
-
-const { locale }: { locale: Locale } = $props();
+import { copy } from "../../lib/copy";
 
 const tools = $derived([
 	{
-		name: t(locale, "toolsTakeHomeName"),
-		description: t(locale, "toolsTakeHomeDescription"),
-		href: localePath(locale, "tools/take-home-pay"),
+		name: copy.toolsTakeHomeName,
+		description: copy.toolsTakeHomeDescription,
+		href: "/tools/take-home-pay",
 		bgColour: "bg-pink-200",
 		iconColour: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: t(locale, "toolsSavingsName"),
-		description: t(locale, "toolsSavingsDescription"),
-		href: localePath(locale, "tools/savings-calculator"),
+		name: copy.toolsSavingsName,
+		description: copy.toolsSavingsDescription,
+		href: "/tools/savings-calculator",
 		bgColour: "bg-emerald-200",
 		iconColour: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: t(locale, "toolsStudentLoanName"),
-		description: t(locale, "toolsStudentLoanDescription"),
-		href: localePath(locale, "tools/student-loan-repayment"),
+		name: copy.toolsStudentLoanName,
+		description: copy.toolsStudentLoanDescription,
+		href: "/tools/student-loan-repayment",
 		bgColour: "bg-blue-200",
 		iconColour: "text-blue-900",
 		icon: SchoolIcon,

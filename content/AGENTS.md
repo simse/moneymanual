@@ -2,7 +2,7 @@ Articles are written in MDX and stored in `articles`.
 
 The writing style guide is stored in `writing-style-guide.md`.
 
-Short term definitions live in the `glossary` content collection under `glossary/<locale>/<slug>.mdx` and render at `/glossary` (overview) and `/glossary/<slug>` (per-term, two-pane reader). Frontmatter:
+Short term definitions live in the `glossary` content collection under `glossary/<slug>.mdx` and render at `/glossary` (overview) and `/glossary/<slug>` (per-term, two-pane reader). Frontmatter:
 
 - `term` (required) — the heading, e.g. "ISA".
 - `name` (optional) — long form, e.g. "Individual Savings Account".

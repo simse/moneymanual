@@ -3,10 +3,10 @@ import GlossaryTermPage from "@components/page/GlossaryTermPage.astro";
 import { glossaryTermBySlug } from "../../lib/content";
 
 const { slug } = Astro.params;
-const entry = slug ? await glossaryTermBySlug("en-gb", slug) : undefined;
+const entry = slug ? await glossaryTermBySlug(slug) : undefined;
 
 if (!entry) {
 	return Astro.rewrite("/404");
 }
 ---
-<GlossaryTermPage locale="en-gb" entry={entry} />
+<GlossaryTermPage entry={entry} />

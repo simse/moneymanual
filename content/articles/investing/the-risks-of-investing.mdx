@@ -1,0 +1,172 @@
+---
+title: The risks of investing
+description: Understand how shares, funds, bonds and property can lose value, how to reduce risk, and how inflation affects cash savings.
+publishedDate: 2026-09-06
+lastChangedDate: 2026-09-06
+type: page
+sortOrderHint: 200
+searchPhrases:
+  - risks of investing
+  - can i lose money investing
+  - are index funds safe
+  - risks of bonds
+  - risks of investing in property
+  - inflation and savings
+---
+
+import LineChart from "@components/content/LineChart.svelte";
+
+Investing can help your money grow, but you could get back less than you put in. Understanding the risks helps you decide how much to invest and where to put it.
+
+Spreading your investments and allowing time can reduce some risks. They cannot guarantee a profit. Keeping money in cash has a different risk: rising prices can reduce what your savings buy.
+
+## What investment risk means
+
+Investing means buying something you expect to provide income, rise in value, or both. Shares, funds, bonds and property work differently, so their risks differ too.
+
+You might lose money because an investment falls in value. You might also earn less income than expected or struggle to sell when you need the money.
+
+### Understanding risk warnings
+
+Investment adverts often say 'capital at risk'. This means you could lose some or all of the money you invest.
+
+The Financial Conduct Authority (FCA) requires firms to explain benefits and risks fairly when promoting mainstream investments. It does not require a fixed phrase or a separate warning for these products. Different rules apply to some higher-risk investments. Read the [FCA explanation of risk warnings](https://www.fca.org.uk/firms/risk-warnings-mainstream-investments).
+
+## How risks differ between investments
+
+### Shares in individual companies
+
+A share is a small part of a company. You can make money if its price rises. Some companies also pay dividends, which are payments to shareholders.
+
+A successful business does not guarantee a rising share price. Investors may already expect strong results and have paid a high price for its shares.
+
+If the business fails, your shares could become worthless. A price fall can also be permanent even if the company survives. Dividends can fall or stop.
+
+Putting all your money in one company makes you depend on its success. [Spreading investments across companies and markets](https://www.fca.org.uk/investsmart/diversification) reduces that dependence.
+
+### Index funds
+
+An index fund aims to follow a market index: a group of investments used to measure a market's performance. For example, some funds follow an index of shares in large US companies.
+
+These funds usually charge less than funds where managers choose investments to try to beat the market. Some index funds trade on stock exchanges as exchange-traded funds (ETFs).
+
+A broad index fund can spread your money across hundreds or thousands of companies. This reduces the damage if one company fails.
+
+But a whole market can fall, taking your fund's value down with it. A fund covering only one industry or country gives you a narrower spread of investments.
+
+Economic growth does not guarantee that your fund will rise in value. You still need to choose which market to track and check the fees.
+
+### Bonds
+
+A bond is a loan to a government or company. Many pay fixed interest and promise to repay a set amount on an agreed date. Some have payments that vary.
+
+The borrower could miss payments or fail to repay you. This is called default. The risk depends on the borrower, so bonds are not all equally safe.
+
+UK government bonds are called gilts. The UK has never missed a gilt payment, but gilt prices can still fall.
+
+If market interest rates rise, existing bonds with fixed payments usually become less attractive and their prices fall. Selling then could mean a loss. Inflation can also reduce what fixed payments buy.
+
+A conventional gilt repays its face value when it ends. This is the repayment amount, which may differ from what you paid.
+
+Headlines about rising government borrowing costs usually refer to gilt yields. A yield measures the return at the price paid. Higher yields generally mean borrowing through new gilt sales costs the government more. Existing conventional gilts keep their fixed interest payments.
+
+### Property
+
+You can buy property hoping to sell it for more, receive rent, or both. Neither a higher sale price nor steady rent is guaranteed.
+
+An empty property brings in no rent. Tenants might miss payments, while repairs, insurance and other costs continue. If you have a mortgage, you still need to pay it.
+
+Selling a property can take months and involves costs. Owning one rental property also leaves much of your money dependent on one building and location.
+
+Borrowing increases the risk to your own money. For example, suppose you buy a £200,000 property with £50,000 of savings and a £150,000 mortgage.
+
+If its value falls by 10% to £180,000, you have £30,000 left after repaying the unchanged mortgage. That is a 40% loss on your £50,000, before buying or selling costs.
+
+## The risk of keeping everything in cash
+
+Cash savings are useful for emergencies and spending you expect soon. You can keep money available without having to sell investments after a price fall.
+
+But if your savings interest is lower than inflation, your money buys less over time. Interest that matches or exceeds inflation can preserve its buying power, before any tax you owe.
+
+The government sets the [Bank of England an inflation target of 2%](/inflation/what-is-bank-of-england). This is a target, not a promise or a limit on price rises.
+
+### How inflation changes what £10,000 can buy
+
+Real value shows what £10,000 earning no interest can buy, expressed in 2016 pounds. Potential value shows the balance with interest earned at average one-year fixed cash ISA rates.
+
+The potential value is not adjusted for inflation. The gap between these lines is therefore not a comparison of real returns.
+
+<LineChart
+  title="Inflation reduces what cash savings can buy"
+  subtitle="Buying power and potential cash ISA balance, UK, 2016 to 2026"
+  description="The buying power of £10,000 falls to £7,036.23. The potential cash ISA balance rises to £12,737.87, before adjusting for inflation."
+  source="Money Manual calculations."
+  yDomain={[0, 14000]}
+  yTicks={[0, 2000, 4000, 6000, 8000, 10000, 12000, 14000]}
+  xTicks={[2016, 2018, 2020, 2022, 2024, 2026]}
+  formatY={(value) =>
+    new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      maximumFractionDigits: 0,
+    }).format(value)
+  }
+  formatValue={(value) =>
+    new Intl.NumberFormat("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value)
+  }
+  series={[
+    {
+      label: "Real value",
+      points: [
+        { x: 2016, y: 10000.0 },
+        { x: 2017, y: 9743.84 },
+        { x: 2018, y: 9508.55 },
+        { x: 2019, y: 9316.53 },
+        { x: 2020, y: 9220.61 },
+        { x: 2021, y: 9036.27 },
+        { x: 2022, y: 8207.26 },
+        { x: 2023, y: 7682.75 },
+        { x: 2024, y: 7514.83 },
+        { x: 2025, y: 7237.67 },
+        { x: 2026, y: 7036.23 },
+      ],
+    },
+    {
+      label: "Potential value",
+      points: [
+        { x: 2016, y: 10106.0 },
+        { x: 2017, y: 10115.8 },
+        { x: 2018, y: 10251.35 },
+        { x: 2019, y: 10377.45 },
+        { x: 2020, y: 10435.56 },
+        { x: 2021, y: 10465.82 },
+        { x: 2022, y: 10654.21 },
+        { x: 2023, y: 11187.98 },
+        { x: 2024, y: 11701.51 },
+        { x: 2025, y: 12166.06 },
+        { x: 2026, y: 12737.87 },
+      ],
+    },
+  ]}
+/>
+
+Investments offer a chance to grow faster than inflation over time. They can also fall short, so inflation alone is not a reason to invest all your savings.
+
+## How to manage the risks
+
+Start with when you will need the money. Considering investing for goals more than five years away, once you have emergency savings. Five years does not guarantee recovery from a fall.
+
+Before you invest:
+
+- keep money for emergencies and near-term spending in accessible savings
+- spread investments across companies, markets and types of investment
+- check what a fund holds rather than relying on its name
+- compare fees, which reduce what you keep
+- consider how a loss would affect your plans
+
+Choose an amount and mix of investments that fit your finances. The aim is to take risks you understand and can afford.

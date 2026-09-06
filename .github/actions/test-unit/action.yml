@@ -8,4 +8,4 @@ runs:
 
     - name: Unit tests
       shell: bash
-      run: pnpm run test:unit
+      run: pnpm run test
