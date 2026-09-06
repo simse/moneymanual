@@ -1,61 +1,69 @@
 {
-	"$schema": "./node_modules/wrangler/config-schema.json",
-	"name": "money-manual",
-	"main": "@astrojs/cloudflare/entrypoints/server",
-	"compatibility_date": "2025-08-17",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"workers_dev": false,
-	"preview_urls": false,
-	"upload_source_maps": true,
-	"assets": {
-		"binding": "ASSETS",
-		"directory": "./dist",
-	},
-	"observability": {
-		"enabled": true,
-		"logs": {
-			"invocation_logs": true,
-			"head_sampling_rate": 1,
-		},
-	},
-	"env": {
-		"staging": {
-			"name": "money-manual-staging",
-			"routes": [
-				{
-					"pattern": "staging.moneymanual.org.uk",
-					"custom_domain": true,
-				},
-			],
-			"kv_namespaces": [
-				{
-					"binding": "SESSION",
-					"id": "776e836c1afe4d9caa81a93780ef716e",
-				},
-			],
-			"images": {
-				"binding": "IMAGES",
-			},
-		},
-		"prod": {
-			"name": "money-manual-prod",
-			"routes": [
-				{
-					"pattern": "moneymanual.org.uk",
-					"custom_domain": true,
-				},
-			],
-			"kv_namespaces": [
-				{
-					"binding": "SESSION",
-					"id": "e895398d68eb4b259381c7771568d4de",
-				},
-			],
-			"images": {
-				"binding": "IMAGES",
-			},
-		},
-	},
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "money-manual",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2025-08-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "upload_source_maps": true,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": true,
+      "head_sampling_rate": 1,
+    },
+  },
+  "env": {
+    "staging": {
+      "name": "money-manual-staging",
+      "routes": [
+        {
+          "pattern": "staging.moneymanual.org.uk",
+          "custom_domain": true,
+        },
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSION",
+          "id": "776e836c1afe4d9caa81a93780ef716e",
+        },
+      ],
+      "images": {
+        "binding": "IMAGES",
+      },
+      "vars": {
+        "TYPESENSE_API_URL": "https://search.moneymanual.org.uk",
+        "TYPESENSE_INDEX_NAME": "moneymanual-staging",
+        "ENVIRONMENT": "staging",
+      },
+    },
+    "prod": {
+      "name": "money-manual-prod",
+      "routes": [
+        {
+          "pattern": "moneymanual.org.uk",
+          "custom_domain": true,
+        },
+      ],
+      "kv_namespaces": [
+        {
+          "binding": "SESSION",
+          "id": "e895398d68eb4b259381c7771568d4de",
+        },
+      ],
+      "images": {
+        "binding": "IMAGES",
+      },
+      "vars": {
+        "TYPESENSE_API_URL": "https://search.moneymanual.org.uk",
+        "TYPESENSE_INDEX_NAME": "moneymanual-prod",
+        "ENVIRONMENT": "prod",
+      },
+    },
+  },
 }

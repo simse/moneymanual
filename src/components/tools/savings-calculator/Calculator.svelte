@@ -1,17 +1,17 @@
 <script lang="ts">
+import { untrack } from "svelte";
 import type { SavingsCalculatorState } from "../../../lib/calculator-state-schemas";
-import type { Locale } from "../../../lib/i18n/locales";
-import { t } from "../../../lib/i18n/strings";
+import { copy } from "../../../lib/copy";
 import {
 	computeSavingsGrowth,
 	type SavingsGrowthYear,
 } from "../../../lib/savings-growth";
 import { persistSessionState } from "../../../lib/session-state.svelte";
 
-let {
-	locale,
-	initial,
-}: { locale: Locale; initial: SavingsCalculatorState | null } = $props();
+let { initial }: { initial: SavingsCalculatorState | null } = $props();
+
+// Restore saved values once; subsequent edits belong to this calculator.
+const initialState = untrack(() => initial);
 
 const poundsFormatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -28,7 +28,7 @@ const poundsPenceFormatter = new Intl.NumberFormat("en-GB", {
 });
 
 const formatPounds = (amount: number | null | undefined): string => {
-	if (!amount || amount === 0) return "£-";
+	if (!amount || amount === 0) {return "£-";}
 	return poundsFormatter.format(amount);
 };
 
@@ -36,12 +36,14 @@ const formatPoundsExact = (amount: number): string => {
 	return poundsPenceFormatter.format(amount);
 };
 
-let startingBalance = $state<number | null>(initial?.startingBalance ?? null);
-let monthlyDeposit = $state<number | null>(initial?.monthlyDeposit ?? null);
+let startingBalance = $state<number | null>(initialState?.startingBalance ?? null);
+let monthlyDeposit = $state<number | null>(initialState?.monthlyDeposit ?? null);
+
 let annualInterestRate = $state<number | null>(
-	initial?.annualInterestRate ?? null,
+	initialState?.annualInterestRate ?? null,
 );
-let years = $state<number | null>(initial?.years ?? null);
+
+let years = $state<number | null>(initialState?.years ?? null);
 
 persistSessionState("savings-calculator", () => ({
 	startingBalance,
@@ -60,30 +62,32 @@ const result = $derived(
 );
 
 const principal = $derived(result.startingBalance + result.totalDeposits);
+
 const interestShare = $derived(
 	result.finalBalance > 0
 		? (result.totalInterest / result.finalBalance) * 100
 		: 0,
 );
+
 const principalShare = $derived(100 - interestShare);
 
 const yearLabel = (entry: SavingsGrowthYear): string =>
-	t(locale, "svYearLabel")(entry.year);
+	copy.svYearLabel(entry.year);
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-5 gap-16">
   <div class="md:col-span-3">
     <form>
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{t(locale, "svStartingBalanceTitle")}</h2>
+        <h2 class="text-2xl font-bold mb-2">{copy.svStartingBalanceTitle}</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {t(locale, "svStartingBalanceHelp")}
+          {copy.svStartingBalanceHelp}
         </p>
         <input
           type="number"
-          aria-label={t(locale, "svStartingBalanceAria")}
+          aria-label={copy.svStartingBalanceAria}
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={t(locale, "svStartingBalancePlaceholder")}
+          placeholder={copy.svStartingBalancePlaceholder}
           min="0"
           step="100"
           bind:value={startingBalance}
@@ -91,15 +95,15 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{t(locale, "svMonthlyDepositTitle")}</h2>
+        <h2 class="text-2xl font-bold mb-2">{copy.svMonthlyDepositTitle}</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {t(locale, "svMonthlyDepositHelp")}
+          {copy.svMonthlyDepositHelp}
         </p>
         <input
           type="number"
-          aria-label={t(locale, "svMonthlyDepositAria")}
+          aria-label={copy.svMonthlyDepositAria}
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={t(locale, "svMonthlyDepositPlaceholder")}
+          placeholder={copy.svMonthlyDepositPlaceholder}
           min="0"
           step="10"
           bind:value={monthlyDeposit}
@@ -107,16 +111,16 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{t(locale, "svInterestRateTitle")}</h2>
+        <h2 class="text-2xl font-bold mb-2">{copy.svInterestRateTitle}</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {t(locale, "svInterestRateHelp")}
+          {copy.svInterestRateHelp}
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={t(locale, "svInterestRateAria")}
+            aria-label={copy.svInterestRateAria}
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={t(locale, "svInterestRatePlaceholder")}
+            placeholder={copy.svInterestRatePlaceholder}
             min="0"
             step="0.1"
             bind:value={annualInterestRate}
@@ -126,36 +130,36 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{t(locale, "svTimePeriodTitle")}</h2>
+        <h2 class="text-2xl font-bold mb-2">{copy.svTimePeriodTitle}</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {t(locale, "svTimePeriodHelp")}
+          {copy.svTimePeriodHelp}
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={t(locale, "svTimePeriodAria")}
+            aria-label={copy.svTimePeriodAria}
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={t(locale, "svTimePeriodPlaceholder")}
+            placeholder={copy.svTimePeriodPlaceholder}
             min="0"
             max="80"
             step="1"
             bind:value={years}
           >
-          <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">{t(locale, "svYearsUnit")}</span>
+          <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">{copy.svYearsUnit}</span>
         </div>
       </div>
 
       <p class="text-sm text-zinc-600">
-        {t(locale, "svAssumptionNote")}
+        {copy.svAssumptionNote}
       </p>
     </form>
   </div>
 
   <aside class="md:col-span-2 md:sticky md:top-4 md:self-start">
     <div class="bg-teal-900 text-white p-4" data-testid="final-balance-card">
-      <strong>{t(locale, "svFinalBalanceHeading")}</strong>
+      <strong>{copy.svFinalBalanceHeading}</strong>
       <p class="text-3xl font-bold" data-testid="final-balance">{formatPounds(result.finalBalance)}</p>
-      <p>{t(locale, "svAfterYears")(years ?? 0)}</p>
+      <p>{copy.svAfterYears(years ?? 0)}</p>
     </div>
 
     {#if result.finalBalance > 0}
@@ -167,17 +171,17 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
         <ul class="text-lg p-4 space-y-1">
           <li class="flex items-center gap-2">
             <span class="size-3 bg-teal-700 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{t(locale, "svYourMoney")}: <strong>{formatPounds(principal)}</strong></span>
+            <span>{copy.svYourMoney}: <strong>{formatPounds(principal)}</strong></span>
           </li>
           <li class="flex items-center gap-2 ml-5 text-base text-zinc-700">
-            <span>{t(locale, "svStartingBalanceLine")}: {formatPounds(result.startingBalance)}</span>
+            <span>{copy.svStartingBalanceLine}: {formatPounds(result.startingBalance)}</span>
           </li>
           <li class="flex items-center gap-2 ml-5 text-base text-zinc-700">
-            <span>{t(locale, "svTotalDeposits")}: {formatPounds(result.totalDeposits)}</span>
+            <span>{copy.svTotalDeposits}: {formatPounds(result.totalDeposits)}</span>
           </li>
           <li class="flex items-center gap-2 mt-2">
             <span class="size-3 bg-amber-400 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{t(locale, "svInterestEarned")}: <strong>{formatPounds(result.totalInterest)}</strong></span>
+            <span>{copy.svInterestEarned}: <strong>{formatPounds(result.totalInterest)}</strong></span>
           </li>
         </ul>
       </div>
@@ -186,16 +190,16 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
     {#if result.yearlyBreakdown.length > 0}
       <details class="mt-4 group [&_summary::-webkit-details-marker]:hidden">
         <summary class="cursor-pointer text-lg font-semibold underline">
-          {t(locale, "svBreakdownToggle")}
+          {copy.svBreakdownToggle}
         </summary>
         <div class="mt-3 overflow-x-auto">
           <table class="w-full text-sm border-collapse">
             <thead>
               <tr class="border-b-2 border-black text-left">
-                <th class="py-2 pr-2 font-semibold">{t(locale, "svTableYear")}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{t(locale, "svTableDeposits")}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{t(locale, "svTableInterest")}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{t(locale, "svTableBalance")}</th>
+                <th class="py-2 pr-2 font-semibold">{copy.svTableYear}</th>
+                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableDeposits}</th>
+                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableInterest}</th>
+                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableBalance}</th>
               </tr>
             </thead>
             <tbody>

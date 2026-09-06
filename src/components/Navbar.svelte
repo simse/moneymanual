@@ -1,16 +1,12 @@
 <script lang="ts">
 import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
 import SearchIcon from "virtual:icons/bx/search";
-import type { Locale } from "../lib/i18n/locales";
-import { t } from "../lib/i18n/strings";
-import { localePath } from "../lib/i18n/urls";
+import { copy } from "../lib/copy";
 
 const {
-	locale,
 	homeHref,
 	topics,
 }: {
-	locale: Locale;
 	homeHref: string;
 	topics: {
 		title: string;
@@ -18,9 +14,10 @@ const {
 		href: string;
 	}[];
 } = $props();
+
 let isMenuOpen = $state(false);
 
-const searchHref = $derived(localePath(locale, "search"));
+const searchHref = "/search";
 </script>
 
 <nav class="w-full bg-black text-white">
@@ -42,7 +39,7 @@ const searchHref = $derived(localePath(locale, "search"));
                 }}
                 onclick={() => (isMenuOpen = !isMenuOpen)}
             >
-                {t(locale, "topics")}
+                {copy.topics}
                 <ChevronDownIcon />
             </button>
         </li>
@@ -51,7 +48,7 @@ const searchHref = $derived(localePath(locale, "search"));
             <a
                 class="pl-3 h-full hover:cursor-pointer"
                 href={searchHref}
-                aria-label={t(locale, "search")}
+                aria-label={copy.search}
             >
                 <SearchIcon class="h-6 w-6" />
             </a>

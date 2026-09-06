@@ -2,8 +2,6 @@
 import ArrowRightIcon from "virtual:icons/bx/right-arrow-alt";
 import SearchIcon from "virtual:icons/bx/search";
 import debounce from "lodash/debounce";
-import type { Locale } from "../lib/i18n/locales";
-import { localePath } from "../lib/i18n/urls";
 import type { AutocompleteResult, SearchResponse } from "../lib/search-results";
 
 type Suggestion = {
@@ -11,28 +9,23 @@ type Suggestion = {
 	matchedTerms: Set<string>;
 };
 
-const {
-	initialValue,
-	locale = "en-gb",
-}: { initialValue?: string; locale?: Locale } = $props();
+const { initialValue }: { initialValue?: string } = $props();
 
-const autocompleteEndpoint = $derived(
-	localePath(locale, "api/search-autocomplete"),
-);
-const searchAction = $derived(localePath(locale, "search"));
+const autocompleteEndpoint = "/api/search-autocomplete";
+const searchAction = "/search";
 
 let suggestions = $state<Suggestion[]>([]);
 let inputActive = $state(false);
 let showSuggestions = $derived(inputActive || suggestions.length > 0);
-let inputValue = $state(initialValue);
 
 const getSuggestions = async (query: string): Promise<Suggestion[]> => {
-	if (!query || query.length < 3) return [];
+	if (!query || query.length < 3) {return [];}
 
 	const resp = await fetch(
 		`${autocompleteEndpoint}?${new URLSearchParams({ query })}`,
 	);
-	if (!resp.ok) return [];
+
+	if (!resp.ok) {return [];}
 
 	const respBody = (await resp.json()) as SearchResponse<AutocompleteResult>;
 
@@ -48,7 +41,7 @@ const handleInput = debounce(
 			currentTarget: EventTarget & HTMLInputElement;
 		},
 	) => {
-		if (!e.target) return;
+		if (!e.target) {return;}
 		const { value } = e.target as HTMLInputElement;
 
 		getSuggestions(value)
@@ -74,7 +67,7 @@ const handleInput = debounce(
             name="query"
             class="block text-xl bg-white text-black w-128 p-2 outline-yellow-500 ring-black border-transparent z-20"
             type="text"
-            bind:value={inputValue}
+            value={initialValue}
             oninput={handleInput}
             onfocus={() => inputActive = true}
             onblur={() => inputActive = false}

@@ -2,33 +2,25 @@
 import Hero from "@components/Hero.astro";
 import Tools from "@components/parts/Tools.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { sectionEntriesForLocale, urlPathForEntry } from "../../lib/content";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
+import { sectionEntries, urlPathForEntry } from "../../lib/content";
+import { copy } from "../../lib/copy";
 
-interface Props {
-	locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-
-const sections = await sectionEntriesForLocale(locale);
+const sections = await sectionEntries();
 ---
 <Layout
-  locale={locale}
-  description={t(locale, "homepageDescription")}
+  description={copy.homepageDescription}
 >
-  <Hero locale={locale} />
+  <Hero />
 
   <main class="max-w-5xl mx-auto px-4 mt-8">
     <section class="mt-8 mb-12">
-      <h2 class="text-2xl font-bold my-4">{t(locale, "tools")}</h2>
+      <h2 class="text-2xl font-bold my-4">{copy.tools}</h2>
 
-      <Tools locale={locale} />
+      <Tools />
     </section>
 
     <section class="my-12">
-      <h2 class="text-2xl font-bold my-4">{t(locale, "topics")}</h2>
+      <h2 class="text-2xl font-bold my-4">{copy.topics}</h2>
 
       <ul class="md:w-4/5">
         {sections.map(entry => (

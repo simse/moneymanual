@@ -3,40 +3,30 @@ import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/savings-calculator/Calculator.svelte";
 import Layout from "../../layouts/Layout.astro";
 import { savingsCalculatorStateSchema } from "../../lib/calculator-state-schemas";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-import { localePath } from "../../lib/i18n/urls";
+import { copy } from "../../lib/copy";
 
-interface Props {
-	locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-
-const title = t(locale, "toolsSavingsPageTitle");
-const description = t(locale, "toolsSavingsPageDescription");
+const title = copy.toolsSavingsPageTitle;
+const description = copy.toolsSavingsPageDescription;
 
 const raw = await Astro.session?.get("savings-calculator");
 const initial = savingsCalculatorStateSchema.safeParse(raw).data ?? null;
 ---
 <Layout
-  locale={locale}
   title={title}
   description={description}
 >
   <PageHeader
-    locale={locale}
     title={title}
     subtitle={description}
     breadcrumbs={[
       {
-        text: t(locale, "tools"),
-        href: localePath(locale, "tools"),
+        text: copy.tools,
+        href: "/tools",
       }
     ]}
   />
 
   <main class="max-w-5xl mx-auto px-4 my-8">
-    <Calculator locale={locale} initial={initial} client:load />
+    <Calculator initial={initial} client:load />
   </main>
 </Layout>

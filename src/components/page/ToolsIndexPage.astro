@@ -2,27 +2,18 @@
 import PageHeader from "@components/common/PageHeader.astro";
 import ToolsSection from "@components/parts/Tools.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-
-interface Props {
-	locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
+import { copy } from "../../lib/copy";
 ---
 <Layout
-  locale={locale}
-  title={t(locale, "toolsHeading")}
-  description={t(locale, "toolsSubheading")}
+  title={copy.toolsHeading}
+  description={copy.toolsSubheading}
 >
   <PageHeader
-    locale={locale}
-    title={t(locale, "toolsHeading")}
-    subtitle={t(locale, "toolsSubheading")}
+    title={copy.toolsHeading}
+    subtitle={copy.toolsSubheading}
   />
 
   <main class="max-w-5xl mx-auto px-4 mt-8">
-    <ToolsSection locale={locale} />
+    <ToolsSection />
   </main>
 </Layout>

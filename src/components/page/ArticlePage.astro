@@ -4,46 +4,44 @@ import Breadcrumbs from "@components/Breadcrumbs.svelte";
 import TableOfContents from "@components/TableOfContents.astro";
 import BaseLayout from "../../layouts/Layout.astro";
 import { getPageEntry, type PageEntry, parseEntryId } from "../../lib/content";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
-import { localePath } from "../../lib/i18n/urls";
+import { copy } from "../../lib/copy";
 import SectionPage from "../../templates/SectionPage.astro";
 
 interface Props {
-	locale?: Locale;
 	page: PageEntry;
 }
 
-const { locale = DEFAULT_LOCALE, page } = Astro.props;
+const { page } = Astro.props;
 
 const { Content, headings } = await render(page);
 const parsed = parseEntryId(page.id);
 
 let sectionTitle = "";
+
 if (parsed && !parsed.isSection) {
-	const sectionEntry = await getPageEntry(locale, parsed.topic);
+	const sectionEntry = await getPageEntry(parsed.topic);
 	sectionTitle = sectionEntry?.data.title ?? "";
 }
 
 const breadcrumbs: { text: string; href: string }[] = [
-	{ text: t(locale, "home"), href: localePath(locale) },
+	{ text: copy.home, href: "/" },
 ];
+
 if (parsed && !parsed.isSection) {
 	breadcrumbs.push({
 		text: sectionTitle,
-		href: localePath(locale, parsed.topic),
+		href: `/${parsed.topic}`,
 	});
 }
 
 const isSection = page.data.type === "section";
 ---
 <BaseLayout
-  locale={locale}
   title={page.data.title}
   description={page.data.description}
 >
   {isSection ? (
-    <SectionPage locale={locale} page={page} />
+    <SectionPage page={page} />
   ) : (
     <Fragment>
       <header class="max-w-5xl mx-auto px-4 pt-4 pb-8 border-t-8 border-teal-700">

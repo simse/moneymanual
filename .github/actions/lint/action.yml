@@ -6,6 +6,10 @@ runs:
   steps:
     - uses: ./.github/actions/setup
 
+    - name: Check formatting
+      shell: bash
+      run: pnpm run fmt:check
+
     - name: Lint
       shell: bash
       run: pnpm run lint

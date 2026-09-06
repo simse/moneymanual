@@ -1,4 +1,7 @@
 // @ts-check
+import { loadEnv } from "vite";
+import { validateEnvVariable } from "astro/env/runtime";
+import { envSchema } from "./env.schema.mjs";
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
@@ -7,19 +10,20 @@ import mdx from "@astrojs/mdx";
 import Icons from "unplugin-icons/vite";
 import favicons from "astro-favicons";
 
+const site = validateEnvVariable(
+  loadEnv(process.env.NODE_ENV ?? "development", process.cwd(), "").SITE_URL,
+  envSchema.SITE_URL,
+);
+
+if (!site.ok || typeof site.value !== "string") {
+  throw new Error("Invalid SITE_URL: expected a URL");
+}
+
 // https://astro.build/config
 export default defineConfig({
-  site: import.meta.env.SITE_URL ?? "https://moneymanual.org.uk",
+  site: site.value,
+  env: { schema: envSchema },
   output: "server",
-  i18n: {
-    defaultLocale: "en-gb",
-    locales: ["en-gb", "cy", "sco"],
-    routing: {
-      prefixDefaultLocale: false,
-      redirectToDefaultLocale: false,
-      fallbackType: "redirect",
-    },
-  },
   integrations: [svelte(), mdx(), favicons()],
   compressHTML: true,
   devToolbar: { enabled: false },

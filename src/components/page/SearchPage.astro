@@ -1,16 +1,10 @@
 ---
 import SearchForm from "@components/Search.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { DEFAULT_LOCALE, type Locale } from "../../lib/i18n/locales";
-import { t } from "../../lib/i18n/strings";
+import { copy } from "../../lib/copy";
 import { search } from "../../lib/search";
 import type { SearchResult } from "../../lib/search-results";
 
-interface Props {
-	locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
 const query = Astro.url.searchParams.get("query");
 
 let results: SearchResult[] = [];
@@ -18,7 +12,7 @@ let queryTimeMs: number | undefined;
 
 if (query) {
 	try {
-		const response = await search(query, locale, Astro.request);
+		const response = await search(query, Astro.request);
 		results = response.results;
 		queryTimeMs = response.queryTimeMs;
 	} catch (err) {
@@ -26,18 +20,18 @@ if (query) {
 	}
 }
 ---
-<Layout locale={locale} title={query ? `${query} - ${t(locale, "search")}` : t(locale, "search")} description={t(locale, "searchPageHeading")}>
+<Layout title={query ? `${query} - ${copy.search}` : copy.search} description={copy.searchPageHeading}>
     <header class="bg-teal-900 text-white">
         <div class="mx-auto max-w-5xl px-4 py-12">
-            <h1 class="text-3xl font-bold mb-4">{t(locale, "searchPageHeading")}</h1>
+            <h1 class="text-3xl font-bold mb-4">{copy.searchPageHeading}</h1>
 
-            <SearchForm locale={locale} initialValue={query ?? undefined} client:load />
+            <SearchForm initialValue={query ?? undefined} client:load />
         </div>
     </header>
 
     <main class="mx-auto max-w-5xl px-4 mt-4">
         {query ? (
-            <p class="my-8 font-medium text-zinc-700">{t(locale, "resultsFound")(results.length, query, queryTimeMs)}</p>
+            <p class="my-8 font-medium text-zinc-700">{copy.resultsFound(results.length, query, queryTimeMs)}</p>
 
             <ul>
                 {results.map(result => (

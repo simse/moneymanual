@@ -5,24 +5,21 @@ import {
 	parseEntryId,
 	urlPathForEntry,
 } from "../lib/content";
-import { DEFAULT_LOCALE, type Locale } from "../lib/i18n/locales";
-import { t } from "../lib/i18n/strings";
-import { localePath } from "../lib/i18n/urls";
+import { copy } from "../lib/copy";
 
 interface Props {
-	locale?: Locale;
 	page: PageEntry;
 }
 
-const { locale = DEFAULT_LOCALE, page } = Astro.props;
+const { page } = Astro.props;
 const parsed = parseEntryId(page.id);
 const topic = parsed?.topic ?? "";
 
-const sectionPages = await childEntriesForSection(topic, locale);
+const sectionPages = await childEntriesForSection(topic);
 ---
 <header class="bg-teal-900 text-white">
   <div class="max-w-5xl mx-auto px-4 pt-4 pb-14 border-t-8 border-teal-700">
-    <a href={localePath(locale)} class="underline text-lg font-medium mb-8 block">{t(locale, "home")}</a>
+    <a href={"/"} class="underline text-lg font-medium mb-8 block">{copy.home}</a>
 
     <h1 class="text-4xl font-bold mb-4">{page.data.title}</h1>
 
@@ -31,7 +28,7 @@ const sectionPages = await childEntriesForSection(topic, locale);
 </header>
 
 <main class="max-w-5xl mx-auto p-4">
-  <h2 class="my-6 text-2xl font-medium">{t(locale, "topics")}</h2>
+  <h2 class="my-6 text-2xl font-medium">{copy.topics}</h2>
 
   <ul>
     {sectionPages.map(entry => (
