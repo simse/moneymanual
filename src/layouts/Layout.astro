@@ -21,6 +21,10 @@ const topics = sections.map((entry) => ({
 }));
 
 const pageTitle = title ? `${title}${copy.titleSuffix}` : copy.siteTagline;
+
+// Always point search engines at the https URL on the main domain, without a trailing slash, to match the sitemap.
+const canonicalPath = Astro.url.pathname.replace(/(.)\/+$/, "$1");
+const canonicalUrl = new URL(canonicalPath, Astro.site).href;
 ---
 
 <!doctype html>
@@ -33,7 +37,9 @@ const pageTitle = title ? `${title}${copy.titleSuffix}` : copy.siteTagline;
         <title>{pageTitle}</title>
         {ENVIRONMENT !== "prod" && <meta name="robots" content="noindex" />}
         <meta name="description" content={description} />
-        <link rel="sitemap" href="/sitemap-index.xml" />
+        <link rel="canonical" href={canonicalUrl} />
+        <meta property="og:url" content={canonicalUrl} />
+        <link rel="sitemap" href="/sitemap.xml" />
     </head>
     <body class="bg-white text-zinc-950 min-h-svh flex flex-col">
         <Navbar homeHref="/" topics={topics} client:load />
