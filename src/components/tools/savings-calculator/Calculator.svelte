@@ -1,17 +1,11 @@
 <script lang="ts">
-import { untrack } from "svelte";
-import type { SavingsCalculatorState } from "../../../lib/calculator-state-schemas";
 import { copy } from "../../../lib/copy";
 import {
 	computeSavingsGrowth,
 	type SavingsGrowthYear,
 } from "../../../lib/savings-growth";
-import { persistSessionState } from "../../../lib/session-state.svelte";
-
-let { initial }: { initial: SavingsCalculatorState | null } = $props();
-
-// Restore saved values once; subsequent edits belong to this calculator.
-const initialState = untrack(() => initial);
+import { persistLocalState } from "../../../lib/local-state.svelte";
+import RestoreBanner from "../RestoreBanner.svelte";
 
 const poundsFormatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -36,21 +30,28 @@ const formatPoundsExact = (amount: number): string => {
 	return poundsPenceFormatter.format(amount);
 };
 
-let startingBalance = $state<number | null>(initialState?.startingBalance ?? null);
-let monthlyDeposit = $state<number | null>(initialState?.monthlyDeposit ?? null);
+let startingBalance = $state<number | null>(null);
+let monthlyDeposit = $state<number | null>(null);
 
-let annualInterestRate = $state<number | null>(
-	initialState?.annualInterestRate ?? null,
+let annualInterestRate = $state<number | null>(null);
+
+let years = $state<number | null>(null);
+
+const persisted = persistLocalState(
+	"savings-calculator",
+	() => ({
+		startingBalance,
+		monthlyDeposit,
+		annualInterestRate,
+		years,
+	}),
+	(state) => {
+		startingBalance = state.startingBalance;
+		monthlyDeposit = state.monthlyDeposit;
+		annualInterestRate = state.annualInterestRate;
+		years = state.years;
+	},
 );
-
-let years = $state<number | null>(initialState?.years ?? null);
-
-persistSessionState("savings-calculator", () => ({
-	startingBalance,
-	monthlyDeposit,
-	annualInterestRate,
-	years,
-}));
 
 const result = $derived(
 	computeSavingsGrowth({
@@ -74,6 +75,8 @@ const principalShare = $derived(100 - interestShare);
 const yearLabel = (entry: SavingsGrowthYear): string =>
 	copy.svYearLabel(entry.year);
 </script>
+
+<RestoreBanner {persisted} />
 
 <div class="grid grid-cols-1 md:grid-cols-5 gap-16">
   <div class="md:col-span-3">

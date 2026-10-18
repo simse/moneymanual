@@ -2,14 +2,10 @@
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/savings-calculator/Calculator.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { savingsCalculatorStateSchema } from "../../lib/calculator-state-schemas";
 import { copy } from "../../lib/copy";
 
 const title = copy.toolsSavingsPageTitle;
 const description = copy.toolsSavingsPageDescription;
-
-const raw = await Astro.session?.get("savings-calculator");
-const initial = savingsCalculatorStateSchema.safeParse(raw).data ?? null;
 ---
 <Layout
   title={title}
@@ -27,6 +23,6 @@ const initial = savingsCalculatorStateSchema.safeParse(raw).data ?? null;
   />
 
   <main class="max-w-5xl mx-auto px-4 my-8">
-    <Calculator initial={initial} client:load />
+    <Calculator client:load />
   </main>
 </Layout>

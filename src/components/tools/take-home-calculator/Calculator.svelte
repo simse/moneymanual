@@ -1,9 +1,7 @@
 <script lang="ts">
-import { untrack } from "svelte";
-import DownRightIcon from "virtual:icons/material-symbols/subdirectory-arrow-right";
-import type { TakeHomePayState } from "../../../lib/calculator-state-schemas";
 import { copy } from "../../../lib/copy";
-import { persistSessionState } from "../../../lib/session-state.svelte";
+import { persistLocalState } from "../../../lib/local-state.svelte";
+import RestoreBanner from "../RestoreBanner.svelte";
 import {
 	type Country,
 	computeTakeHome,
@@ -15,11 +13,7 @@ import {
 	type TaxYear,
 } from "../../../lib/take-home-pay";
 import AccordionSection from "../../common/AccordionSection.svelte";
-
-let { initial }: { initial: TakeHomePayState | null } = $props();
-
-// Restore saved values once; subsequent edits belong to this calculator.
-const initialState = untrack(() => initial);
+import Breakdown from "./Breakdown.svelte";
 
 const formatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -63,41 +57,62 @@ const studentLoanPlans: { id: StudentLoanPlan; label: string }[] = $derived([
 	{ id: 5, label: copy.thStudentLoanPlan5 },
 ]);
 
-let selectedTaxYear = $state<TaxYear>(
-	initialState?.selectedTaxYear ?? DEFAULT_TAX_YEAR,
+let selectedTaxYear = $state<TaxYear>(DEFAULT_TAX_YEAR);
+
+let selectedPayFrequency = $state("annually");
+
+let selectedCountry = $state<Country>("England/NI/Wales");
+
+let selectedStudentLoanPlans = $state<StudentLoanPlan[]>([]);
+
+let grossIncome = $state<number | null>(null);
+let pensionMethod = $state<PensionMethod>("net_pay");
+
+let pensionInputType = $state<PensionInputType>("percent");
+
+let pensionValue = $state<number | null>(null);
+let bonusValue = $state<number | null>(null);
+let bonusInputType = $state<PensionInputType>("amount");
+
+const persisted = persistLocalState(
+	"take-home-pay",
+	() => ({
+		selectedTaxYear,
+		selectedPayFrequency,
+		selectedCountry,
+		selectedStudentLoanPlans,
+		grossIncome,
+		pensionMethod,
+		pensionInputType,
+		pensionValue,
+		annualBonus: bonusValue,
+		bonusInputType,
+	}),
+	(state) => {
+		selectedTaxYear = state.selectedTaxYear;
+		selectedPayFrequency = state.selectedPayFrequency;
+		selectedCountry = state.selectedCountry;
+		selectedStudentLoanPlans = [...state.selectedStudentLoanPlans];
+		grossIncome = state.grossIncome;
+		pensionMethod = state.pensionMethod;
+		pensionInputType = state.pensionInputType;
+		pensionValue = state.pensionValue;
+		bonusValue = state.annualBonus;
+		bonusInputType = state.bonusInputType;
+	},
 );
 
-let selectedPayFrequency = $state(initialState?.selectedPayFrequency ?? "annually");
+const annualBonus = $derived.by(() => {
+	const freq =
+		payFrequencies.find((f) => f.id === selectedPayFrequency) ??
+		payFrequencies[3];
 
-let selectedCountry = $state<Country>(
-	initialState?.selectedCountry ?? "England/NI/Wales",
-);
+	const value = bonusValue ?? 0;
 
-let selectedStudentLoanPlans = $state<StudentLoanPlan[]>(
-	initialState?.selectedStudentLoanPlans ?? [],
-);
-
-let grossIncome = $state<number | null>(initialState?.grossIncome ?? null);
-let pensionMethod = $state<PensionMethod>(initialState?.pensionMethod ?? "net_pay");
-
-let pensionInputType = $state<PensionInputType>(
-	initialState?.pensionInputType ?? "percent",
-);
-
-let pensionValue = $state<number | null>(initialState?.pensionValue ?? null);
-let annualBonus = $state<number | null>(initialState?.annualBonus ?? null);
-
-persistSessionState("take-home-pay", () => ({
-	selectedTaxYear,
-	selectedPayFrequency,
-	selectedCountry,
-	selectedStudentLoanPlans,
-	grossIncome,
-	pensionMethod,
-	pensionInputType,
-	pensionValue,
-	annualBonus,
-}));
+	return bonusInputType === "percent"
+		? freq.toAnnual(grossIncome ?? 0) * (value / 100)
+		: value;
+});
 
 const result = $derived.by(() => {
 	const freq =
@@ -115,7 +130,7 @@ const result = $derived.by(() => {
 		taxYear: selectedTaxYear,
 		country: selectedCountry,
 		annualGrossSalary,
-		annualBonus: annualBonus ?? 0,
+		annualBonus,
 		pension: {
 			method: pensionMethod,
 			inputType: pensionInputType,
@@ -125,9 +140,8 @@ const result = $derived.by(() => {
 	});
 });
 
-const hasBonus = $derived((annualBonus ?? 0) > 0);
+const hasBonus = $derived(annualBonus > 0);
 const hasPension = $derived(result.base.grossPensionContribution > 0);
-const hasStudentLoans = $derived(result.base.totalStudentLoanRepayments > 0);
 
 const pensionIndicator = $derived.by(() => {
 	if ((pensionValue ?? 0) <= 0) {return null;}
@@ -162,6 +176,8 @@ const showRasHigherRateNote = $derived(
 			0,
 );
 </script>
+
+<RestoreBanner {persisted} />
 
 <div class="grid grid-cols-1 md:grid-cols-5 gap-16">
   <div class="md:col-span-3">
@@ -259,12 +275,12 @@ const showRasHigherRateNote = $derived(
           <div class="inline-flex border-2 border-black">
             <button
               type="button"
-              class="px-3 text-xl {pensionInputType === 'percent' ? 'bg-black text-white' : 'bg-white'}"
+              class="px-3 text-xl cursor-pointer {pensionInputType === 'percent' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
               onclick={() => { pensionInputType = "percent"; }}
             >%</button>
             <button
               type="button"
-              class="px-3 text-xl {pensionInputType === 'amount' ? 'bg-black text-white' : 'bg-white'}"
+              class="px-3 text-xl cursor-pointer {pensionInputType === 'amount' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
               onclick={() => { pensionInputType = "amount"; }}
             >£</button>
           </div>
@@ -282,13 +298,34 @@ const showRasHigherRateNote = $derived(
         <p class="text-base text-zinc-700 mb-3">
           {copy.thBonusIntro}
         </p>
-        <input
-          type="number"
-          aria-label={copy.thBonusAria}
-          class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.thBonusPlaceholder}
-          bind:value={annualBonus}
-        >
+        <div class="flex items-stretch gap-2 mb-2">
+          <input
+            type="number"
+            aria-label={copy.thBonusAria}
+            class="text-xl border-2 border-black outline-yellow-400 block w-full"
+            placeholder={bonusInputType === "percent" ? copy.thBonusPercentPlaceholder : copy.thBonusPlaceholder}
+            bind:value={bonusValue}
+          >
+          <div class="inline-flex border-2 border-black">
+            <button
+              type="button"
+              class="px-3 text-xl cursor-pointer {bonusInputType === 'percent' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
+              onclick={() => { bonusInputType = "percent"; }}
+            >%</button>
+            <button
+              type="button"
+              class="px-3 text-xl cursor-pointer {bonusInputType === 'amount' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
+              onclick={() => { bonusInputType = "amount"; }}
+            >£</button>
+          </div>
+        </div>
+        <p class="text-sm text-zinc-600">
+          {#if bonusInputType === "percent"}
+            {copy.thBonusPercentHelp(formatPounds(annualBonus))}
+          {:else}
+            {copy.thBonusAmountHelp}
+          {/if}
+        </p>
       </AccordionSection>
 
       <AccordionSection title={copy.thStudentLoanTitle} indicator={studentLoanIndicator}>
@@ -329,74 +366,8 @@ const showRasHigherRateNote = $derived(
       </div>
     {/if}
 
-    <div class="mt-4">
-      <p class="text-lg font-semibold mb-2">{copy.thWorkingsHeading}</p>
-
-      <ul class="space-y-1 text-lg">
-        <li>{copy.thWorkingsSalary}: {formatPounds(result.withBonus.annualGross - (annualBonus ?? 0))}</li>
-        {#if hasBonus}
-          <li>{copy.thWorkingsBonus}: {formatPounds(annualBonus ?? 0)}</li>
-        {/if}
-        <li>{copy.thWorkingsTaxFree}: {formatPounds(result.withBonus.personalAllowance)}</li>
-        {#if hasPension}
-          <li>
-            {copy.thWorkingsPension}: {formatPounds(result.withBonus.grossPensionContribution)}
-            <span class="block text-sm text-zinc-600 ml-1">
-              {copy.thWorkingsPensionCost(pensionMethod === "net_pay" ? copy.thPensionNetPay : copy.thPensionRas, formatPounds(result.withBonus.pensionCostFromTakeHome))}
-            </span>
-          </li>
-        {/if}
-        <li>{copy.thWorkingsNi}: {formatPounds(result.withBonus.nationalInsurance)}</li>
-        <li class="font-semibold border-t border-zinc-500 mt-2 pt-2">
-          {copy.thWorkingsIncomeTax}: {formatPounds(result.withBonus.incomeTax.total)}
-        </li>
-        <li>
-          <ul>
-            {#if result.withBonus.incomeTax.incomeTaxType === "England/NI/Wales"}
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandBasicRate}: {formatPounds(result.withBonus.incomeTax.breakdown.basicRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandHigherRate}: {formatPounds(result.withBonus.incomeTax.breakdown.higherRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandAdditionalRate}: {formatPounds(result.withBonus.incomeTax.breakdown.additionalRateTax)}
-              </li>
-            {:else}
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandStarterRate}: {formatPounds(result.withBonus.incomeTax.breakdown.starterRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandBasicRateScot}: {formatPounds(result.withBonus.incomeTax.breakdown.basicRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandIntermediateRate}: {formatPounds(result.withBonus.incomeTax.breakdown.intermediateRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandHigherRateScot}: {formatPounds(result.withBonus.incomeTax.breakdown.higherRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandAdvancedRate}: {formatPounds(result.withBonus.incomeTax.breakdown.advancedRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandTopRate}: {formatPounds(result.withBonus.incomeTax.breakdown.topRateTax)}
-              </li>
-            {/if}
-          </ul>
-        </li>
-        {#if hasStudentLoans}
-          <li>{copy.thWorkingsStudentLoan}: {formatPounds(result.withBonus.totalStudentLoanRepayments)}</li>
-        {/if}
-      </ul>
+    <div class="mt-6">
+      <Breakdown {result} {annualBonus} {pensionMethod} />
 
       {#if showRasHigherRateNote}
         <p class="text-sm text-zinc-700 mt-4">

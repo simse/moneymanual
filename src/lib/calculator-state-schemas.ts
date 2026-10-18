@@ -14,6 +14,7 @@ export const takeHomePayStateSchema = z.object({
   pensionInputType: z.enum(["percent", "amount"]),
   pensionValue: nullableNumber,
   annualBonus: nullableNumber,
+  bonusInputType: z.enum(["percent", "amount"]).default("amount"),
 });
 
 export const savingsCalculatorStateSchema = z.object({

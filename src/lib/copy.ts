@@ -66,6 +66,11 @@ type Strings = {
   pluralYears: (n: number) => string;
   pluralPlans: (n: number) => string;
 
+  // Calculator restore banner
+  calcRestoreMessage: string;
+  calcRestoreButton: string;
+  calcRestoreDismiss: string;
+
   // Take-home pay calculator
   thTaxYearHeading: string;
   thTaxYearAria: string;
@@ -95,6 +100,9 @@ type Strings = {
   thBonusAria: string;
   thBonusIntro: string;
   thBonusPlaceholder: string;
+  thBonusPercentPlaceholder: string;
+  thBonusAmountHelp: string;
+  thBonusPercentHelp: (amount: string) => string;
   thStudentLoanTitle: string;
   thStudentLoanPlan1: string;
   thStudentLoanPlan2: string;
@@ -109,11 +117,19 @@ type Strings = {
   thBonusMonthAnnual: (formatted: string) => string;
   thBonusMonthNetOnTop: (netBonus: string, regularMonthly: string) => string;
   thWorkingsHeading: string;
+  thWorkingsPeriodAria: string;
+  thWorkingsYearly: string;
+  thWorkingsMonthly: string;
+  thWorkingsIntro: string;
+  thWorkingsIncludeBonus: string;
+  thWorkingsMonthlyBonusNote: string;
+  thWorkingsMonthlyWithBonusNote: string;
   thWorkingsSalary: string;
   thWorkingsBonus: string;
   thWorkingsTaxFree: string;
   thWorkingsPension: string;
-  thWorkingsPensionCost: (method: string, costFromTakeHome: string) => string;
+  thWorkingsPensionNetPayNote: string;
+  thWorkingsPensionRasNote: (gross: string) => string;
   thWorkingsNi: string;
   thWorkingsIncomeTax: string;
   thBandBasicRate: string;
@@ -126,6 +142,7 @@ type Strings = {
   thBandAdvancedRate: string;
   thBandTopRate: string;
   thWorkingsStudentLoan: string;
+  thWorkingsTakeHome: string;
   thRasNote: string;
 
   // Savings calculator
@@ -248,7 +265,7 @@ export const copy: Strings = {
   searchTheSite: "Search the site",
   footerTagline:
     "Free, plain-English guides to money, finance and the UK economy.",
-  notFinancialAdvice: "Information only — not financial advice.",
+  notFinancialAdvice: "Information only. Not financial advice.",
   copyright: (year) => `© ${year} MoneyManual.org.uk`,
   resultsFound: (count, query) => `Found ${count} results for "${query}"`,
   resultsNone: (query) => `No results found for "${query}".`,
@@ -259,7 +276,7 @@ export const copy: Strings = {
 
   glossaryHeading: "Glossary of finance terms",
   glossarySubheading:
-    "Plain-English definitions of the money words you'll come across — from AER to Yield. Pick a term from the list, or browse by topic.",
+    "Plain-English definitions of the money words you'll come across, from AER to Yield. Pick a term from the list, or browse by topic.",
   glossaryDescription:
     "A plain-English glossary of common money, finance and economy terms, browsable by topic.",
   glossaryFooterLink: "Glossary",
@@ -294,11 +311,15 @@ export const copy: Strings = {
     "See how your savings will grow with compound interest, regular deposits and a fixed annual interest rate.",
   toolsStudentLoanPageTitle: "Student Loan Repayment Calculator",
   toolsStudentLoanPageDescription:
-    "Find out how long it will take to repay your UK student loan, how much you will pay back in total, and whether your loan will be written off — based on your salary, plan and graduation year.",
+    "Find out how long it will take to repay your UK student loan, how much you will pay back in total, and whether your loan will be written off, based on your salary, plan and graduation year.",
 
   optional: "optional",
   pluralYears: (n) => `${n} year${n === 1 ? "" : "s"}`,
   pluralPlans: (n) => `${n} plan${n === 1 ? "" : "s"}`,
+
+  calcRestoreMessage: "You've used this calculator before on this device.",
+  calcRestoreButton: "Restore my values",
+  calcRestoreDismiss: "Dismiss",
 
   thTaxYearHeading: "Tax year",
   thTaxYearAria: "Tax year",
@@ -319,7 +340,7 @@ export const copy: Strings = {
     "Auto-enrolment pensions reduce your take-home pay differently depending on the relief method your employer uses.",
   thPensionNetPay: "Net pay arrangement",
   thPensionNetPayHelp:
-    "Deducted before income tax — tax relief is automatic at your marginal rate.",
+    "Deducted before income tax, so you get tax relief at your highest rate automatically.",
   thPensionRas: "Relief at source",
   thPensionRasHelp:
     "Deducted from net pay; provider claims back basic-rate (20%) relief.",
@@ -333,6 +354,10 @@ export const copy: Strings = {
   thBonusAria: "Annual bonus",
   thBonusIntro: "A one-off annual bonus, paid in a single month.",
   thBonusPlaceholder: "For example: 5000",
+  thBonusPercentPlaceholder: "For example: 10",
+  thBonusAmountHelp: "Your bonus before tax, in pounds.",
+  thBonusPercentHelp: (amount) =>
+    `Percentage of your yearly salary. That's a bonus of ${amount}.`,
   thStudentLoanTitle: "Student loan",
   thStudentLoanPlan1: "Plan 1",
   thStudentLoanPlan2: "Plan 2",
@@ -348,12 +373,22 @@ export const copy: Strings = {
   thBonusMonthNetOnTop: (netBonus, regular) =>
     `${netBonus} net bonus on top of your regular ${regular}.`,
   thWorkingsHeading: "How this was worked out",
+  thWorkingsPeriodAria: "Show amounts for",
+  thWorkingsYearly: "Yearly",
+  thWorkingsMonthly: "Monthly",
+  thWorkingsIntro: "Amounts with a minus sign are taken off your pay.",
+  thWorkingsIncludeBonus: "Include my bonus",
+  thWorkingsMonthlyWithBonusNote:
+    "Your bonus is spread evenly over 12 months. In practice you get it in one month.",
+  thWorkingsMonthlyBonusNote:
+    "A typical month without your bonus. Your bonus month is shown above.",
   thWorkingsSalary: "Your salary",
-  thWorkingsBonus: "Annual bonus",
-  thWorkingsTaxFree: "Tax-free amount",
-  thWorkingsPension: "Pension contribution",
-  thWorkingsPensionCost: (method, cost) =>
-    `${method} — costs you ${cost} from take-home.`,
+  thWorkingsBonus: "Bonus",
+  thWorkingsTaxFree: "Tax-free amount (no tax on this)",
+  thWorkingsPension: "Pension",
+  thWorkingsPensionNetPayNote: "Paid before income tax, so you pay less tax.",
+  thWorkingsPensionRasNote: (gross) =>
+    `${gross} goes into your pension once tax relief is added.`,
   thWorkingsNi: "National Insurance (NI)",
   thWorkingsIncomeTax: "Income tax",
   thBandBasicRate: "Basic rate (20%)",
@@ -366,6 +401,7 @@ export const copy: Strings = {
   thBandAdvancedRate: "Advanced rate",
   thBandTopRate: "Top rate",
   thWorkingsStudentLoan: "Student loan",
+  thWorkingsTakeHome: "Your take-home pay",
   thRasNote:
     "Note: with relief at source you'd typically claim back the extra higher-rate tax relief via Self Assessment.",
 
@@ -461,7 +497,7 @@ export const copy: Strings = {
   slForgivenIn: (formatted, year) => `${formatted} forgiven in ${year}`,
   slForgivenInYear: (year) => `forgiven in ${year}`,
   slOverpayingCostsMore: (more, writeOff) =>
-    `Overpaying costs you ${more} more — without it, your loan would have been written off in ${writeOff}.`,
+    `Overpaying costs you ${more} more. Without it, your loan would have been written off in ${writeOff}.`,
   slSavingsTimeAndMoney: (years, money) =>
     `You save ${years} year${years === 1 ? "" : "s"} and ${money}.`,
   slSavingsTimeOnly: (years) =>

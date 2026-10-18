@@ -27,7 +27,7 @@ const slug = glossaryTermSlug(entry);
 
 <Layout
     title={entry.data.term}
-    description={`${entry.data.term} — ${copy.glossaryDescription}`}
+    description={`${entry.data.term}: ${copy.glossaryDescription}`}
 >
     <GlossaryShell
         terms={allTerms}
