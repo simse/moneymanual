@@ -118,7 +118,9 @@ type Strings = {
   thWorkingsYearly: string;
   thWorkingsMonthly: string;
   thWorkingsIntro: string;
+  thWorkingsIncludeBonus: string;
   thWorkingsMonthlyBonusNote: string;
+  thWorkingsMonthlyWithBonusNote: string;
   thWorkingsSalary: string;
   thWorkingsBonus: string;
   thWorkingsTaxFree: string;
@@ -368,6 +370,9 @@ export const copy: Strings = {
   thWorkingsYearly: "Yearly",
   thWorkingsMonthly: "Monthly",
   thWorkingsIntro: "Amounts with a minus sign are taken off your pay.",
+  thWorkingsIncludeBonus: "Include my bonus",
+  thWorkingsMonthlyWithBonusNote:
+    "Your bonus is spread evenly over 12 months. In practice you get it in one month.",
   thWorkingsMonthlyBonusNote:
     "A typical month without your bonus. Your bonus month is shown above.",
   thWorkingsSalary: "Your salary",

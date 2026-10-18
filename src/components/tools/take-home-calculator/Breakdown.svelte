@@ -32,11 +32,14 @@ const monthFormatter = new Intl.NumberFormat("en-GB", {
 	maximumFractionDigits: 2,
 });
 
-// The yearly view includes the bonus. The monthly view shows a typical month
-// without it, matching the monthly figure at the top of the results.
+let includeBonus = $state(true);
+
+// With the bonus included, the monthly view spreads it evenly over the year.
+const hasBonus = $derived(annualBonus > 0);
 const isMonthly = $derived(period === "month");
-const scenario = $derived(isMonthly ? result.base : result.withBonus);
-const bonus = $derived(isMonthly ? 0 : annualBonus);
+const showBonus = $derived(hasBonus && includeBonus);
+const scenario = $derived(showBonus ? result.withBonus : result.base);
+const bonus = $derived(showBonus ? annualBonus : 0);
 
 const amount = (annual: number): string =>
 	(isMonthly ? monthFormatter : yearFormatter).format(annual / (isMonthly ? 12 : 1));
@@ -95,6 +98,13 @@ const taxBands = $derived.by(() => {
 </div>
 
 <p class="text-sm text-zinc-700 mb-3">{copy.thWorkingsIntro}</p>
+
+{#if hasBonus}
+  <label class="flex items-center gap-2 mb-3 cursor-pointer">
+    <input class="p-3" type="checkbox" bind:checked={includeBonus} />
+    {copy.thWorkingsIncludeBonus}
+  </label>
+{/if}
 
 <div class="text-lg tabular-nums" data-testid="workings">
   <div class="flex justify-between gap-4 py-1">
@@ -160,6 +170,8 @@ const taxBands = $derived.by(() => {
   </div>
 </div>
 
-{#if isMonthly && annualBonus > 0}
-  <p class="text-sm text-zinc-700 mt-2">{copy.thWorkingsMonthlyBonusNote}</p>
+{#if isMonthly && hasBonus}
+  <p class="text-sm text-zinc-700 mt-2">
+    {includeBonus ? copy.thWorkingsMonthlyWithBonusNote : copy.thWorkingsMonthlyBonusNote}
+  </p>
 {/if}
