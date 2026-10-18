@@ -1,19 +1,13 @@
 <script lang="ts">
-import { untrack } from "svelte";
-import type { StudentLoanRepaymentState } from "../../../lib/calculator-state-schemas";
 import { copy } from "../../../lib/copy";
-import { persistSessionState } from "../../../lib/session-state.svelte";
+import { persistLocalState } from "../../../lib/local-state.svelte";
+import RestoreBanner from "../RestoreBanner.svelte";
 import {
 	computeStudentLoanRepayment,
 	STUDENT_LOAN_PLANS,
 	type StudentLoanPlan,
 	type StudentLoanYear,
 } from "../../../lib/student-loan-repayment";
-
-let { initial }: { initial: StudentLoanRepaymentState | null } = $props();
-
-// Restore saved values once; subsequent edits belong to this calculator.
-const initialState = untrack(() => initial);
 
 const poundsFormatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -58,30 +52,38 @@ const planLabel = (planId: StudentLoanPlan): string => {
 
 const currentYear = new Date().getFullYear();
 
-let currentBalance = $state<number | null>(initialState?.currentBalance ?? null);
-let yearGraduated = $state<number | null>(initialState?.yearGraduated ?? null);
-let plan = $state<StudentLoanPlan>(initialState?.plan ?? "plan2");
-let currentSalary = $state<number | null>(initialState?.currentSalary ?? null);
+let currentBalance = $state<number | null>(null);
+let yearGraduated = $state<number | null>(null);
+let plan = $state<StudentLoanPlan>("plan2");
+let currentSalary = $state<number | null>(null);
 
-let salaryGrowthPercent = $state<number | null>(
-	initialState?.salaryGrowthPercent ?? 5,
+let salaryGrowthPercent = $state<number | null>(5);
+
+let inflationPercent = $state<number | null>(3);
+
+let monthlyOverpayment = $state<number | null>(null);
+
+const persisted = persistLocalState(
+	"student-loan-repayment",
+	() => ({
+		currentBalance,
+		yearGraduated,
+		plan,
+		currentSalary,
+		salaryGrowthPercent,
+		inflationPercent,
+		monthlyOverpayment,
+	}),
+	(state) => {
+		currentBalance = state.currentBalance;
+		yearGraduated = state.yearGraduated;
+		plan = state.plan;
+		currentSalary = state.currentSalary;
+		salaryGrowthPercent = state.salaryGrowthPercent;
+		inflationPercent = state.inflationPercent;
+		monthlyOverpayment = state.monthlyOverpayment;
+	},
 );
-
-let inflationPercent = $state<number | null>(initialState?.inflationPercent ?? 3);
-
-let monthlyOverpayment = $state<number | null>(
-	initialState?.monthlyOverpayment ?? null,
-);
-
-persistSessionState("student-loan-repayment", () => ({
-	currentBalance,
-	yearGraduated,
-	plan,
-	currentSalary,
-	salaryGrowthPercent,
-	inflationPercent,
-	monthlyOverpayment,
-}));
 
 const sharedInputs = $derived({
 	currentBalance: currentBalance ?? 0,
@@ -140,6 +142,8 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
 	}
 };
 </script>
+
+<RestoreBanner {persisted} />
 
 <div class="grid grid-cols-1 md:grid-cols-5 gap-16">
   <div class="md:col-span-3">

@@ -1,9 +1,8 @@
 <script lang="ts">
-import { untrack } from "svelte";
 import DownRightIcon from "virtual:icons/material-symbols/subdirectory-arrow-right";
-import type { TakeHomePayState } from "../../../lib/calculator-state-schemas";
 import { copy } from "../../../lib/copy";
-import { persistSessionState } from "../../../lib/session-state.svelte";
+import { persistLocalState } from "../../../lib/local-state.svelte";
+import RestoreBanner from "../RestoreBanner.svelte";
 import {
 	type Country,
 	computeTakeHome,
@@ -15,11 +14,6 @@ import {
 	type TaxYear,
 } from "../../../lib/take-home-pay";
 import AccordionSection from "../../common/AccordionSection.svelte";
-
-let { initial }: { initial: TakeHomePayState | null } = $props();
-
-// Restore saved values once; subsequent edits belong to this calculator.
-const initialState = untrack(() => initial);
 
 const formatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -63,41 +57,47 @@ const studentLoanPlans: { id: StudentLoanPlan; label: string }[] = $derived([
 	{ id: 5, label: copy.thStudentLoanPlan5 },
 ]);
 
-let selectedTaxYear = $state<TaxYear>(
-	initialState?.selectedTaxYear ?? DEFAULT_TAX_YEAR,
+let selectedTaxYear = $state<TaxYear>(DEFAULT_TAX_YEAR);
+
+let selectedPayFrequency = $state("annually");
+
+let selectedCountry = $state<Country>("England/NI/Wales");
+
+let selectedStudentLoanPlans = $state<StudentLoanPlan[]>([]);
+
+let grossIncome = $state<number | null>(null);
+let pensionMethod = $state<PensionMethod>("net_pay");
+
+let pensionInputType = $state<PensionInputType>("percent");
+
+let pensionValue = $state<number | null>(null);
+let annualBonus = $state<number | null>(null);
+
+const persisted = persistLocalState(
+	"take-home-pay",
+	() => ({
+		selectedTaxYear,
+		selectedPayFrequency,
+		selectedCountry,
+		selectedStudentLoanPlans,
+		grossIncome,
+		pensionMethod,
+		pensionInputType,
+		pensionValue,
+		annualBonus,
+	}),
+	(state) => {
+		selectedTaxYear = state.selectedTaxYear;
+		selectedPayFrequency = state.selectedPayFrequency;
+		selectedCountry = state.selectedCountry;
+		selectedStudentLoanPlans = [...state.selectedStudentLoanPlans];
+		grossIncome = state.grossIncome;
+		pensionMethod = state.pensionMethod;
+		pensionInputType = state.pensionInputType;
+		pensionValue = state.pensionValue;
+		annualBonus = state.annualBonus;
+	},
 );
-
-let selectedPayFrequency = $state(initialState?.selectedPayFrequency ?? "annually");
-
-let selectedCountry = $state<Country>(
-	initialState?.selectedCountry ?? "England/NI/Wales",
-);
-
-let selectedStudentLoanPlans = $state<StudentLoanPlan[]>(
-	initialState?.selectedStudentLoanPlans ?? [],
-);
-
-let grossIncome = $state<number | null>(initialState?.grossIncome ?? null);
-let pensionMethod = $state<PensionMethod>(initialState?.pensionMethod ?? "net_pay");
-
-let pensionInputType = $state<PensionInputType>(
-	initialState?.pensionInputType ?? "percent",
-);
-
-let pensionValue = $state<number | null>(initialState?.pensionValue ?? null);
-let annualBonus = $state<number | null>(initialState?.annualBonus ?? null);
-
-persistSessionState("take-home-pay", () => ({
-	selectedTaxYear,
-	selectedPayFrequency,
-	selectedCountry,
-	selectedStudentLoanPlans,
-	grossIncome,
-	pensionMethod,
-	pensionInputType,
-	pensionValue,
-	annualBonus,
-}));
 
 const result = $derived.by(() => {
 	const freq =
@@ -162,6 +162,8 @@ const showRasHigherRateNote = $derived(
 			0,
 );
 </script>
+
+<RestoreBanner {persisted} />
 
 <div class="grid grid-cols-1 md:grid-cols-5 gap-16">
   <div class="md:col-span-3">

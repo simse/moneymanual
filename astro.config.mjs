@@ -46,9 +46,7 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: "cloudflare-binding",
   }),
-  session: {
-    ttl: 60 * 60 * 24 * 30,
-  },
+  session: false,
   experimental: {
     contentIntellisense: true,
   },

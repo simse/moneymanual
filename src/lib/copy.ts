@@ -66,6 +66,11 @@ type Strings = {
   pluralYears: (n: number) => string;
   pluralPlans: (n: number) => string;
 
+  // Calculator restore banner
+  calcRestoreMessage: string;
+  calcRestoreButton: string;
+  calcRestoreDismiss: string;
+
   // Take-home pay calculator
   thTaxYearHeading: string;
   thTaxYearAria: string;
@@ -299,6 +304,10 @@ export const copy: Strings = {
   optional: "optional",
   pluralYears: (n) => `${n} year${n === 1 ? "" : "s"}`,
   pluralPlans: (n) => `${n} plan${n === 1 ? "" : "s"}`,
+
+  calcRestoreMessage: "You've used this calculator before on this device.",
+  calcRestoreButton: "Restore my values",
+  calcRestoreDismiss: "Dismiss",
 
   thTaxYearHeading: "Tax year",
   thTaxYearAria: "Tax year",
