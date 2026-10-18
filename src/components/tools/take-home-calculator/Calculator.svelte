@@ -71,7 +71,8 @@ let pensionMethod = $state<PensionMethod>("net_pay");
 let pensionInputType = $state<PensionInputType>("percent");
 
 let pensionValue = $state<number | null>(null);
-let annualBonus = $state<number | null>(null);
+let bonusValue = $state<number | null>(null);
+let bonusInputType = $state<PensionInputType>("amount");
 
 const persisted = persistLocalState(
 	"take-home-pay",
@@ -84,7 +85,8 @@ const persisted = persistLocalState(
 		pensionMethod,
 		pensionInputType,
 		pensionValue,
-		annualBonus,
+		annualBonus: bonusValue,
+		bonusInputType,
 	}),
 	(state) => {
 		selectedTaxYear = state.selectedTaxYear;
@@ -95,9 +97,22 @@ const persisted = persistLocalState(
 		pensionMethod = state.pensionMethod;
 		pensionInputType = state.pensionInputType;
 		pensionValue = state.pensionValue;
-		annualBonus = state.annualBonus;
+		bonusValue = state.annualBonus;
+		bonusInputType = state.bonusInputType;
 	},
 );
+
+const annualBonus = $derived.by(() => {
+	const freq =
+		payFrequencies.find((f) => f.id === selectedPayFrequency) ??
+		payFrequencies[3];
+
+	const value = bonusValue ?? 0;
+
+	return bonusInputType === "percent"
+		? freq.toAnnual(grossIncome ?? 0) * (value / 100)
+		: value;
+});
 
 const result = $derived.by(() => {
 	const freq =
@@ -115,7 +130,7 @@ const result = $derived.by(() => {
 		taxYear: selectedTaxYear,
 		country: selectedCountry,
 		annualGrossSalary,
-		annualBonus: annualBonus ?? 0,
+		annualBonus,
 		pension: {
 			method: pensionMethod,
 			inputType: pensionInputType,
@@ -125,7 +140,7 @@ const result = $derived.by(() => {
 	});
 });
 
-const hasBonus = $derived((annualBonus ?? 0) > 0);
+const hasBonus = $derived(annualBonus > 0);
 const hasPension = $derived(result.base.grossPensionContribution > 0);
 
 const pensionIndicator = $derived.by(() => {
@@ -260,12 +275,12 @@ const showRasHigherRateNote = $derived(
           <div class="inline-flex border-2 border-black">
             <button
               type="button"
-              class="px-3 text-xl {pensionInputType === 'percent' ? 'bg-black text-white' : 'bg-white'}"
+              class="px-3 text-xl cursor-pointer {pensionInputType === 'percent' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
               onclick={() => { pensionInputType = "percent"; }}
             >%</button>
             <button
               type="button"
-              class="px-3 text-xl {pensionInputType === 'amount' ? 'bg-black text-white' : 'bg-white'}"
+              class="px-3 text-xl cursor-pointer {pensionInputType === 'amount' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
               onclick={() => { pensionInputType = "amount"; }}
             >£</button>
           </div>
@@ -283,13 +298,34 @@ const showRasHigherRateNote = $derived(
         <p class="text-base text-zinc-700 mb-3">
           {copy.thBonusIntro}
         </p>
-        <input
-          type="number"
-          aria-label={copy.thBonusAria}
-          class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.thBonusPlaceholder}
-          bind:value={annualBonus}
-        >
+        <div class="flex items-stretch gap-2 mb-2">
+          <input
+            type="number"
+            aria-label={copy.thBonusAria}
+            class="text-xl border-2 border-black outline-yellow-400 block w-full"
+            placeholder={bonusInputType === "percent" ? copy.thBonusPercentPlaceholder : copy.thBonusPlaceholder}
+            bind:value={bonusValue}
+          >
+          <div class="inline-flex border-2 border-black">
+            <button
+              type="button"
+              class="px-3 text-xl cursor-pointer {bonusInputType === 'percent' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
+              onclick={() => { bonusInputType = "percent"; }}
+            >%</button>
+            <button
+              type="button"
+              class="px-3 text-xl cursor-pointer {bonusInputType === 'amount' ? 'bg-black text-white' : 'bg-white hover:bg-zinc-200'}"
+              onclick={() => { bonusInputType = "amount"; }}
+            >£</button>
+          </div>
+        </div>
+        <p class="text-sm text-zinc-600">
+          {#if bonusInputType === "percent"}
+            {copy.thBonusPercentHelp(formatPounds(annualBonus))}
+          {:else}
+            {copy.thBonusAmountHelp}
+          {/if}
+        </p>
       </AccordionSection>
 
       <AccordionSection title={copy.thStudentLoanTitle} indicator={studentLoanIndicator}>
@@ -331,7 +367,7 @@ const showRasHigherRateNote = $derived(
     {/if}
 
     <div class="mt-6">
-      <Breakdown {result} annualBonus={annualBonus ?? 0} {pensionMethod} />
+      <Breakdown {result} {annualBonus} {pensionMethod} />
 
       {#if showRasHigherRateNote}
         <p class="text-sm text-zinc-700 mt-4">

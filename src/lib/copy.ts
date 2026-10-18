@@ -100,6 +100,9 @@ type Strings = {
   thBonusAria: string;
   thBonusIntro: string;
   thBonusPlaceholder: string;
+  thBonusPercentPlaceholder: string;
+  thBonusAmountHelp: string;
+  thBonusPercentHelp: (amount: string) => string;
   thStudentLoanTitle: string;
   thStudentLoanPlan1: string;
   thStudentLoanPlan2: string;
@@ -351,6 +354,10 @@ export const copy: Strings = {
   thBonusAria: "Annual bonus",
   thBonusIntro: "A one-off annual bonus, paid in a single month.",
   thBonusPlaceholder: "For example: 5000",
+  thBonusPercentPlaceholder: "For example: 10",
+  thBonusAmountHelp: "Your bonus before tax, in pounds.",
+  thBonusPercentHelp: (amount) =>
+    `Percentage of your yearly salary. That's a bonus of ${amount}.`,
   thStudentLoanTitle: "Student loan",
   thStudentLoanPlan1: "Plan 1",
   thStudentLoanPlan2: "Plan 2",
