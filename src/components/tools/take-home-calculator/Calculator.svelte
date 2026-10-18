@@ -1,5 +1,4 @@
 <script lang="ts">
-import DownRightIcon from "virtual:icons/material-symbols/subdirectory-arrow-right";
 import { copy } from "../../../lib/copy";
 import { persistLocalState } from "../../../lib/local-state.svelte";
 import RestoreBanner from "../RestoreBanner.svelte";
@@ -14,6 +13,7 @@ import {
 	type TaxYear,
 } from "../../../lib/take-home-pay";
 import AccordionSection from "../../common/AccordionSection.svelte";
+import Breakdown from "./Breakdown.svelte";
 
 const formatter = new Intl.NumberFormat("en-GB", {
 	currency: "GBP",
@@ -127,7 +127,6 @@ const result = $derived.by(() => {
 
 const hasBonus = $derived((annualBonus ?? 0) > 0);
 const hasPension = $derived(result.base.grossPensionContribution > 0);
-const hasStudentLoans = $derived(result.base.totalStudentLoanRepayments > 0);
 
 const pensionIndicator = $derived.by(() => {
 	if ((pensionValue ?? 0) <= 0) {return null;}
@@ -331,74 +330,8 @@ const showRasHigherRateNote = $derived(
       </div>
     {/if}
 
-    <div class="mt-4">
-      <p class="text-lg font-semibold mb-2">{copy.thWorkingsHeading}</p>
-
-      <ul class="space-y-1 text-lg">
-        <li>{copy.thWorkingsSalary}: {formatPounds(result.withBonus.annualGross - (annualBonus ?? 0))}</li>
-        {#if hasBonus}
-          <li>{copy.thWorkingsBonus}: {formatPounds(annualBonus ?? 0)}</li>
-        {/if}
-        <li>{copy.thWorkingsTaxFree}: {formatPounds(result.withBonus.personalAllowance)}</li>
-        {#if hasPension}
-          <li>
-            {copy.thWorkingsPension}: {formatPounds(result.withBonus.grossPensionContribution)}
-            <span class="block text-sm text-zinc-600 ml-1">
-              {copy.thWorkingsPensionCost(pensionMethod === "net_pay" ? copy.thPensionNetPay : copy.thPensionRas, formatPounds(result.withBonus.pensionCostFromTakeHome))}
-            </span>
-          </li>
-        {/if}
-        <li>{copy.thWorkingsNi}: {formatPounds(result.withBonus.nationalInsurance)}</li>
-        <li class="font-semibold border-t border-zinc-500 mt-2 pt-2">
-          {copy.thWorkingsIncomeTax}: {formatPounds(result.withBonus.incomeTax.total)}
-        </li>
-        <li>
-          <ul>
-            {#if result.withBonus.incomeTax.incomeTaxType === "England/NI/Wales"}
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandBasicRate}: {formatPounds(result.withBonus.incomeTax.breakdown.basicRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandHigherRate}: {formatPounds(result.withBonus.incomeTax.breakdown.higherRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandAdditionalRate}: {formatPounds(result.withBonus.incomeTax.breakdown.additionalRateTax)}
-              </li>
-            {:else}
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandStarterRate}: {formatPounds(result.withBonus.incomeTax.breakdown.starterRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandBasicRateScot}: {formatPounds(result.withBonus.incomeTax.breakdown.basicRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandIntermediateRate}: {formatPounds(result.withBonus.incomeTax.breakdown.intermediateRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandHigherRateScot}: {formatPounds(result.withBonus.incomeTax.breakdown.higherRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandAdvancedRate}: {formatPounds(result.withBonus.incomeTax.breakdown.advancedRateTax)}
-              </li>
-              <li class="flex gap-2">
-                <DownRightIcon />
-                {copy.thBandTopRate}: {formatPounds(result.withBonus.incomeTax.breakdown.topRateTax)}
-              </li>
-            {/if}
-          </ul>
-        </li>
-        {#if hasStudentLoans}
-          <li>{copy.thWorkingsStudentLoan}: {formatPounds(result.withBonus.totalStudentLoanRepayments)}</li>
-        {/if}
-      </ul>
+    <div class="mt-6">
+      <Breakdown {result} annualBonus={annualBonus ?? 0} {pensionMethod} />
 
       {#if showRasHigherRateNote}
         <p class="text-sm text-zinc-700 mt-4">

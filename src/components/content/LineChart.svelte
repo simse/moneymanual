@@ -126,7 +126,7 @@
               <th scope="row">{formatX(x)}</th>
               {#each lines as line}
                 {@const point = line.points.find((value) => value.x === x)}
-                <td>{point ? formatValue(point.y) : "—"}</td>
+                <td>{point ? formatValue(point.y) : "-"}</td>
               {/each}
             </tr>
           {/each}
