@@ -14,14 +14,14 @@ let { persisted }: { persisted: PersistedState } = $props();
     <div class="flex gap-2">
       <button
         type="button"
-        class="bg-teal-900 text-white font-semibold px-3 py-1 outline-yellow-400"
+        class="bg-teal-900 text-white font-semibold px-3 py-1 outline-yellow-400 cursor-pointer hover:bg-teal-700 active:bg-yellow-400 active:text-black"
         onclick={persisted.restore}
       >
         {copy.calcRestoreButton}
       </button>
       <button
         type="button"
-        class="border-2 border-black bg-white font-semibold px-3 py-0.5 outline-yellow-400"
+        class="border-2 border-black bg-white font-semibold px-3 py-0.5 outline-yellow-400 cursor-pointer hover:bg-zinc-200 active:bg-yellow-400"
         onclick={persisted.dismiss}
       >
         {copy.calcRestoreDismiss}
