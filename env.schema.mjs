@@ -14,22 +14,4 @@ export const envSchema = {
     values: ["dev", "staging", "prod"],
     default: "dev",
   }),
-  TYPESENSE_API_URL: envField.string({
-    context: "server",
-    access: "secret",
-    url: true,
-    optional: true,
-  }),
-  TYPESENSE_API_KEY: envField.string({
-    context: "server",
-    access: "secret",
-    min: 1,
-    optional: true,
-  }),
-  TYPESENSE_INDEX_NAME: envField.string({
-    context: "server",
-    access: "secret",
-    min: 1,
-    optional: true,
-  }),
 };

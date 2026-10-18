@@ -9,7 +9,4 @@ export type AutocompleteResult = {
   matchedTerms: string[];
 };
 
-export type SearchResponse<T> = { results: T[] } & (
-  | { provider: "typesense"; queryTimeMs?: number }
-  | { provider: "minisearch"; queryTimeMs?: never }
-);
+export type SearchResponse<T> = { results: T[] };

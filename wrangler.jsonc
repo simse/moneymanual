@@ -37,8 +37,6 @@
         "binding": "IMAGES",
       },
       "vars": {
-        "TYPESENSE_API_URL": "https://search.moneymanual.org.uk",
-        "TYPESENSE_INDEX_NAME": "moneymanual-staging",
         "ENVIRONMENT": "staging",
       },
     },
@@ -60,8 +58,6 @@
         "binding": "IMAGES",
       },
       "vars": {
-        "TYPESENSE_API_URL": "https://search.moneymanual.org.uk",
-        "TYPESENSE_INDEX_NAME": "moneymanual-prod",
         "ENVIRONMENT": "prod",
       },
     },
