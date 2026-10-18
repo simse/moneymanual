@@ -1,68 +1,14 @@
 # moneymanual.org.uk
 
-## Sync articles to Typesense
-
-Use Node 24 and install dependencies with `pnpm install --frozen-lockfile`.
-Set these variables in the root `.env` file locally, or inject them into the CI
-environment. Existing environment variables take precedence over `.env`.
-
-```dotenv
-TYPESENSE_API_URL=https://your-typesense-host:443
-TYPESENSE_API_KEY=your-write-key
-TYPESENSE_INDEX_NAME=articles
-```
-
-Run `pnpm run search:sync`. To validate local content without credentials or
-remote requests, run `pnpm run search:sync --dry-run`.
-
-The command creates the collection when missing and bulk upserts all
-articles, including section pages. Documents contain `id`, `title`,
-`description`, readable `body` text, `searchPhrases`, and `url`.
-MDX is parsed without execution. Text inside components is retained, but imports,
-attributes, and JavaScript expressions are omitted. Glossary entries are excluded.
-
-The configured collection must be dedicated to these articles. After
-every import succeeds, the command deletes remote IDs absent from the content
-folder. Invalid content, an empty source set, or import/export errors prevent
-deletion. The command removes the legacy `locale` field from a compatible
-collection. Other incompatible schemas cause an error and are not recreated.
-
-The key needs permission to get, create, and update collections, plus
-`documents:import`, `documents:export`, and `documents:delete` permissions for
-the configured collection. Keep the key in local environment files or CI
-secrets, never in browser code.
-
-CI can run the same command after dependency installation, with the three
-variables injected. No workflow is added here. Serialize all runs against a
-collection, including local runs; do not run this from competing CI jobs.
-Use separate collection names for staging and production.
-
-Failures exit nonzero. Successful earlier batches or deletions can remain after
-a failure; fix the reported problem and rerun to complete the sync. The command
-reports validated, upserted, and deleted counts.
-
 ## Runtime search
 
-Search and autocomplete use Typesense. Set `TYPESENSE_API_URL`,
-`TYPESENSE_API_KEY`, and `TYPESENSE_INDEX_NAME` in the Worker's runtime environment
-for staging and production. Locally, the Cloudflare adapter loads these from
-`.env`. Use a separate search-only key with `documents:search` permission for the
-configured collection at runtime; the sync key needs the write permissions above.
-Keep keys in Worker secrets, not public frontend variables.
+Search and autocomplete run in the Worker with MiniSearch. The indexes are
+prerendered at build time as `/index/search.json` and `/index/autocomplete.json`.
+If search fails, the API routes return a generic 503.
 
-The server falls back to MiniSearch if configuration is missing or Typesense
-fails, returns invalid or incomplete data, or exceeds two seconds across all
-pages. Valid empty results do not trigger fallback. If both providers fail, API
-routes return a generic 503.
-
-Both endpoints return `{ results, provider, queryTimeMs? }`. The provider is
-`typesense` or `minisearch`. Typesense query time is in milliseconds, summed across
-result pages; it is omitted if any page has no valid timing. MiniSearch omits
-query time. The results page shows timing when present, including zero.
-
-Within `results`, search items contain `title`,
+Both endpoints return `{ results }`. Search items contain `title`,
 `description`, and `url`; autocomplete items contain `phrase` and `matchedTerms`.
-Autocomplete returns up to six unique search phrases. Credentials are never sent to the frontend.
+Autocomplete returns up to six unique search phrases.
 
 ## Environment and fonts
 
@@ -71,8 +17,7 @@ Autocomplete returns up to six unique search phrases. Credentials are never sent
 `ENVIRONMENT` is a runtime Worker binding: `dev` (the default), `staging`, or
 `prod`. Pages include `noindex` unless it is `prod`. Select the matching
 `CLOUDFLARE_ENV` when building so prerendered pages use the correct environment.
-Typesense variables are optional for the site's local search fallback, but are
-required by the sync command. Supplied values are validated by Astro.
+Supplied values are validated by Astro.
 
 Archivo's Latin variable fonts (normal and italic, weights 100–900) are served
 from `public/fonts/`. They were downloaded from Fontsource's CDN; the included

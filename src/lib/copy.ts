@@ -21,7 +21,7 @@ type Strings = {
   footerTagline: string;
   notFinancialAdvice: string;
   copyright: (year: number) => string;
-  resultsFound: (count: number, query: string, queryTimeMs?: number) => string;
+  resultsFound: (count: number, query: string) => string;
   resultsNone: (query: string) => string;
   notFoundTitle: string;
   notFoundHeading: string;
@@ -250,8 +250,7 @@ export const copy: Strings = {
     "Free, plain-English guides to money, finance and the UK economy.",
   notFinancialAdvice: "Information only — not financial advice.",
   copyright: (year) => `© ${year} MoneyManual.org.uk`,
-  resultsFound: (count, query, queryTimeMs) =>
-    `Found ${count} results for "${query}"${queryTimeMs === undefined ? "" : ` in ${queryTimeMs} ms`}`,
+  resultsFound: (count, query) => `Found ${count} results for "${query}"`,
   resultsNone: (query) => `No results found for "${query}".`,
   notFoundTitle: "404",
   notFoundHeading: "Page not found",
