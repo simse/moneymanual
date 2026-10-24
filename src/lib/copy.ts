@@ -20,6 +20,7 @@ type Strings = {
   searchTheSite: string;
   footerTagline: string;
   notFinancialAdvice: string;
+  articleSources: string;
   copyright: (year: number) => string;
   resultsFound: (count: number, query: string) => string;
   resultsNone: (query: string) => string;
@@ -266,6 +267,7 @@ export const copy: Strings = {
   footerTagline:
     "Free, plain-English guides to money, finance and the UK economy.",
   notFinancialAdvice: "Information only. Not financial advice.",
+  articleSources: "Sources",
   copyright: (year) => `© ${year} MoneyManual.org.uk`,
   resultsFound: (count, query) => `Found ${count} results for "${query}"`,
   resultsNone: (query) => `No results found for "${query}".`,
