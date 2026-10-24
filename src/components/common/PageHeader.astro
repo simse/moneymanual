@@ -1,5 +1,4 @@
 ---
-import { copy } from "../../lib/copy";
 import Breadcrumbs from "../Breadcrumbs.svelte";
 
 interface Props {
@@ -17,7 +16,7 @@ const { title, subtitle, breadcrumbs = [] } = Astro.props;
   <div class="max-w-5xl mx-auto px-4 pt-4 pb-12">
     <Breadcrumbs links={[
       {
-        text: copy.home,
+        text: "Home",
         href: "/",
       },
       ...breadcrumbs,

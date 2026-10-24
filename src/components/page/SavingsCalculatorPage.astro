@@ -2,10 +2,9 @@
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/savings-calculator/Calculator.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { copy } from "../../lib/copy";
 
-const title = copy.toolsSavingsPageTitle;
-const description = copy.toolsSavingsPageDescription;
+const title = "Savings Growth Calculator";
+const description = "See how your savings will grow with compound interest, regular deposits and a fixed annual interest rate.";
 ---
 <Layout
   title={title}
@@ -16,7 +15,7 @@ const description = copy.toolsSavingsPageDescription;
     subtitle={description}
     breadcrumbs={[
       {
-        text: copy.tools,
+        text: "Tools",
         href: "/tools",
       }
     ]}

@@ -2,7 +2,6 @@
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
 import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
-import { copy } from "../lib/copy";
 
 type Topic = { title: string; href: string };
 
@@ -14,21 +13,21 @@ const {
 
 const tools = $derived([
 	{
-		name: copy.toolsTakeHomeShortName,
+		name: "Take-home pay",
 		href: "/tools/take-home-pay",
 		bg: "bg-pink-200",
 		fg: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: copy.toolsSavingsShortName,
+		name: "Savings growth",
 		href: "/tools/savings-calculator",
 		bg: "bg-emerald-200",
 		fg: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: copy.toolsStudentLoanShortName,
+		name: "Student loan",
 		href: "/tools/student-loan-repayment",
 		bg: "bg-blue-200",
 		fg: "text-blue-900",
@@ -53,24 +52,24 @@ const glossaryHref = "/glossary";
                     moneymanual<span class="opacity-60">.org.uk</span>
                 </p>
                 <p class="text-zinc-700 font-medium mb-4">
-                    {copy.footerTagline}
+                    Free, plain-English guides to money, finance and the UK economy.
                 </p>
                 <ul class="text-sm">
                     <li>
                         <a href={searchHref} class={linkCls}
-                            >{copy.searchTheSite}</a
+                            >Search the site</a
                         >
                     </li>
                     <li>
                         <a href={glossaryHref} class={linkCls}
-                            >{copy.glossaryFooterLink}</a
+                            >Glossary</a
                         >
                     </li>
                 </ul>
             </div>
             <div class="md:col-span-3">
                 <h4 class="font-bold text-zinc-900 mb-3">
-                    {copy.topics}
+                    Topics
                 </h4>
                 <ul>
                     {#each topics as topic}
@@ -85,13 +84,13 @@ const glossaryHref = "/glossary";
             <div class="md:col-span-5">
                 <div class="flex items-baseline justify-between mb-3">
                     <h4 class="font-bold text-zinc-900">
-                        {copy.tools}
+                        Tools
                     </h4>
                     <a
                         href={toolsHref}
                         class="text-teal-700 hover:text-teal-900 underline font-medium text-sm"
                     >
-                        {copy.seeAll}
+                        See all →
                     </a>
                 </div>
                 <ul class="flex flex-col gap-3">
@@ -120,8 +119,8 @@ const glossaryHref = "/glossary";
         <div
             class="border-t border-zinc-300 mt-6 pt-5 flex flex-wrap gap-x-6 gap-y-1 text-sm text-zinc-700"
         >
-            <p>{copy.copyright(year)}</p>
-            <p>{copy.notFinancialAdvice}</p>
+            <p>© {year} MoneyManual.org.uk</p>
+            <p>Information only. Not financial advice.</p>
         </div>
     </div>
 </footer>

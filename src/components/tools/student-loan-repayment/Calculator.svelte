@@ -1,5 +1,4 @@
 <script lang="ts">
-import { copy } from "../../../lib/copy";
 import { persistLocalState } from "../../../lib/local-state.svelte";
 import RestoreBanner from "../RestoreBanner.svelte";
 import {
@@ -38,15 +37,15 @@ const planOptions: StudentLoanPlan[] = [
 const planLabel = (planId: StudentLoanPlan): string => {
 	switch (planId) {
 		case "plan1":
-			return copy.slPlan1;
+			return "Plan 1";
 		case "plan2":
-			return copy.slPlan2;
+			return "Plan 2";
 		case "plan4":
-			return copy.slPlan4;
+			return "Plan 4";
 		case "plan5":
-			return copy.slPlan5;
+			return "Plan 5";
 		case "postgrad":
-			return copy.slPostgrad;
+			return "Postgraduate Loan";
 	}
 };
 
@@ -134,11 +133,11 @@ const interestShare = $derived(100 - repaymentShare);
 const statusLabel = (status: StudentLoanYear["status"]): string => {
 	switch (status) {
 		case "studying":
-			return copy.slStatusStudying;
+			return "Studying";
 		case "paid_off":
-			return copy.slStatusPaidOff;
+			return "Paid off";
 		default:
-			return copy.slStatusRepaying;
+			return "Repaying";
 	}
 };
 </script>
@@ -149,15 +148,15 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
   <div class="md:col-span-3">
     <form>
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slBalanceTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Current loan balance</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slBalanceHelp}
+          The amount you currently owe. You can find this on your Student Loans Company online account.
         </p>
         <input
           type="number"
-          aria-label={copy.slBalanceAria}
+          aria-label="Current loan balance in pounds"
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.slBalancePlaceholder}
+          placeholder="For example: 35000"
           min="0"
           step="100"
           bind:value={currentBalance}
@@ -165,15 +164,15 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slYearGraduatedTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Year you graduated</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slYearGraduatedHelp}
+          You start repaying the April after you finish your course. If you have not graduated yet, enter the year you expect to.
         </p>
         <input
           type="number"
-          aria-label={copy.slYearGraduatedAria}
+          aria-label="Year you graduated"
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.slYearGraduatedPlaceholder(currentYear - 4)}
+          placeholder={`For example: ${currentYear - 4}`}
           min="1990"
           max={currentYear + 10}
           step="1"
@@ -182,12 +181,12 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slPlanTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Repayment plan</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slPlanHelpBefore}<a href="/student-finance/repaying-your-loan" class="underline">{copy.slPlanHelpLink}</a>{copy.slPlanHelpAfter}
+          Your plan depends on when and where you studied. Check your <a href="/student-finance/repaying-your-loan" class="underline">repayment plan details</a> if you are not sure.
         </p>
         <select
-          aria-label={copy.slPlanAria}
+          aria-label="Repayment plan"
           bind:value={plan}
           class="text-xl border-2 border-black outline-yellow-400"
         >
@@ -198,15 +197,15 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slSalaryTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Current annual salary</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slSalaryHelp}
+          Your gross income before tax and other deductions, including bonuses.
         </p>
         <input
           type="number"
-          aria-label={copy.slSalaryAria}
+          aria-label="Current annual salary in pounds"
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.slSalaryPlaceholder}
+          placeholder="For example: 35000"
           min="0"
           step="500"
           bind:value={currentSalary}
@@ -214,16 +213,16 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slSalaryGrowthTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Expected annual salary growth</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slSalaryGrowthHelp}
+          How much you expect your pay to rise each year, on average.
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={copy.slSalaryGrowthAria}
+            aria-label="Annual salary growth as a percentage"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={copy.slSalaryGrowthPlaceholder}
+            placeholder="For example: 5"
             min="0"
             step="0.1"
             bind:value={salaryGrowthPercent}
@@ -233,16 +232,16 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slInflationTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Expected annual inflation</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slInflationHelp}
+          The repayment threshold is reviewed each April. We assume it grows in line with inflation, so a higher figure means more of your pay stays below the threshold.
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={copy.slInflationAria}
+            aria-label="Annual inflation as a percentage"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={copy.slInflationPlaceholder}
+            placeholder="For example: 3"
             min="0"
             step="0.1"
             bind:value={inflationPercent}
@@ -252,17 +251,17 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.slOverpaymentTitle} <span class="text-base font-normal text-zinc-600">({copy.optional})</span></h2>
+        <h2 class="text-2xl font-bold mb-2">Monthly overpayment <span class="text-base font-normal text-zinc-600">(optional)</span></h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.slOverpaymentHelp}
+          Voluntary extra payment you'll make each month on top of the statutory deduction. You can make voluntary repayments directly to the Student Loans Company at any time.
         </p>
         <div class="flex items-stretch gap-2">
           <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">£</span>
           <input
             type="number"
-            aria-label={copy.slOverpaymentAria}
+            aria-label="Monthly overpayment in pounds"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={copy.slOverpaymentPlaceholder}
+            placeholder="For example: 100"
             min="0"
             step="10"
             bind:value={monthlyOverpayment}
@@ -271,7 +270,7 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </div>
 
       <p class="text-sm text-zinc-600">
-        {copy.slAssumptionNote}
+        Estimates based on current plan thresholds and rates. Plan 2 interest scales with income between £29,385 and £52,485. Real-world thresholds and rates can change each April.
       </p>
     </form>
   </div>
@@ -280,48 +279,48 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
     {#if hasResult}
       {#if isOverpaying}
         <div class="bg-zinc-200 text-zinc-900 p-4" data-testid="baseline-card">
-          <strong>{copy.slWithoutOverpayment}</strong>
+          <strong>Without overpayment</strong>
           {#if baselineResult.writtenOff}
-            <p class="text-2xl font-bold" data-testid="baseline-amount">{copy.slPaidLabel(formatPoundsExact(baselineResult.totalRepaid))}</p>
-            <p>{copy.slWrittenOffAfter(STUDENT_LOAN_PLANS[plan].writeOffYears)}, {copy.slForgivenIn(formatPoundsExact(baselineResult.writtenOffAmount), baselineResult.writeOffCalendarYear ?? 0)}</p>
+            <p class="text-2xl font-bold" data-testid="baseline-amount">{formatPoundsExact(baselineResult.totalRepaid)} paid</p>
+            <p>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} year{STUDENT_LOAN_PLANS[plan].writeOffYears === 1 ? "" : "s"}, {formatPoundsExact(baselineResult.writtenOffAmount)} forgiven in {baselineResult.writeOffCalendarYear ?? 0}</p>
           {:else}
-            <p class="text-2xl font-bold" data-testid="baseline-amount">{copy.slPaidLabel(formatPoundsExact(baselineResult.totalRepaid))}</p>
-            <p>{copy.slPaidOffIn(baselineResult.yearsUntilCleared ?? 0)}</p>
+            <p class="text-2xl font-bold" data-testid="baseline-amount">{formatPoundsExact(baselineResult.totalRepaid)} paid</p>
+            <p>Paid off in {baselineResult.yearsUntilCleared ?? 0} year{(baselineResult.yearsUntilCleared ?? 0) === 1 ? "" : "s"}</p>
           {/if}
         </div>
         <div class="bg-teal-900 text-white p-4 mt-2" data-testid="with-overpayment-card">
-          <strong>{copy.slWithOverpayment}</strong>
+          <strong>With overpayment</strong>
           {#if result.writtenOff}
-            <p class="text-2xl font-bold" data-testid="with-amount">{copy.slPaidLabel(formatPoundsExact(result.totalRepaid))}</p>
-            <p>{copy.slWrittenOffAfter(STUDENT_LOAN_PLANS[plan].writeOffYears)}, {copy.slForgivenIn(formatPoundsExact(result.writtenOffAmount), result.writeOffCalendarYear ?? 0)}</p>
+            <p class="text-2xl font-bold" data-testid="with-amount">{formatPoundsExact(result.totalRepaid)} paid</p>
+            <p>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} year{STUDENT_LOAN_PLANS[plan].writeOffYears === 1 ? "" : "s"}, {formatPoundsExact(result.writtenOffAmount)} forgiven in {result.writeOffCalendarYear ?? 0}</p>
           {:else}
-            <p class="text-2xl font-bold" data-testid="with-amount">{copy.slPaidLabel(formatPoundsExact(result.totalRepaid))}</p>
-            <p>{copy.slPaidOffIn(result.yearsUntilCleared ?? 0)}</p>
+            <p class="text-2xl font-bold" data-testid="with-amount">{formatPoundsExact(result.totalRepaid)} paid</p>
+            <p>Paid off in {result.yearsUntilCleared ?? 0} year{(result.yearsUntilCleared ?? 0) === 1 ? "" : "s"}</p>
           {/if}
         </div>
         {#if overpayingCostsMore}
           <div class="bg-amber-100 border-2 border-amber-400 p-3 mt-2 text-base" data-testid="overpay-warning">
-            {copy.slOverpayingCostsMore(formatPounds(-moneySaved), baselineResult.writeOffCalendarYear ?? 0)}
+            Overpaying costs you {formatPounds(-moneySaved)} more. Without it, your loan would have been written off in {baselineResult.writeOffCalendarYear ?? 0}.
           </div>
         {:else if moneySaved > 0}
           <p class="mt-2 text-lg" data-testid="savings-summary">
-            {copy.slSavingsTimeAndMoney(yearsSaved, formatPounds(moneySaved))}
+            You save {yearsSaved} year{yearsSaved === 1 ? "" : "s"} and {formatPounds(moneySaved)}.
           </p>
         {:else if yearsSaved > 0}
           <p class="mt-2 text-lg" data-testid="savings-summary">
-            {copy.slSavingsTimeOnly(yearsSaved)}
+            You save {yearsSaved} year{yearsSaved === 1 ? "" : "s"}.
           </p>
         {/if}
       {:else}
         <div class="bg-teal-900 text-white p-4" data-testid="outcome-card">
           {#if result.writtenOff}
-            <strong>{copy.slWrittenOffAfter(STUDENT_LOAN_PLANS[plan].writeOffYears)}</strong>
+            <strong>Written off after {STUDENT_LOAN_PLANS[plan].writeOffYears} year{STUDENT_LOAN_PLANS[plan].writeOffYears === 1 ? "" : "s"}</strong>
             <p class="text-3xl font-bold" data-testid="written-off-amount">{formatPounds(result.writtenOffAmount)}</p>
-            <p>{copy.slForgivenInYear(result.writeOffCalendarYear ?? 0)}</p>
+            <p>forgiven in {result.writeOffCalendarYear ?? 0}</p>
           {:else}
-            <strong>{copy.slPaidOffIn(result.yearsUntilCleared ?? 0)}</strong>
+            <strong>Paid off in {result.yearsUntilCleared ?? 0} year{(result.yearsUntilCleared ?? 0) === 1 ? "" : "s"}</strong>
             <p class="text-3xl font-bold" data-testid="total-repaid">{formatPounds(result.totalRepaid)}</p>
-            <p>{copy.slTotalPaidBack}</p>
+            <p>total paid back</p>
           {/if}
         </div>
       {/if}
@@ -334,15 +333,15 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
         <ul class="text-lg p-4 space-y-1">
           <li class="flex items-center gap-2">
             <span class="size-3 bg-teal-700 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{copy.slYouRepaid}: <strong>{formatPounds(result.totalRepaid)}</strong></span>
+            <span>You repaid: <strong>{formatPounds(result.totalRepaid)}</strong></span>
           </li>
           <li class="flex items-center gap-2 mt-2">
             <span class="size-3 bg-amber-400 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{copy.slInterestAccrued}: <strong>{formatPounds(result.totalInterest)}</strong></span>
+            <span>Interest accrued: <strong>{formatPounds(result.totalInterest)}</strong></span>
           </li>
           {#if result.writtenOff}
             <li class="flex items-center gap-2 mt-2 text-base text-zinc-700">
-              <span>{copy.slForgivenAtWriteOff}: <strong>{formatPounds(result.writtenOffAmount)}</strong></span>
+              <span>Forgiven at write-off: <strong>{formatPounds(result.writtenOffAmount)}</strong></span>
             </li>
           {/if}
         </ul>
@@ -350,17 +349,17 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
 
       <details class="mt-4 group [&_summary::-webkit-details-marker]:hidden">
         <summary class="cursor-pointer text-lg font-semibold underline">
-          {copy.slBreakdownToggle}
+          Show year-by-year breakdown
         </summary>
         <div class="mt-3 overflow-x-auto">
           <table class="w-full text-sm border-collapse">
             <thead>
               <tr class="border-b-2 border-black text-left">
-                <th class="py-2 pr-2 font-semibold">{copy.slTableYear}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.slTableSalary}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.slTableRepayment}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.slTableInterest}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.slTableBalance}</th>
+                <th class="py-2 pr-2 font-semibold">Year</th>
+                <th class="py-2 pr-2 font-semibold text-right">Salary</th>
+                <th class="py-2 pr-2 font-semibold text-right">Repayment</th>
+                <th class="py-2 pr-2 font-semibold text-right">Interest</th>
+                <th class="py-2 pr-2 font-semibold text-right">Balance</th>
               </tr>
             </thead>
             <tbody>
@@ -384,7 +383,7 @@ const statusLabel = (status: StudentLoanYear["status"]): string => {
       </details>
     {:else}
       <div class="bg-zinc-100 border-2 border-zinc-300 p-4 text-zinc-600">
-        {copy.slEmptyState}
+        Enter your details on the left to see your repayment forecast.
       </div>
     {/if}
   </aside>

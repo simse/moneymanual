@@ -109,11 +109,3 @@ it("rejects missing queries before searching", async () => {
   expect(await result.json()).toEqual({ error: "Missing query parameter" });
   expect(getIndex).not.toHaveBeenCalled();
 });
-
-it("shows the result count", async () => {
-  const { copy } = await import("./copy");
-
-  expect(copy.resultsFound(2, "inflation")).toBe(
-    'Found 2 results for "inflation"',
-  );
-});

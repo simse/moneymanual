@@ -1,5 +1,4 @@
 <script lang="ts">
-import { copy } from "../../../lib/copy";
 import type { PensionMethod, TakeHomeResult } from "../../../lib/take-home-pay";
 
 interface Props {
@@ -15,8 +14,8 @@ type Period = "year" | "month";
 let period = $state<Period>("year");
 
 const periods: { id: Period; label: string }[] = [
-	{ id: "year", label: copy.thWorkingsYearly },
-	{ id: "month", label: copy.thWorkingsMonthly },
+	{ id: "year", label: "Yearly" },
+	{ id: "month", label: "Monthly" },
 ];
 
 const yearFormatter = new Intl.NumberFormat("en-GB", {
@@ -53,23 +52,23 @@ const taxBands = $derived.by(() => {
 	const bands =
 		incomeTax.incomeTaxType === "England/NI/Wales"
 			? [
-					{ label: copy.thBandBasicRate, value: incomeTax.breakdown.basicRateTax },
-					{ label: copy.thBandHigherRate, value: incomeTax.breakdown.higherRateTax },
+					{ label: "Basic rate (20%)", value: incomeTax.breakdown.basicRateTax },
+					{ label: "Higher rate (40%)", value: incomeTax.breakdown.higherRateTax },
 					{
-						label: copy.thBandAdditionalRate,
+						label: "Additional rate (45%)",
 						value: incomeTax.breakdown.additionalRateTax,
 					},
 				]
 			: [
-					{ label: copy.thBandStarterRate, value: incomeTax.breakdown.starterRateTax },
-					{ label: copy.thBandBasicRateScot, value: incomeTax.breakdown.basicRateTax },
+					{ label: "Starter rate", value: incomeTax.breakdown.starterRateTax },
+					{ label: "Basic rate", value: incomeTax.breakdown.basicRateTax },
 					{
-						label: copy.thBandIntermediateRate,
+						label: "Intermediate rate",
 						value: incomeTax.breakdown.intermediateRateTax,
 					},
-					{ label: copy.thBandHigherRateScot, value: incomeTax.breakdown.higherRateTax },
-					{ label: copy.thBandAdvancedRate, value: incomeTax.breakdown.advancedRateTax },
-					{ label: copy.thBandTopRate, value: incomeTax.breakdown.topRateTax },
+					{ label: "Higher rate", value: incomeTax.breakdown.higherRateTax },
+					{ label: "Advanced rate", value: incomeTax.breakdown.advancedRateTax },
+					{ label: "Top rate", value: incomeTax.breakdown.topRateTax },
 				];
 
 	return bands.filter((band) => band.value > 0);
@@ -77,8 +76,8 @@ const taxBands = $derived.by(() => {
 </script>
 
 <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-  <p class="text-lg font-semibold">{copy.thWorkingsHeading}</p>
-  <div class="flex" role="group" aria-label={copy.thWorkingsPeriodAria}>
+  <p class="text-lg font-semibold">How this was worked out</p>
+  <div class="flex" role="group" aria-label="Show amounts for">
     {#each periods as option}
       <button
         type="button"
@@ -97,24 +96,24 @@ const taxBands = $derived.by(() => {
   </div>
 </div>
 
-<p class="text-sm text-zinc-700 mb-3">{copy.thWorkingsIntro}</p>
+<p class="text-sm text-zinc-700 mb-3">Amounts with a minus sign are taken off your pay.</p>
 
 {#if hasBonus}
   <label class="flex items-center gap-2 mb-3 cursor-pointer">
     <input class="p-3" type="checkbox" bind:checked={includeBonus} />
-    {copy.thWorkingsIncludeBonus}
+    Include my bonus
   </label>
 {/if}
 
 <div class="text-lg tabular-nums" data-testid="workings">
   <div class="flex justify-between gap-4 py-1">
-    <span>{copy.thWorkingsSalary}</span>
+    <span>Your salary</span>
     <span>{amount(scenario.annualGross - bonus)}</span>
   </div>
 
   {#if bonus > 0}
     <div class="flex justify-between gap-4 py-1">
-      <span>{copy.thWorkingsBonus}</span>
+      <span>Bonus</span>
       <span>{amount(bonus)}</span>
     </div>
   {/if}
@@ -122,25 +121,25 @@ const taxBands = $derived.by(() => {
   {#if scenario.grossPensionContribution > 0}
     <div class="py-1">
       <div class="flex justify-between gap-4">
-        <span>{copy.thWorkingsPension}</span>
+        <span>Pension</span>
         <span class="text-red-800">{deduction(scenario.pensionCostFromTakeHome)}</span>
       </div>
       <p class="text-sm text-zinc-600">
         {pensionMethod === "net_pay"
-          ? copy.thWorkingsPensionNetPayNote
-          : copy.thWorkingsPensionRasNote(amount(scenario.grossPensionContribution))}
+          ? "Paid before income tax, so you pay less tax."
+          : `${amount(scenario.grossPensionContribution)} goes into your pension once tax relief is added.`}
       </p>
     </div>
   {/if}
 
   <div class="py-1">
     <div class="flex justify-between gap-4">
-      <span>{copy.thWorkingsIncomeTax}</span>
+      <span>Income tax</span>
       <span class="text-red-800">{deduction(scenario.incomeTax.total)}</span>
     </div>
     <div class="text-sm text-zinc-600 pl-4 border-l-2 border-zinc-300 mt-1 space-y-0.5">
       <div class="flex justify-between gap-4">
-        <span>{copy.thWorkingsTaxFree}</span>
+        <span>Tax-free amount (no tax on this)</span>
         <span>{amount(scenario.personalAllowance)}</span>
       </div>
       {#each taxBands as band}
@@ -153,25 +152,25 @@ const taxBands = $derived.by(() => {
   </div>
 
   <div class="flex justify-between gap-4 py-1">
-    <span>{copy.thWorkingsNi}</span>
+    <span>National Insurance (NI)</span>
     <span class="text-red-800">{deduction(scenario.nationalInsurance)}</span>
   </div>
 
   {#if scenario.totalStudentLoanRepayments > 0}
     <div class="flex justify-between gap-4 py-1">
-      <span>{copy.thWorkingsStudentLoan}</span>
+      <span>Student loan</span>
       <span class="text-red-800">{deduction(scenario.totalStudentLoanRepayments)}</span>
     </div>
   {/if}
 
   <div class="flex justify-between gap-4 font-bold border-t-2 border-black mt-2 pt-2">
-    <span>{copy.thWorkingsTakeHome}</span>
+    <span>Your take-home pay</span>
     <span>{amount(scenario.takeHome)}</span>
   </div>
 </div>
 
 {#if isMonthly && hasBonus}
   <p class="text-sm text-zinc-700 mt-2">
-    {includeBonus ? copy.thWorkingsMonthlyWithBonusNote : copy.thWorkingsMonthlyBonusNote}
+    {includeBonus ? "Your bonus is spread evenly over 12 months. In practice you get it in one month." : "A typical month without your bonus. Your bonus month is shown above."}
   </p>
 {/if}

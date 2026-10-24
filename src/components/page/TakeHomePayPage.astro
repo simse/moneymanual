@@ -2,10 +2,9 @@
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/take-home-calculator/Calculator.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { copy } from "../../lib/copy";
 
-const title = copy.toolsTakeHomePageTitle;
-const description = copy.toolsTakeHomePageDescription;
+const title = "Take-Home Pay Calculator";
+const description = "Calculate your exact take-home pay after tax and National Insurance with this handy calculator";
 ---
 <Layout
   title={title}
@@ -16,7 +15,7 @@ const description = copy.toolsTakeHomePageDescription;
     subtitle={description}
     breadcrumbs={[
       {
-        text: copy.tools,
+        text: "Tools",
         href: "/tools",
       }
     ]}

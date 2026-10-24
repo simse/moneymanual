@@ -3,24 +3,23 @@ import Hero from "@components/Hero.astro";
 import Tools from "@components/parts/Tools.svelte";
 import Layout from "../../layouts/Layout.astro";
 import { sectionEntries, urlPathForEntry } from "../../lib/content";
-import { copy } from "../../lib/copy";
 
 const sections = await sectionEntries();
 ---
 <Layout
-  description={copy.homepageDescription}
+  description="Money Manual is an encyclopedia for everything relating to money, finance and the economy."
 >
   <Hero />
 
   <main class="max-w-5xl mx-auto px-4 mt-8">
     <section class="mt-8 mb-12">
-      <h2 class="text-2xl font-bold my-4">{copy.tools}</h2>
+      <h2 class="text-2xl font-bold my-4">Tools</h2>
 
       <Tools />
     </section>
 
     <section class="my-12">
-      <h2 class="text-2xl font-bold my-4">{copy.topics}</h2>
+      <h2 class="text-2xl font-bold my-4">Topics</h2>
 
       <ul class="md:w-4/5">
         {sections.map(entry => (
