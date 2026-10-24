@@ -14,6 +14,14 @@ const pages = defineCollection({
     type: z.enum(["section", "page"]).default("page"),
     sortOrderHint: z.number().default(0),
     searchPhrases: z.array(z.string()).optional(),
+    sources: z
+      .array(
+        z.object({
+          title: z.string(),
+          url: z.string().url(),
+        }),
+      )
+      .optional(),
   }),
 });
 

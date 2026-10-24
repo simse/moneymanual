@@ -55,6 +55,17 @@ const isSection = page.data.type === "section";
       <main class="max-w-5xl mx-auto p-4 flex gap-8 mb-16">
         <article class="flex-1 prose prose-lg border-t border-zinc-400 pt-4">
           <Content />
+
+          {page.data.sources && page.data.sources.length > 0 && (
+            <section>
+              <h2 id="sources">{copy.articleSources}</h2>
+              <ul>
+                {page.data.sources.map((source) => (
+                  <li><a href={source.url}>{source.title}</a></li>
+                ))}
+              </ul>
+            </section>
+          )}
         </article>
 
         <nav class="hidden md:block w-64 border-t-2 border-teal-700 pt-4 sticky top-4 h-fit">

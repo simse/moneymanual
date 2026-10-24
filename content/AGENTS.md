@@ -18,3 +18,5 @@ When updating an article, update the `lastChangedDate` field to the current date
 `sortOrderHint` is used for sorting articles correctly on section pages.
 
 All articles should have `searchPhrases` which are used as auto suggest for the search. If an article is missing them, add them in when updating. The phrases should be all lowercase without punctuation.
+
+Record the sources an article relies on in the `sources` frontmatter field, as a list of `title` and `url` pairs. They render as a "Sources" list at the end of the article. Do not add a sources section to the MDX body.
