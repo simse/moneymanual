@@ -1,0 +1,63 @@
+name: preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+  deployments: write
+
+jobs:
+  deploy-preview:
+    name: deploy preview
+    # Fork PRs have no access to the Cloudflare secrets.
+    if: github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-26.04-arm
+    environment:
+      name: preview
+      url: https://pr-${{ github.event.pull_request.number }}.moneymanual.org.uk
+    env:
+      PREVIEW_NAME: pr-${{ github.event.pull_request.number }}
+      SITE_URL: https://pr-${{ github.event.pull_request.number }}.moneymanual.org.uk
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      # Previews belong to the prod Worker, which owns the moneymanual.org.uk custom domain.
+      - name: Build
+        run: CLOUDFLARE_ENV=prod pnpm run build
+
+      # Prerendered pages are built with the prod vars, so they lack the noindex meta tag.
+      - name: Keep preview out of search engines
+        run: |
+          printf '/*\n  X-Robots-Tag: noindex\n' >> dist/client/_headers
+
+      - name: Deploy preview
+        run: pnpm exec wrangler preview --env prod --name "$PREVIEW_NAME" --message "${{ github.event.pull_request.head.sha }}"
+
+      - name: Comment preview URL
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" --edit-last --create-if-none --body "Preview: $SITE_URL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  delete-preview:
+    name: delete preview
+    if: github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-26.04-arm
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup
+
+      - name: Delete preview
+        run: pnpm exec wrangler preview delete --env prod --name "pr-${{ github.event.pull_request.number }}" --skip-confirmation
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

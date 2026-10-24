@@ -40,6 +40,8 @@
         {
           "pattern": "moneymanual.org.uk",
           "custom_domain": true,
+          // Also serve pull request Previews at pr-<number>.moneymanual.org.uk.
+          "previews_enabled": true,
         },
       ],
       "images": {
@@ -47,6 +49,15 @@
       },
       "vars": {
         "ENVIRONMENT": "prod",
+      },
+      // Previews do not inherit production settings, so repeat every binding and var here.
+      "previews": {
+        "images": {
+          "binding": "IMAGES",
+        },
+        "vars": {
+          "ENVIRONMENT": "staging",
+        },
       },
     },
   },
