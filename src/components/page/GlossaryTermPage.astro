@@ -8,7 +8,6 @@ import {
 	glossaryTerms,
 	relatedGlossaryTerms,
 } from "../../lib/content";
-import { copy } from "../../lib/copy";
 import { iconFor } from "../../lib/glossary-icons";
 import { topicById } from "../../lib/glossary-topics";
 
@@ -27,7 +26,7 @@ const slug = glossaryTermSlug(entry);
 
 <Layout
     title={entry.data.term}
-    description={`${entry.data.term}: ${copy.glossaryDescription}`}
+    description={`${entry.data.term}: A plain-English glossary of common money, finance and economy terms, browsable by topic.`}
 >
     <GlossaryShell
         terms={allTerms}
@@ -101,7 +100,7 @@ const slug = glossaryTermSlug(entry);
                 related.length > 0 && (
                     <>
                         <h2 class="font-bold uppercase text-xs tracking-widest text-zinc-500 mb-3">
-                            {copy.glossarySeeAlso}
+                            See also
                         </h2>
                         <ul class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             {related.map((r) => {

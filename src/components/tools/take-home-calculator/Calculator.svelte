@@ -1,5 +1,4 @@
 <script lang="ts">
-import { copy } from "../../../lib/copy";
 import { persistLocalState } from "../../../lib/local-state.svelte";
 import RestoreBanner from "../RestoreBanner.svelte";
 import {
@@ -35,26 +34,26 @@ const payFrequencies: {
 	label: string;
 	toAnnual: (input: number) => number;
 }[] = $derived([
-	{ id: "weekly", label: copy.thFreqWeekly, toAnnual: (n) => n * 52 },
+	{ id: "weekly", label: "Weekly", toAnnual: (n) => n * 52 },
 	{
 		id: "bi_weekly",
-		label: copy.thFreqFortnightly,
+		label: "Fortnightly",
 		toAnnual: (n) => n * 26,
 	},
-	{ id: "monthly", label: copy.thFreqMonthly, toAnnual: (n) => n * 12 },
-	{ id: "annually", label: copy.thFreqAnnually, toAnnual: (n) => n },
+	{ id: "monthly", label: "Monthly", toAnnual: (n) => n * 12 },
+	{ id: "annually", label: "Annually", toAnnual: (n) => n },
 ]);
 
 const countries: { id: Country; label: string }[] = $derived([
-	{ id: "England/NI/Wales", label: copy.thCountryEngNiWales },
-	{ id: "Scotland", label: copy.thCountryScotland },
+	{ id: "England/NI/Wales", label: "England, Northern Ireland or Wales" },
+	{ id: "Scotland", label: "Scotland" },
 ]);
 
 const studentLoanPlans: { id: StudentLoanPlan; label: string }[] = $derived([
-	{ id: 1, label: copy.thStudentLoanPlan1 },
-	{ id: 2, label: copy.thStudentLoanPlan2 },
-	{ id: 4, label: copy.thStudentLoanPlan4 },
-	{ id: 5, label: copy.thStudentLoanPlan5 },
+	{ id: 1, label: "Plan 1" },
+	{ id: 2, label: "Plan 2" },
+	{ id: 4, label: "Plan 4 (Scotland)" },
+	{ id: 5, label: "Plan 5" },
 ]);
 
 let selectedTaxYear = $state<TaxYear>(DEFAULT_TAX_YEAR);
@@ -155,16 +154,16 @@ const bonusIndicator = $derived(hasBonus ? formatPounds(annualBonus) : null);
 
 const studentLoanIndicator = $derived(
 	selectedStudentLoanPlans.length > 0
-		? copy.pluralPlans(selectedStudentLoanPlans.length)
+		? `${selectedStudentLoanPlans.length} plan${selectedStudentLoanPlans.length === 1 ? "" : "s"}`
 		: null,
 );
 
 const regularMonthlyText = $derived(
-	copy.thResultMonthly(formatPounds(result.regularMonthlyTakeHome)),
+	`${formatPounds(result.regularMonthlyTakeHome)} monthly`,
 );
 
 const bonusMonthlyText = $derived(
-	copy.thBonusMonthMonthly(formatPounds(result.bonusMonthTakeHome)),
+	`${formatPounds(result.bonusMonthTakeHome)} in bonus month`,
 );
 
 const showRasHigherRateNote = $derived(
@@ -183,9 +182,9 @@ const showRasHigherRateNote = $derived(
   <div class="md:col-span-3">
     <form>
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">{copy.thTaxYearHeading}</h2>
+        <h2 class="text-2xl font-bold mb-4">Tax year</h2>
         <select
-          aria-label={copy.thTaxYearAria}
+          aria-label="Tax year"
           bind:value={selectedTaxYear}
           class="text-xl border-2 border-black outline-yellow-400"
         >
@@ -196,9 +195,9 @@ const showRasHigherRateNote = $derived(
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">{copy.thCountryHeading}</h2>
+        <h2 class="text-2xl font-bold mb-4">Which country do you work in?</h2>
         <select
-          aria-label={copy.thCountryAria}
+          aria-label="Country"
           bind:value={selectedCountry}
           class="text-xl border-2 border-black outline-yellow-400"
         >
@@ -209,12 +208,12 @@ const showRasHigherRateNote = $derived(
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-4">{copy.thSalaryHeading}</h2>
+        <h2 class="text-2xl font-bold mb-4">Your salary</h2>
         <input
           type="number"
-          aria-label={copy.thSalaryAria}
+          aria-label="Gross salary"
           class="text-xl border-2 border-black outline-yellow-400 block mb-8 w-full"
-          placeholder={copy.thSalaryPlaceholder}
+          placeholder="For example: 45000"
           bind:value={grossIncome}
         >
         {#each payFrequencies as payFrequency}
@@ -232,9 +231,9 @@ const showRasHigherRateNote = $derived(
         {/each}
       </div>
 
-      <AccordionSection title={copy.thPensionTitle} indicator={pensionIndicator}>
+      <AccordionSection title="Pension contribution" indicator={pensionIndicator}>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.thPensionIntro}
+          Auto-enrolment pensions reduce your take-home pay differently depending on the relief method your employer uses.
         </p>
 
         <div class="mb-4">
@@ -247,8 +246,8 @@ const showRasHigherRateNote = $derived(
               value="net_pay"
               bind:group={pensionMethod}
             />
-            {copy.thPensionNetPay}
-            <span class="block text-sm text-zinc-600 ml-7">{copy.thPensionNetPayHelp}</span>
+            Net pay arrangement
+            <span class="block text-sm text-zinc-600 ml-7">Deducted before income tax, so you get tax relief at your highest rate automatically.</span>
           </label>
           <label for="pension-ras" class="text-xl mr-8 mb-2 block">
             <input
@@ -259,17 +258,17 @@ const showRasHigherRateNote = $derived(
               value="relief_at_source"
               bind:group={pensionMethod}
             />
-            {copy.thPensionRas}
-            <span class="block text-sm text-zinc-600 ml-7">{copy.thPensionRasHelp}</span>
+            Relief at source
+            <span class="block text-sm text-zinc-600 ml-7">Deducted from net pay; provider claims back basic-rate (20%) relief.</span>
           </label>
         </div>
 
         <div class="flex items-stretch gap-2 mb-2">
           <input
             type="number"
-            aria-label={copy.thPensionAria}
+            aria-label="Pension contribution"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={pensionInputType === "percent" ? copy.thPensionPercentPlaceholder : copy.thPensionAmountPlaceholder}
+            placeholder={pensionInputType === "percent" ? "For example: 5" : "For example: 200"}
             bind:value={pensionValue}
           >
           <div class="inline-flex border-2 border-black">
@@ -287,23 +286,23 @@ const showRasHigherRateNote = $derived(
         </div>
         <p class="text-sm text-zinc-600">
           {#if pensionInputType === "percent"}
-            {copy.thPensionPercentHelp}
+            Percentage of your gross salary (and bonus) paid into your pension.
           {:else}
-            {copy.thPensionAmountHelp}
+            Amount paid into your pension at the same frequency as your salary above.
           {/if}
         </p>
       </AccordionSection>
 
-      <AccordionSection title={copy.thBonusTitle} indicator={bonusIndicator}>
+      <AccordionSection title="Annual bonus" indicator={bonusIndicator}>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.thBonusIntro}
+          A one-off annual bonus, paid in a single month.
         </p>
         <div class="flex items-stretch gap-2 mb-2">
           <input
             type="number"
-            aria-label={copy.thBonusAria}
+            aria-label="Annual bonus"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={bonusInputType === "percent" ? copy.thBonusPercentPlaceholder : copy.thBonusPlaceholder}
+            placeholder={bonusInputType === "percent" ? "For example: 10" : "For example: 5000"}
             bind:value={bonusValue}
           >
           <div class="inline-flex border-2 border-black">
@@ -321,14 +320,14 @@ const showRasHigherRateNote = $derived(
         </div>
         <p class="text-sm text-zinc-600">
           {#if bonusInputType === "percent"}
-            {copy.thBonusPercentHelp(formatPounds(annualBonus))}
+            Percentage of your yearly salary. That's a bonus of {formatPounds(annualBonus)}.
           {:else}
-            {copy.thBonusAmountHelp}
+            Your bonus before tax, in pounds.
           {/if}
         </p>
       </AccordionSection>
 
-      <AccordionSection title={copy.thStudentLoanTitle} indicator={studentLoanIndicator}>
+      <AccordionSection title="Student loan" indicator={studentLoanIndicator}>
         {#each studentLoanPlans as studentLoanPlan}
           <label for={`student-loan-${studentLoanPlan.id}`} class="text-xl mr-8 mb-4 block">
             <input
@@ -348,20 +347,20 @@ const showRasHigherRateNote = $derived(
 
   <aside class="md:col-span-2 md:sticky md:top-4 md:self-start">
     <div class="bg-teal-900 text-white p-4" data-testid="regular-month-card">
-      <strong>{copy.thResultHeading}</strong>
+      <strong>Your Take-Home Pay</strong>
       <p class="text-3xl font-bold" data-testid="regular-month-figure">{regularMonthlyText}</p>
-      <p data-testid="regular-annual-figure">{copy.thResultAnnual(formatPounds(result.base.takeHome))}</p>
+      <p data-testid="regular-annual-figure">{formatPounds(result.base.takeHome)} annually</p>
     </div>
 
     {#if hasBonus}
       <div class="bg-amber-100 border-2 border-amber-700 text-amber-950 p-4 mt-4" data-testid="bonus-month-card">
-        <strong>{copy.thBonusMonthHeading}</strong>
+        <strong>Bonus month take-home</strong>
         <p class="text-2xl font-bold" data-testid="bonus-month-figure">{bonusMonthlyText}</p>
         <p class="text-sm">
-          {copy.thBonusMonthNetOnTop(formatPounds(result.bonusNet), formatPounds(result.regularMonthlyTakeHome))}
+          {formatPounds(result.bonusNet)} net bonus on top of your regular {formatPounds(result.regularMonthlyTakeHome)}.
         </p>
         <p class="text-sm mt-1" data-testid="annual-with-bonus">
-          {copy.thBonusMonthAnnual(formatPounds(result.withBonus.takeHome))}
+          {formatPounds(result.withBonus.takeHome)} annually including bonus.
         </p>
       </div>
     {/if}
@@ -371,7 +370,7 @@ const showRasHigherRateNote = $derived(
 
       {#if showRasHigherRateNote}
         <p class="text-sm text-zinc-700 mt-4">
-          {copy.thRasNote}
+          Note: with relief at source you'd typically claim back the extra higher-rate tax relief via Self Assessment.
         </p>
       {/if}
     </div>

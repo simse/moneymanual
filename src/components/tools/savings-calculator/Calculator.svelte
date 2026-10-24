@@ -1,5 +1,4 @@
 <script lang="ts">
-import { copy } from "../../../lib/copy";
 import {
 	computeSavingsGrowth,
 	type SavingsGrowthYear,
@@ -73,7 +72,9 @@ const interestShare = $derived(
 const principalShare = $derived(100 - interestShare);
 
 const yearLabel = (entry: SavingsGrowthYear): string =>
-	copy.svYearLabel(entry.year);
+	Number.isInteger(entry.year)
+		? `Year ${entry.year}`
+		: `Year ${entry.year.toFixed(2).replace(/\.?0+$/, "")}`;
 </script>
 
 <RestoreBanner {persisted} />
@@ -82,15 +83,15 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
   <div class="md:col-span-3">
     <form>
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.svStartingBalanceTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Starting balance</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.svStartingBalanceHelp}
+          How much you have saved already.
         </p>
         <input
           type="number"
-          aria-label={copy.svStartingBalanceAria}
+          aria-label="Starting balance in pounds"
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.svStartingBalancePlaceholder}
+          placeholder="For example: 1000"
           min="0"
           step="100"
           bind:value={startingBalance}
@@ -98,15 +99,15 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.svMonthlyDepositTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Monthly deposit</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.svMonthlyDepositHelp}
+          How much you plan to add each month. Leave blank if you don't plan to add anything.
         </p>
         <input
           type="number"
-          aria-label={copy.svMonthlyDepositAria}
+          aria-label="Monthly deposit in pounds"
           class="text-xl border-2 border-black outline-yellow-400 block w-full"
-          placeholder={copy.svMonthlyDepositPlaceholder}
+          placeholder="For example: 100"
           min="0"
           step="10"
           bind:value={monthlyDeposit}
@@ -114,16 +115,16 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.svInterestRateTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Annual interest rate</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.svInterestRateHelp}
+          The yearly rate (AER) your savings earn. UK savings accounts typically advertise this figure.
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={copy.svInterestRateAria}
+            aria-label="Annual interest rate as a percentage"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={copy.svInterestRatePlaceholder}
+            placeholder="For example: 5"
             min="0"
             step="0.1"
             bind:value={annualInterestRate}
@@ -133,36 +134,36 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
       </div>
 
       <div class="mb-8">
-        <h2 class="text-2xl font-bold mb-2">{copy.svTimePeriodTitle}</h2>
+        <h2 class="text-2xl font-bold mb-2">Time period</h2>
         <p class="text-base text-zinc-700 mb-3">
-          {copy.svTimePeriodHelp}
+          How many years you plan to save for.
         </p>
         <div class="flex items-stretch gap-2">
           <input
             type="number"
-            aria-label={copy.svTimePeriodAria}
+            aria-label="Time period in years"
             class="text-xl border-2 border-black outline-yellow-400 block w-full"
-            placeholder={copy.svTimePeriodPlaceholder}
+            placeholder="For example: 10"
             min="0"
             max="80"
             step="1"
             bind:value={years}
           >
-          <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">{copy.svYearsUnit}</span>
+          <span class="border-2 border-black px-3 text-xl bg-white inline-flex items-center">years</span>
         </div>
       </div>
 
       <p class="text-sm text-zinc-600">
-        {copy.svAssumptionNote}
+        Assumes interest compounds monthly and that you make each deposit at the start of the month. Tax on interest is not included.
       </p>
     </form>
   </div>
 
   <aside class="md:col-span-2 md:sticky md:top-4 md:self-start">
     <div class="bg-teal-900 text-white p-4" data-testid="final-balance-card">
-      <strong>{copy.svFinalBalanceHeading}</strong>
+      <strong>Final balance</strong>
       <p class="text-3xl font-bold" data-testid="final-balance">{formatPounds(result.finalBalance)}</p>
-      <p>{copy.svAfterYears(years ?? 0)}</p>
+      <p>after {years ?? 0} year{(years ?? 0) === 1 ? "" : "s"}</p>
     </div>
 
     {#if result.finalBalance > 0}
@@ -174,17 +175,17 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
         <ul class="text-lg p-4 space-y-1">
           <li class="flex items-center gap-2">
             <span class="size-3 bg-teal-700 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{copy.svYourMoney}: <strong>{formatPounds(principal)}</strong></span>
+            <span>Your money: <strong>{formatPounds(principal)}</strong></span>
           </li>
           <li class="flex items-center gap-2 ml-5 text-base text-zinc-700">
-            <span>{copy.svStartingBalanceLine}: {formatPounds(result.startingBalance)}</span>
+            <span>Starting balance: {formatPounds(result.startingBalance)}</span>
           </li>
           <li class="flex items-center gap-2 ml-5 text-base text-zinc-700">
-            <span>{copy.svTotalDeposits}: {formatPounds(result.totalDeposits)}</span>
+            <span>Total deposits: {formatPounds(result.totalDeposits)}</span>
           </li>
           <li class="flex items-center gap-2 mt-2">
             <span class="size-3 bg-amber-400 inline-block shrink-0" aria-hidden="true"></span>
-            <span>{copy.svInterestEarned}: <strong>{formatPounds(result.totalInterest)}</strong></span>
+            <span>Interest earned: <strong>{formatPounds(result.totalInterest)}</strong></span>
           </li>
         </ul>
       </div>
@@ -193,16 +194,16 @@ const yearLabel = (entry: SavingsGrowthYear): string =>
     {#if result.yearlyBreakdown.length > 0}
       <details class="mt-4 group [&_summary::-webkit-details-marker]:hidden">
         <summary class="cursor-pointer text-lg font-semibold underline">
-          {copy.svBreakdownToggle}
+          Show year-by-year breakdown
         </summary>
         <div class="mt-3 overflow-x-auto">
           <table class="w-full text-sm border-collapse">
             <thead>
               <tr class="border-b-2 border-black text-left">
-                <th class="py-2 pr-2 font-semibold">{copy.svTableYear}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableDeposits}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableInterest}</th>
-                <th class="py-2 pr-2 font-semibold text-right">{copy.svTableBalance}</th>
+                <th class="py-2 pr-2 font-semibold">Year</th>
+                <th class="py-2 pr-2 font-semibold text-right">Deposits</th>
+                <th class="py-2 pr-2 font-semibold text-right">Interest</th>
+                <th class="py-2 pr-2 font-semibold text-right">Balance</th>
               </tr>
             </thead>
             <tbody>

@@ -4,7 +4,6 @@ import Breadcrumbs from "@components/Breadcrumbs.svelte";
 import TableOfContents from "@components/TableOfContents.astro";
 import BaseLayout from "../../layouts/Layout.astro";
 import { getPageEntry, type PageEntry, parseEntryId } from "../../lib/content";
-import { copy } from "../../lib/copy";
 import SectionPage from "../../templates/SectionPage.astro";
 
 interface Props {
@@ -24,7 +23,7 @@ if (parsed && !parsed.isSection) {
 }
 
 const breadcrumbs: { text: string; href: string }[] = [
-	{ text: copy.home, href: "/" },
+	{ text: "Home", href: "/" },
 ];
 
 if (parsed && !parsed.isSection) {
@@ -58,7 +57,7 @@ const isSection = page.data.type === "section";
 
           {page.data.sources && page.data.sources.length > 0 && (
             <section>
-              <h2 id="sources">{copy.articleSources}</h2>
+              <h2 id="sources">Sources</h2>
               <ul>
                 {page.data.sources.map((source) => (
                   <li><a href={source.url}>{source.title}</a></li>

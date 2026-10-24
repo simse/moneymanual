@@ -2,10 +2,9 @@
 import PageHeader from "@components/common/PageHeader.astro";
 import Calculator from "@components/tools/student-loan-repayment/Calculator.svelte";
 import Layout from "../../layouts/Layout.astro";
-import { copy } from "../../lib/copy";
 
-const title = copy.toolsStudentLoanPageTitle;
-const description = copy.toolsStudentLoanPageDescription;
+const title = "Student Loan Repayment Calculator";
+const description = "Find out how long it will take to repay your UK student loan, how much you will pay back in total, and whether your loan will be written off, based on your salary, plan and graduation year.";
 ---
 <Layout
   title={title}
@@ -16,7 +15,7 @@ const description = copy.toolsStudentLoanPageDescription;
     subtitle={description}
     breadcrumbs={[
       {
-        text: copy.tools,
+        text: "Tools",
         href: "/tools",
       }
     ]}

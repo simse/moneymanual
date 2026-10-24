@@ -2,28 +2,27 @@
 import SchoolIcon from "virtual:icons/bx/bxs-graduation";
 import PoundIcon from "virtual:icons/bx/pound";
 import SavingsIcon from "virtual:icons/material-symbols/savings";
-import { copy } from "../../lib/copy";
 
 const tools = $derived([
 	{
-		name: copy.toolsTakeHomeName,
-		description: copy.toolsTakeHomeDescription,
+		name: "Take Home Pay Calculator",
+		description: "Calculate how much you should earn after taxes and other contributions",
 		href: "/tools/take-home-pay",
 		bgColour: "bg-pink-200",
 		iconColour: "text-pink-900",
 		icon: PoundIcon,
 	},
 	{
-		name: copy.toolsSavingsName,
-		description: copy.toolsSavingsDescription,
+		name: "Savings Growth Calculator",
+		description: "See how your savings will grow with compound interest and regular deposits",
 		href: "/tools/savings-calculator",
 		bgColour: "bg-emerald-200",
 		iconColour: "text-emerald-900",
 		icon: SavingsIcon,
 	},
 	{
-		name: copy.toolsStudentLoanName,
-		description: copy.toolsStudentLoanDescription,
+		name: "Student Loan Repayment Calculator",
+		description: "Find out how long it will take to repay your student loan",
 		href: "/tools/student-loan-repayment",
 		bgColour: "bg-blue-200",
 		iconColour: "text-blue-900",

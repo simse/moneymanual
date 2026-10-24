@@ -1,7 +1,6 @@
 <script lang="ts">
 import ChevronDownIcon from "virtual:icons/bx/bxs-chevron-down";
 import SearchIcon from "virtual:icons/bx/search";
-import { copy } from "../lib/copy";
 
 const {
 	homeHref,
@@ -39,7 +38,7 @@ const searchHref = "/search";
                 }}
                 onclick={() => (isMenuOpen = !isMenuOpen)}
             >
-                {copy.topics}
+                Topics
                 <ChevronDownIcon />
             </button>
         </li>
@@ -48,7 +47,7 @@ const searchHref = "/search";
             <a
                 class="pl-3 h-full hover:cursor-pointer"
                 href={searchHref}
-                aria-label={copy.search}
+                aria-label="Search"
             >
                 <SearchIcon class="h-6 w-6" />
             </a>
